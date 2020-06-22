@@ -1,4 +1,4 @@
-import { useRedux } from 'hooks-for-redux'
+import { useRedux, createReduxModule } from 'hooks-for-redux'
 import {settingsStore} from '../settings/settings'
 import fs from 'fs'
 import http from 'http'
@@ -40,4 +40,3 @@ const unsubscribe = settingsStore.subscribe(({proteinPath, moleculesPath, xprop,
         })
     });*/
 });
-

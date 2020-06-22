@@ -17,6 +17,8 @@
     "react-dom": "^16.13.1",
     "react-plotly.js": "^2.4.0",
     "react-scripts": "3.4.1",
+    "redux-devtools-extension": "^2.13.8",
+    "remotedev-server": "^0.3.1",
     "reselect": "^4.0.0",
     "sdf-parser": "^4.0.1"
   },
@@ -47,6 +49,7 @@
     "@babel/preset-env": "^7.10.3",
     "autoprefixer": "^9.8.2",
     "babel-loader": "^8.1.0",
-    "postcss-loader": "^3.0.0"
+    "postcss-loader": "^3.0.0",
+    "remote-redux-devtools": "^0.5.16"
   }
 }
