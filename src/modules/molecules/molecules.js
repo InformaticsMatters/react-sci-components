@@ -2,7 +2,7 @@ import { useRedux } from 'hooks-for-redux'
 import {settingsStore} from '../settings/settings'
 import fs from 'fs'
 import http from 'http'
-import {parse} from 'sdf-parser'
+//import {parse} from 'sdf-parser'
 
 const initialState = [
     {id: 1, name: "mol1", scores: [{id: 1, name: "score1", value: 1}, {id: 2, name: "score2", value: 2}, {id: 3, name: "score3", value: 3}]},
@@ -27,17 +27,17 @@ export const [useMolecules, {}, moleculesStore] = useRedux(
     }
 );
 
-settingsStore.subscribe((url) => {
+const unsubscribe = settingsStore.subscribe(({proteinPath, moleculesPath, xprop, yprop, color, size}) => {
     const file = fs.createWriteStream("molecules.sdf");
-    const request = http.get(url, response => {
+    /*const request = http.get(moleculesPath, response => {
         response.pipe(file);
         file.on('finish', () => {
             file.close(() => {
-                const fileContents = fs.readFileSync("molecules.sdf")
+                const fileContents = fs.readFileSync("molecules.sdf");
                 const result = parse(fileContents);
-                console.log(result)
+                console.log(result);
             })
         })
-    });
+    });*/
 });
 
