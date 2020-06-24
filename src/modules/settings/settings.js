@@ -6,7 +6,7 @@ export const [
      settingsStore
     ] = useRedux(
     "settings",
-    {proteinPath: '', moleculesPath: '', xprop: 'score1', yprop: 'score2', color: 'red', size: ''},
+    {proteinPath: '', moleculesPath: '', xprop: 'TransFSScore', yprop: 'SuCOS_Score', color: 'red', size: ''},
     {
         setProteinPath: (settings, proteinPathPar) => Object.assign({}, settings, {proteinPath: proteinPathPar}),
         setMoleculesPath: (settings, moleculesPathPar) => Object.assign({}, settings, {moleculesPath: moleculesPathPar}),

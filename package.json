@@ -8,10 +8,11 @@
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
-    "fs": "0.0.1-security",
     "hooks-for-redux": "^1.2.2",
     "http": "0.0.1-security",
     "material-components-web": "^6.0.0",
+    "ngl": "^0.10.4",
+    "openchemlib": "^7.2.3",
     "plotly.js": "^1.54.2",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
@@ -19,8 +20,7 @@
     "react-scripts": "3.4.1",
     "redux-devtools-extension": "^2.13.8",
     "remotedev-server": "^0.3.1",
-    "reselect": "^4.0.0",
-    "sdf-parser": "^4.0.1"
+    "reselect": "^4.0.0"
   },
   "scripts": {
     "start": "react-scripts --max_old_space_size=4096 start",
