@@ -24,11 +24,13 @@ const CardView = () => {
 
     return (
         <div className={classes.root}>
-            {selectedMolecules.map(({name, scores}) => (
-                <MolCard smiles={name}>
-                    <CalculationsTable properties={scores} />
-                </MolCard>
-            ))}
+            {selectedMolecules.map(({ smiles, scores }) => {
+                return (
+                    <MolCard smiles={smiles}>
+                        <CalculationsTable properties={scores} />
+                    </MolCard>
+                );
+            })}
         </div>
     );
 };

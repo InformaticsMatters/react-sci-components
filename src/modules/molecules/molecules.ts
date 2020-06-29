@@ -4,7 +4,7 @@ import { SDFileParser } from 'openchemlib/minimal';
 
 export type Score = { name: string; value: number };
 
-export type Molecule = { name: string; scores: Score[]; molFile: string };
+export type Molecule = { name: string; smiles: string; scores: Score[]; molFile: string };
 
 const initialState: Molecule[] = [
     /*{ id: 1, name: "mol1", scores: [{ id: 1, name: "score1", value: 1 }, { id: 2, name: "score2", value: 2 }, { id: 3, name: "score3", value: 3 }] },
@@ -42,6 +42,7 @@ const unsubscribe = settingsStore.subscribe(
                     const molecule = parser.getMolecule();
                     const molName = molecule.getName();
                     const currentMolFile = molecule.toMolfile();
+                    const smiles = molecule.toIsomericSmiles();
                     const fields: Score[] = [];
                     fieldNames.forEach((fieldName) => {
                         let fieldValue = parser.getField(fieldName);
@@ -49,7 +50,12 @@ const unsubscribe = settingsStore.subscribe(
                             fields.push({ name: fieldName, value: parseFloat(fieldValue) });
                         }
                     });
-                    readMolecules.push({ name: molName, molFile: currentMolFile, scores: fields });
+                    readMolecules.push({
+                        name: molName,
+                        smiles,
+                        molFile: currentMolFile,
+                        scores: fields,
+                    });
                 }
 
                 setMolecules(readMolecules);
