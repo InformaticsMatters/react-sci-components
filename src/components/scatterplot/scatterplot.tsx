@@ -1,38 +1,52 @@
 import React, { useState } from 'react';
 import Plot from 'react-plotly.js';
-import {useSettings} from '../../modules/settings/settings';
-import {useMolecules} from '../../modules/molecules/molecules';
-import {usePlotSelection, selectPoints} from './plot-selection';
+import { useSettings } from '../../modules/settings/settings';
+import { useMolecules } from '../../modules/molecules/molecules';
+import { selectPoints } from './plot-selection';
+import { PlotDatum, Datum } from 'plotly.js';
+
+type Selection = { x: Datum[]; y: Datum[]; n: number[] };
 
 export const ScatterPlot = () => {
-    const [selectedPoints, setSelectedPoints] = useState({ x: [], y: [], n: [] });
+    const [selectedPoints, setSelectedPoints] = useState<Selection>({ x: [], y: [], n: [] });
     const molecules = useMolecules();
     const settings = useSettings();
-    const moleculesSelection = usePlotSelection();
 
-    const mkColor = settings.color
-    const xaxis = molecules.map(molecule => molecule.scores.filter(score => score.name === settings.xprop).map(score => score.value)[0])
-    const yaxis = molecules.map(molecule => molecule.scores.filter(score => score.name === settings.yprop).map(score => score.value)[0])
+    const mkColor = settings.color;
+    const xaxis = molecules.map(
+        (molecule) =>
+            molecule.scores
+                .filter((score) => score.name === settings.xprop)
+                .map((score) => score.value)[0],
+    );
+    const yaxis = molecules.map(
+        (molecule) =>
+            molecule.scores
+                .filter((score) => score.name === settings.yprop)
+                .map((score) => score.value)[0],
+    );
 
-    const handleSelection = (points) => {
+    const handleSelection = (points: PlotDatum[]) => {
         const selectedData = {
             x: points.map((p) => p.x),
             y: points.map((p) => p.y),
             n: points.map((p) => p.pointNumber),
-          };
+        };
         setSelectedPoints(selectedData);
-        let mols = converPointsToMolecules(points);
+        let mols = convertPointsToMolecules(points);
         selectPoints(mols);
-        points.map(p => console.log(`selected point x=${p.x} and y=${p.y}`));
+        points.map((p) => console.log(`selected point x=${p.x} and y=${p.y}`));
     };
 
-    const converPointsToMolecules = points => {
-        return points.map(point => {
-            return molecules.filter(molecule => {
-                let xPropVal = molecule.scores.filter(score => score.name === settings.xprop)[0].value;
-                let yPropVal = molecule.scores.filter(score => score.name === settings.yprop)[0].value;
+    const convertPointsToMolecules = (points: PlotDatum[]) => {
+        return points.map((point) => {
+            return molecules.filter((molecule) => {
+                let xPropVal = molecule.scores.filter((score) => score.name === settings.xprop)[0]
+                    .value;
+                let yPropVal = molecule.scores.filter((score) => score.name === settings.yprop)[0]
+                    .value;
                 return xPropVal == point.x && yPropVal == point.y;
-            });
+            })[0];
         });
     };
 
@@ -49,10 +63,15 @@ export const ScatterPlot = () => {
                     y: yaxis,
                     type: 'scatter',
                     mode: 'markers',
-                    marker: {color}
-                }
+                    marker: { color },
+                },
             ]}
-            layout={{ width: 1000, height: 1000, title: 'Scatter plot component', dragmode: 'select' }}
+            layout={{
+                width: 1000,
+                height: 1000,
+                title: 'Scatter plot component',
+                dragmode: 'select',
+            }}
             onSelected={(e) => handleSelection(e.points)}
             onRelayout={(...e) => console.log(e)}
         />

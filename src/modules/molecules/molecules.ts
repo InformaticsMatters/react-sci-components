@@ -1,8 +1,12 @@
-import { useRedux } from 'hooks-for-redux'
-import { settingsStore } from '../settings/settings'
-import { SDFileParser } from 'openchemlib/minimal'
+import { useRedux } from 'hooks-for-redux';
+import { settingsStore } from '../settings/settings';
+import { SDFileParser } from 'openchemlib/minimal';
 
-const initialState = [
+export type Score = { name: string; value: number };
+
+export type Molecule = { name: string; scores: Score[]; molFile: string };
+
+const initialState: Molecule[] = [
     /*{ id: 1, name: "mol1", scores: [{ id: 1, name: "score1", value: 1 }, { id: 2, name: "score2", value: 2 }, { id: 3, name: "score3", value: 3 }] },
     { id: 2, name: "mol2", scores: [{ id: 1, name: "score1", value: 11 }, { id: 2, name: "score2", value: 21 }, { id: 3, name: "score3", value: 31 }] },
     { id: 3, name: "mol3", scores: [{ id: 1, name: "score1", value: 12 }, { id: 2, name: "score2", value: 22 }, { id: 3, name: "score3", value: 32 }] },
@@ -17,38 +21,39 @@ const initialState = [
     { id: 12, name: "mol12", scores: [{ id: 1, name: "score1", value: 14 }, { id: 2, name: "score2", value: 20 }, { id: 3, name: "score3", value: 3 }] }*/
 ];
 
-export const [useMolecules, { setMolecules}, moleculesStore] = useRedux(
-    "molecules",
+export const [useMolecules, { setMolecules }, moleculesStore] = useRedux(
+    'molecules',
     initialState,
     {
-        setMolecules: (molecules, newMolecules) => newMolecules
-    }
+        setMolecules: (molecules, newMolecules: Molecule[]) => newMolecules,
+    },
 );
 
-const unsubscribe = settingsStore.subscribe(({ proteinPath, moleculesPath, xprop, yprop, color, size }) => {
-    const proxyurl = "https://cors-anywhere.herokuapp.com/";
-    fetch(proxyurl + moleculesPath, { mode: 'cors' })
-        .then(
-            resp => {
-                resp.text().then(sdf => {
-                    const readMolecules = [];
-                    const parser = new SDFileParser(sdf);
-                    const fieldNames = parser.getFieldNames(1);
-                    while (parser.next()) {
-                        const molecule = parser.getMolecule();
-                        const molName = molecule.getName();
-                        const currentMolFile = molecule.toMolfile();
-                        const fields = [];
-                        fieldNames.forEach(fieldName => {
-                            let fieldValue = parser.getField(fieldName);
-                            if (!isNaN(fieldValue)) {
-                                fields.push({name: fieldName, value: parseFloat(fieldValue)});
-                            };
-                        });
-                        readMolecules.push({name: molName, molFile: currentMolFile, scores: fields});
-                    };
+const unsubscribe = settingsStore.subscribe(
+    ({ proteinPath, moleculesPath, xprop, yprop, color, size }) => {
+        const proxyurl = 'https://cors-anywhere.herokuapp.com/';
+        fetch(proxyurl + moleculesPath, { mode: 'cors' }).then((resp) => {
+            resp.text().then((sdf) => {
+                const readMolecules: Molecule[] = [];
+                // Types for openchemlib are missing strict null checks
+                const parser = new SDFileParser(sdf, null as any);
+                const fieldNames = parser.getFieldNames(1);
+                while (parser.next()) {
+                    const molecule = parser.getMolecule();
+                    const molName = molecule.getName();
+                    const currentMolFile = molecule.toMolfile();
+                    const fields: Score[] = [];
+                    fieldNames.forEach((fieldName) => {
+                        let fieldValue = parser.getField(fieldName);
+                        if (!isNaN(fieldValue as any)) {
+                            fields.push({ name: fieldName, value: parseFloat(fieldValue) });
+                        }
+                    });
+                    readMolecules.push({ name: molName, molFile: currentMolFile, scores: fields });
+                }
 
-                    setMolecules(readMolecules);
-                });
+                setMolecules(readMolecules);
             });
-});
+        });
+    },
+);
