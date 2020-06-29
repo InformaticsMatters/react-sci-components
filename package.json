@@ -8,6 +8,10 @@
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
+    "@types/plotly.js": "^1.50.13",
+    "@types/react": "^16.9.41",
+    "@types/react-dom": "^16.9.8",
+    "@types/react-plotly.js": "^2.2.4",
     "hooks-for-redux": "^1.2.2",
     "http": "0.0.1-security",
     "material-components-web": "^6.0.0",
@@ -20,7 +24,8 @@
     "react-scripts": "3.4.1",
     "redux-devtools-extension": "^2.13.8",
     "remotedev-server": "^0.3.1",
-    "reselect": "^4.0.0"
+    "reselect": "^4.0.0",
+    "typescript": "3.8.3"
   },
   "scripts": {
     "start": "react-scripts --max_old_space_size=4096 start",
