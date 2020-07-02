@@ -1,8 +1,9 @@
-import React from 'react';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import { usePlotSelection } from 'components/scatterplot/plot-selection';
-import MolCard from './MolCard';
+import React from 'react';
+
+import { usePlotSelection } from '../scatterplot/plotSelection';
 import CalculationsTable from './CalculationsTable';
+import MolCard from './MolCard';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

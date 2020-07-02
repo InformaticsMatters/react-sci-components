@@ -4,7 +4,7 @@ import Plot from 'react-plotly.js';
 
 import { useMolecules } from '../../modules/molecules/molecules';
 import { useSettings } from '../../modules/settings/settings';
-import { selectPoints } from './plot-selection';
+import { selectPoints } from './plotSelection';
 
 type Selection = { x: Datum[]; y: Datum[]; n: number[] };
 
