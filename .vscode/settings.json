@@ -1,5 +1,24 @@
 {
   "prettier.semi": true,
+  "prettier.arrowParens": "always",
+  "prettier.bracketSpacing": true,
+  "prettier.printWidth": 100,
+  "prettier.singleQuote": true,
+  "prettier.tabWidth": 2,
+  "prettier.trailingComma": "all",
   "typescript.tsdk": "node_modules/typescript/lib",
-  "prettier.tabWidth": 4
+  "typescriptHero.imports.multiLineWrapThreshold": 100,
+  "typescriptHero.imports.organizeOnSave": true,
+  "prettier.packageManager": "yarn",
+  "cSpell.words": [
+    "Relayout",
+    "dragmode",
+    "moleculespath",
+    "mols",
+    "scatterplot",
+    "xaxis",
+    "xprop",
+    "yaxis",
+    "yprop"
+  ],
 }

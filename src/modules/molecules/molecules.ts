@@ -1,6 +1,7 @@
 import { useRedux } from 'hooks-for-redux';
-import { settingsStore } from '../settings/settings';
 import { SDFileParser } from 'openchemlib/minimal';
+
+import { settingsStore } from '../settings/settings';
 
 export type Score = { name: string; value: number };
 
@@ -27,42 +28,40 @@ export const [useMolecules, { setMolecules }, moleculesStore] = useRedux(
   'molecules',
   initialState,
   {
-    setMolecules: (molecules, newMolecules: MoleculesState) => newMolecules,
+    setMolecules: (_, newMolecules: MoleculesState) => newMolecules,
   },
 );
 
-const unsubscribe = settingsStore.subscribe(
-  ({ proteinPath, moleculesPath, xprop, yprop, color, size }) => {
-    const proxyurl = 'https://cors-anywhere.herokuapp.com/';
-    fetch(proxyurl + moleculesPath, { mode: 'cors' }).then((resp) => {
-      resp.text().then((sdf) => {
-        const readMolecules: Molecule[] = [];
-        // Types for openchemlib are missing strict null checks so need 'null as any' here
-        // TODO: can we specify the field we use with the second arg?
-        const parser = new SDFileParser(sdf, null as any);
-        const fieldNames = parser.getFieldNames(1);
-        while (parser.next()) {
-          const molecule = parser.getMolecule();
-          const molName = molecule.getName();
-          const currentMolFile = molecule.toMolfile();
-          const smiles = molecule.toIsomericSmiles();
-          const fields: Score[] = [];
-          fieldNames.forEach((fieldName) => {
-            let fieldValue = parser.getField(fieldName);
-            if (!isNaN(fieldValue as any)) {
-              fields.push({ name: fieldName, value: parseFloat(fieldValue) });
-            }
-          });
-          readMolecules.push({
-            name: molName,
-            smiles,
-            molFile: currentMolFile,
-            scores: fields,
-          });
-        }
+settingsStore.subscribe(({ proteinPath, moleculesPath, xprop, yprop, color, size }) => {
+  const proxyurl = 'https://cors-anywhere.herokuapp.com/';
+  fetch(proxyurl + moleculesPath, { mode: 'cors' }).then((resp) => {
+    resp.text().then((sdf) => {
+      const readMolecules: Molecule[] = [];
+      // Types for openchemlib are missing strict null checks so need 'null as any' here
+      // TODO: can we specify the field we use with the second arg?
+      const parser = new SDFileParser(sdf, null as any);
+      const fieldNames = parser.getFieldNames(1);
+      while (parser.next()) {
+        const molecule = parser.getMolecule();
+        const molName = molecule.getName();
+        const currentMolFile = molecule.toMolfile();
+        const smiles = molecule.toIsomericSmiles();
+        const fields: Score[] = [];
+        fieldNames.forEach((fieldName) => {
+          let fieldValue = parser.getField(fieldName);
+          if (!isNaN(fieldValue as any)) {
+            fields.push({ name: fieldName, value: parseFloat(fieldValue) });
+          }
+        });
+        readMolecules.push({
+          name: molName,
+          smiles,
+          molFile: currentMolFile,
+          scores: fields,
+        });
+      }
 
-        setMolecules(readMolecules);
-      });
+      setMolecules(readMolecules);
     });
-  },
-);
+  });
+});
