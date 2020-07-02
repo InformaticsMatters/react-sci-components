@@ -1,7 +1,7 @@
-import { useRedux } from "hooks-for-redux";
+import { useRedux } from 'hooks-for-redux';
 
 export const [
-    useSettings, 
+    useSettings,
     {setProteinPath, setMoleculesPath, setXProp, setYProp, setColor, setSize},
      settingsStore
     ] = useRedux(

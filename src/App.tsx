@@ -1,8 +1,10 @@
-import React from 'react';
-import {ScatterPlot} from  './components/scatterplot/scatterplot';
-import {Settings} from './components/settings/settings';
 import './App.css';
+
 import CardView from 'components/cardView/CardView';
+import React from 'react';
+
+import { ScatterPlot } from './components/scatterplot/scatterplot';
+import { Settings } from './components/settings/settings';
 
 function App() {
   return (
