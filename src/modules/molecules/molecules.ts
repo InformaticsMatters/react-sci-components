@@ -6,8 +6,10 @@ export type Score = { name: string; value: number };
 
 export type Molecule = { name: string; smiles: string; scores: Score[]; molFile: string };
 
-const initialState: Molecule[] = [
-    /*{ id: 1, name: "mol1", scores: [{ id: 1, name: "score1", value: 1 }, { id: 2, name: "score2", value: 2 }, { id: 3, name: "score3", value: 3 }] },
+export type MoleculesState = Molecule[];
+
+const initialState: MoleculesState = [
+  /*{ id: 1, name: "mol1", scores: [{ id: 1, name: "score1", value: 1 }, { id: 2, name: "score2", value: 2 }, { id: 3, name: "score3", value: 3 }] },
     { id: 2, name: "mol2", scores: [{ id: 1, name: "score1", value: 11 }, { id: 2, name: "score2", value: 21 }, { id: 3, name: "score3", value: 31 }] },
     { id: 3, name: "mol3", scores: [{ id: 1, name: "score1", value: 12 }, { id: 2, name: "score2", value: 22 }, { id: 3, name: "score3", value: 32 }] },
     { id: 4, name: "mol4", scores: [{ id: 1, name: "score1", value: 4 }, { id: 2, name: "score2", value: 5 }, { id: 3, name: "score3", value: 6 }] },
@@ -22,44 +24,45 @@ const initialState: Molecule[] = [
 ];
 
 export const [useMolecules, { setMolecules }, moleculesStore] = useRedux(
-    'molecules',
-    initialState,
-    {
-        setMolecules: (molecules, newMolecules: Molecule[]) => newMolecules,
-    },
+  'molecules',
+  initialState,
+  {
+    setMolecules: (molecules, newMolecules: MoleculesState) => newMolecules,
+  },
 );
 
 const unsubscribe = settingsStore.subscribe(
-    ({ proteinPath, moleculesPath, xprop, yprop, color, size }) => {
-        const proxyurl = 'https://cors-anywhere.herokuapp.com/';
-        fetch(proxyurl + moleculesPath, { mode: 'cors' }).then((resp) => {
-            resp.text().then((sdf) => {
-                const readMolecules: Molecule[] = [];
-                // Types for openchemlib are missing strict null checks
-                const parser = new SDFileParser(sdf, null as any);
-                const fieldNames = parser.getFieldNames(1);
-                while (parser.next()) {
-                    const molecule = parser.getMolecule();
-                    const molName = molecule.getName();
-                    const currentMolFile = molecule.toMolfile();
-                    const smiles = molecule.toIsomericSmiles();
-                    const fields: Score[] = [];
-                    fieldNames.forEach((fieldName) => {
-                        let fieldValue = parser.getField(fieldName);
-                        if (!isNaN(fieldValue as any)) {
-                            fields.push({ name: fieldName, value: parseFloat(fieldValue) });
-                        }
-                    });
-                    readMolecules.push({
-                        name: molName,
-                        smiles,
-                        molFile: currentMolFile,
-                        scores: fields,
-                    });
-                }
+  ({ proteinPath, moleculesPath, xprop, yprop, color, size }) => {
+    const proxyurl = 'https://cors-anywhere.herokuapp.com/';
+    fetch(proxyurl + moleculesPath, { mode: 'cors' }).then((resp) => {
+      resp.text().then((sdf) => {
+        const readMolecules: Molecule[] = [];
+        // Types for openchemlib are missing strict null checks so need 'null as any' here
+        // TODO: can we specify the field we use with the second arg?
+        const parser = new SDFileParser(sdf, null as any);
+        const fieldNames = parser.getFieldNames(1);
+        while (parser.next()) {
+          const molecule = parser.getMolecule();
+          const molName = molecule.getName();
+          const currentMolFile = molecule.toMolfile();
+          const smiles = molecule.toIsomericSmiles();
+          const fields: Score[] = [];
+          fieldNames.forEach((fieldName) => {
+            let fieldValue = parser.getField(fieldName);
+            if (!isNaN(fieldValue as any)) {
+              fields.push({ name: fieldName, value: parseFloat(fieldValue) });
+            }
+          });
+          readMolecules.push({
+            name: molName,
+            smiles,
+            molFile: currentMolFile,
+            scores: fields,
+          });
+        }
 
-                setMolecules(readMolecules);
-            });
-        });
-    },
+        setMolecules(readMolecules);
+      });
+    });
+  },
 );
