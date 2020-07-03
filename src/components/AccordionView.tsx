@@ -43,6 +43,11 @@ const AccordionView = ({ children, labels }: IProps) => {
     <>
       {React.Children.map(children, (child, index) => (
         <>
+          <VerticalButton onClick={createHandleChange(index)} fullWidth>
+            <Typography noWrap variant="body2">
+              {labels[index]}
+            </Typography>
+          </VerticalButton>
           <div
             style={{
               flexGrow: index === 0 ? 0 : open[index] ? 1 : 0,
@@ -52,11 +57,6 @@ const AccordionView = ({ children, labels }: IProps) => {
           >
             {child}
           </div>
-          <VerticalButton onClick={createHandleChange(index)} fullWidth>
-            <Typography noWrap variant="body2">
-              {labels[index]}
-            </Typography>
-          </VerticalButton>
         </>
       ))}
     </>
@@ -79,7 +79,7 @@ const VerticalButton = withStyles((theme) => ({
     borderRadius: 0,
   },
   label: {
-    transform: 'rotate(90deg)',
+    transform: 'rotate(-90deg)',
     width: '80vh',
   },
 }))(Button);

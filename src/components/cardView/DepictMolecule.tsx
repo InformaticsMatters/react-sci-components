@@ -24,7 +24,7 @@ interface Props {
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     image: {
-      maxWidth: (props: Props) => (props.width ? props.width : '100%'),
+      width: (props: Props) => (props.width ? props.width : '100%'),
       maxHeight: (props: Props) => (props.height ? props.height : '100%'),
     },
   }),

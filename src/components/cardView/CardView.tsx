@@ -9,7 +9,7 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       display: 'grid',
-      gridTemplateColumns: 'repeat(auto-fill, minmax(11rem, 1fr))',
+      gridTemplateColumns: 'repeat(auto-fill, minmax(10rem, 1fr))',
       gridAutoRows: 'max-content',
       gridGap: '1rem',
       overflow: 'auto',
@@ -30,7 +30,7 @@ const CardView = () => {
       {selectedMolecules.map(({ smiles, scores }) => {
         return (
           <MolCard smiles={smiles}>
-            <CalculationsTable properties={scores} />
+            <CalculationsTable properties={scores} fontSize={'0.6rem'} />
           </MolCard>
         );
       })}

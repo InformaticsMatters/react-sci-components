@@ -1,12 +1,13 @@
 import { Table, TableBody, TableCell, TableRow } from '@material-ui/core';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import React from 'react';
 import { Score } from 'modules/molecules/molecules';
+import React from 'react';
 
-interface Props {
+interface IProps {
   properties: Score[];
   calcs?: { [key: string]: string };
   blacklist?: string[];
+  fontSize?: number | string;
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -15,14 +16,15 @@ const useStyles = makeStyles((theme: Theme) =>
       maxWidth: '1rem',
     },
     cell: {
-      fontSize: '.7rem',
+      fontSize: ({ fontSize }: IProps) => fontSize,
       padding: theme.spacing(1),
     },
   }),
 );
 
-const CalculationsTable = ({ calcs, blacklist = [], properties }: Readonly<Props>) => {
-  const classes = useStyles();
+const CalculationsTable = (props: Readonly<IProps>) => {
+  const { calcs, blacklist = [], properties } = props;
+  const classes = useStyles(props);
 
   return (
     <Table size="small">

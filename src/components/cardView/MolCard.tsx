@@ -1,8 +1,9 @@
 import { CardActions, CardContent } from '@material-ui/core';
 import Card, { CardProps } from '@material-ui/core/Card';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import DepictMolecule from './DepictMolecule';
 import React, { Children, useState } from 'react';
+
+import DepictMolecule from './DepictMolecule';
 
 interface Props extends CardProps {
   smiles: string;

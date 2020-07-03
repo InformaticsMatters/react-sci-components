@@ -15,6 +15,9 @@ const useStyles = makeStyles((theme: Theme) =>
       width: '100%',
       display: 'flex',
     },
+    first: {
+      padding: theme.spacing(2),
+    },
   }),
 );
 
@@ -22,9 +25,9 @@ const App = () => {
   const classes = useStyles();
 
   return (
-    <Container maxWidth="lg" className={classes.main}>
+    <Container maxWidth="xl" className={classes.main}>
       <AccordionView labels={['Settings / Scatter Plot', 'Card View', 'NGL Viewer']}>
-        <div>
+        <div className={classes.first}>
           <Settings />
           <ScatterPlot />
         </div>
