@@ -29,8 +29,6 @@ const AccordionView = ({ children, labels }: IProps) => {
 
   const [open, setIsOpen] = useState([true, true, true]);
 
-  console.log(open);
-
   const createHandleChange = (index: number) => () => {
     const newOpen = [...open];
     newOpen.splice(index, 1, !open[index]);

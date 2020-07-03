@@ -2,10 +2,11 @@ import './App.css';
 
 import { Container } from '@material-ui/core';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import AccordionView from 'components/AccordionView';
 import React from 'react';
 
+import AccordionView from './components/AccordionView';
 import CardView from './components/cardView/CardView';
+import NGLViewer from './components/nglViewer/NGLViewer';
 import ScatterPlot from './components/scatterplot/Scatterplot';
 import Settings from './components/settings/Settings';
 
@@ -32,7 +33,7 @@ const App = () => {
           <ScatterPlot />
         </div>
         <CardView />
-        <div>NGL VIEW</div>
+        <NGLViewer />
       </AccordionView>
     </Container>
   );

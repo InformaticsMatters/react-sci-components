@@ -5,7 +5,13 @@ import { settingsStore } from '../settings/settings';
 
 export type Score = { name: string; value: number };
 
-export type Molecule = { name: string; smiles: string; scores: Score[]; molFile: string };
+export interface Molecule {
+  id: number;
+  name: string;
+  smiles: string;
+  scores: Score[];
+  molFile: string;
+}
 
 export type MoleculesState = Molecule[];
 
@@ -41,11 +47,12 @@ settingsStore.subscribe(({ proteinPath, moleculesPath, xprop, yprop, color, size
       // TODO: can we specify the field we use with the second arg?
       const parser = new SDFileParser(sdf, null as any);
       const fieldNames = parser.getFieldNames(1);
+      let counter = 0;
       while (parser.next()) {
-        const molecule = parser.getMolecule();
-        const molName = molecule.getName();
-        const currentMolFile = molecule.toMolfile();
-        const smiles = molecule.toIsomericSmiles();
+        const sdfMolecule = parser.getMolecule();
+        const molName = sdfMolecule.getName();
+        const currentMolFile = sdfMolecule.toMolfile();
+        const smiles = sdfMolecule.toIsomericSmiles();
         const fields: Score[] = [];
         fieldNames.forEach((fieldName) => {
           let fieldValue = parser.getField(fieldName);
@@ -54,11 +61,13 @@ settingsStore.subscribe(({ proteinPath, moleculesPath, xprop, yprop, color, size
           }
         });
         readMolecules.push({
+          id: counter,
           name: molName,
           smiles,
           molFile: currentMolFile,
           scores: fields,
         });
+        counter++;
       }
 
       setMolecules(readMolecules);

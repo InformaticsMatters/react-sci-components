@@ -11,6 +11,7 @@
   "typescriptHero.imports.organizeOnSave": true,
   "prettier.packageManager": "yarn",
   "cSpell.words": [
+    "Popover",
     "Relayout",
     "dragmode",
     "moleculespath",

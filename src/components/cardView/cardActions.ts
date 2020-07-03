@@ -1,3 +1,7 @@
+import { useRedux } from 'hooks-for-redux';
+
+import { moleculesStore } from '../../modules/molecules/molecules';
+
 /*
  * Redux store to manage the card state.
  *
@@ -6,46 +10,61 @@
  * - coloured for use in the NGL viewer
  * - can be toggled for view in the NGL viewer
  */
-
-import { useRedux } from 'hooks-for-redux';
-import { moleculesStore } from '../../modules/molecules/molecules';
-
 // Types
 
-export interface Card {
-  name: string; // "primary key"
-  isPinned: boolean;
-  colour: string; // HEX colour value
-  isInNGL: boolean;
+export type Colour = { id: number; colour: string };
+
+export interface CardActionsState {
+  isPinnedIds: number[];
+  isInNGLViewerIds: number[];
+  colours: Colour[];
 }
 
-export type CardActionsState = Card[];
+type SetColourPayload = { id: number; colour: string };
 
-const initialState: CardActionsState = [];
+const initialState: CardActionsState = {
+  isPinnedIds: [],
+  isInNGLViewerIds: [],
+  colours: [],
+};
 
 // Utils
 
-// Create copy of cards array with the correct card updates with the passed value
-// Use generic to allow value to take the required type
-const updateCard = <TValue>(cards: Card[], name: string, field: keyof Card, value: TValue) =>
-  cards.map((card) => {
-    if (card.name === name) {
-      return { ...card, [field]: value };
-    }
-    return card;
-  });
+const toggleIdInArray = (array: number[], id: number) => {
+  if (array.includes(id)) {
+    return (array = array.filter((id_) => id_ !== id));
+  } else {
+    return (array = [...array, id]);
+  }
+};
+
+export const getColour = (id: number, colours: Colour[]) => {
+  return colours.find((colour) => colour.id === id)?.colour;
+};
 
 export const [
   useCardActions,
-  { setCards, setIsPinned, setColour, setIsInNGL },
+  { resetCardActions, toggleIsPinned, setColour, toggleIsInNGLViewer },
   cardActionsStore,
 ] = useRedux('cardActions', initialState, {
-  setCards: (_, newCards) => newCards,
-  setIsPinned: (cards, { name, isPinned }) => updateCard(cards, name, 'isPinned', isPinned),
-  setColour: (cards, { name, colour }) => updateCard(cards, name, 'colour', colour),
-  setIsInNGL: (cards, { name, isInNGL }) => updateCard(cards, name, 'isInNGL', isInNGL),
+  resetCardActions: () => initialState,
+  toggleIsPinned: ({ isPinnedIds, ...rest }, id: number) => {
+    return { ...rest, isPinnedIds: toggleIdInArray(isPinnedIds, id) };
+  },
+  setColour: ({ colours, ...rest }, { id, colour }: SetColourPayload) => {
+    const c = colours.find((colourObj) => colourObj.id === id);
+    if (c === undefined) {
+      return { ...rest, colours: [...colours, { id, colour }] };
+    } else {
+      return {
+        ...rest,
+        colours: [...colours.filter(({ id: id_ }) => id_ !== id), { id, colour }],
+      };
+    }
+  },
+  toggleIsInNGLViewer: ({ isInNGLViewerIds, ...rest }, id: number) => {
+    return { ...rest, isInNGLViewerIds: toggleIdInArray(isInNGLViewerIds, id) };
+  },
 });
 
-moleculesStore.subscribe((molecules) => {
-  setCards([]);
-});
+moleculesStore.subscribe(() => resetCardActions());
