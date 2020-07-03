@@ -66,9 +66,9 @@ const ScatterPlot = () => {
         },
       ]}
       layout={{
-        width: 1000,
-        height: 1000,
-        title: 'Scatter plot component',
+        width: 500,
+        height: 500,
+        margin: { t: 10, r: 30, b: 25, l: 10 },
         dragmode: 'select',
       }}
       onSelected={(e) => handleSelection(e.points)}

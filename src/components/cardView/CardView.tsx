@@ -10,9 +10,11 @@ const useStyles = makeStyles((theme: Theme) =>
     root: {
       display: 'grid',
       gridTemplateColumns: 'repeat(auto-fill, minmax(11rem, 1fr))',
+      gridAutoRows: 'max-content',
       gridGap: '1rem',
       overflow: 'auto',
       padding: '1rem',
+      height: '95vh',
     },
   }),
 );
