@@ -34,8 +34,8 @@ const ScatterPlot = () => {
       n: points.map((p) => p.pointNumber),
     };
     setSelectedPoints(selectedData);
-    let mols = convertPointsToMolecules(points);
-    selectPoints(mols);
+    let molIds = convertPointsToMolecules(points);
+    selectPoints(molIds);
     points.map((p) => console.log(`selected point x=${p.x} and y=${p.y}`));
   };
 
@@ -45,7 +45,7 @@ const ScatterPlot = () => {
         let xPropVal = molecule.scores.filter((score) => score.name === settings.xprop)[0].value;
         let yPropVal = molecule.scores.filter((score) => score.name === settings.yprop)[0].value;
         return xPropVal === point.x && yPropVal === point.y;
-      })[0];
+      })[0].id;
     });
   };
 

@@ -1,19 +1,17 @@
 import { useRedux } from 'hooks-for-redux';
-import { moleculesStore, Molecule } from '../../modules/molecules/molecules';
 
-const initialState: Molecule[] = [];
+import { moleculesStore } from '../../modules/molecules/molecules';
+
+const initialState: number[] = []; // ids of selected molecules
 
 export const [usePlotSelection, { selectPoints }, plotSelectionStore] = useRedux(
-    'plotSelection',
-    initialState,
-    {
-        //selectMolecules: (moleculesSelection, newSelection) => moleculesSelection = newSelection
-        selectPoints: (moleculesSelection, newSelection: Molecule[]) => {
-            return newSelection;
-        },
-    },
+  'plotSelection',
+  initialState,
+  {
+    selectPoints: (_, newSelection: number[]) => newSelection,
+  },
 );
 
 moleculesStore.subscribe((molecules) => {
-    selectPoints([]);
+  selectPoints([]);
 });

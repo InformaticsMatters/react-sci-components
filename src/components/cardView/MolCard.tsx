@@ -17,6 +17,7 @@ interface Props extends CardProps {
   actionsProps?: {
     className: string;
   };
+  onClick?: () => void;
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -24,6 +25,7 @@ const useStyles = makeStyles((theme: Theme) =>
     paper: {
       position: 'relative',
       backgroundColor: ({ bgColor }: Props) => bgColor,
+      cursor: ({ onClick }: Props) => onClick && 'pointer',
     },
   }),
 );
@@ -40,6 +42,7 @@ const MolCard = (props: Props) => {
     bgColor,
     actions = () => undefined,
     actionsProps,
+    onClick,
     ...cardProps
   } = props;
 
@@ -53,6 +56,7 @@ const MolCard = (props: Props) => {
       className={classes.paper}
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
+      onClick={onClick}
     >
       <CardContent>
         <DepictMolecule

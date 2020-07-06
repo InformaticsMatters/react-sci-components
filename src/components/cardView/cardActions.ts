@@ -15,7 +15,6 @@ import { moleculesStore } from '../../modules/molecules/molecules';
 export type Colour = { id: number; colour: string };
 
 export interface CardActionsState {
-  isPinnedIds: number[];
   isInNGLViewerIds: number[];
   colours: Colour[];
 }
@@ -23,7 +22,6 @@ export interface CardActionsState {
 type SetColourPayload = { id: number; colour: string };
 
 const initialState: CardActionsState = {
-  isPinnedIds: [],
   isInNGLViewerIds: [],
   colours: [],
 };
@@ -44,13 +42,10 @@ export const getColour = (id: number, colours: Colour[]) => {
 
 export const [
   useCardActions,
-  { resetCardActions, toggleIsPinned, setColour, toggleIsInNGLViewer },
+  { resetCardActions, setColour, toggleIsInNGLViewer },
   cardActionsStore,
 ] = useRedux('cardActions', initialState, {
   resetCardActions: () => initialState,
-  toggleIsPinned: ({ isPinnedIds, ...rest }, id: number) => {
-    return { ...rest, isPinnedIds: toggleIdInArray(isPinnedIds, id) };
-  },
   setColour: ({ colours, ...rest }, { id, colour }: SetColourPayload) => {
     const c = colours.find((colourObj) => colourObj.id === id);
     if (c === undefined) {
