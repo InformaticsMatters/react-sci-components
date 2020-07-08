@@ -14,29 +14,35 @@ export interface Molecule {
 }
 
 export interface MoleculesState {
+  isMoleculesLoading: boolean;
   molecules: Molecule[];
   scoresNames: string[];
 }
 
 const initialState: MoleculesState = {
+  isMoleculesLoading: false,
   molecules: [],
   scoresNames: [],
 };
 
-export const [useMolecules, { setMolecules, setScoresNames }, moleculesStore] = useRedux(
-  'molecules',
-  initialState,
-  {
-    setMolecules: ({ scoresNames }, molecules: Molecule[]) => ({ scoresNames, molecules }),
-    setScoresNames: ({ molecules }, scoresNames: string[]) => ({ molecules, scoresNames }),
-  },
-);
+export const [
+  useMolecules,
+  { setIsMoleculesLoading, setMolecules, setScoresNames },
+  moleculesStore,
+] = useRedux('molecules', initialState, {
+  setIsMoleculesLoading: (state, isMoleculesLoading: boolean) => ({
+    ...state,
+    isMoleculesLoading,
+  }),
+  setMolecules: (state, molecules: Molecule[]) => ({ ...state, molecules }),
+  setScoresNames: (state, scoresNames: string[]) => ({ ...state, scoresNames }),
+});
 
 const parseSDF = (sdf: string) => {
   const readMolecules: Molecule[] = [];
   // Types for openchemlib are missing strict null checks so need 'null as any' here
   // TODO: can we specify the field we use with the second arg?
-  const parser = new SDFileParser(sdf, null as any);
+  const parser = new SDFileParser(sdf, null!);
   const fieldNames = parser.getFieldNames(1);
   let counter = 0;
   while (parser.next()) {
@@ -66,6 +72,7 @@ const parseSDF = (sdf: string) => {
 };
 
 settingsStore.subscribe(({ proteinPath, moleculesPath }) => {
+  setIsMoleculesLoading(true);
   const proxyurl = 'https://cors-anywhere.herokuapp.com/';
   fetch(proxyurl + moleculesPath, { mode: 'cors' })
     .then((resp) => {
@@ -78,15 +85,21 @@ settingsStore.subscribe(({ proteinPath, moleculesPath }) => {
         });
     })
     .catch((reason) => {
-      // If CORS fails then use mock for now
+      console.log('Request failed due to');
       console.log(reason);
 
-      fetch('./moleculesmock.sdf')
-        .then((resp) => resp.text())
-        .then(parseSDF)
-        .then(([readMolecules, fieldNames]) => {
-          setMolecules(readMolecules);
-          setScoresNames(fieldNames);
-        });
-    });
+      if (process.env.NODE_ENV === 'development') {
+        // If CORS fails then use mock for now
+        console.log('Using mock data instead');
+
+        fetch('./moleculesmock.sdf')
+          .then((resp) => resp.text())
+          .then(parseSDF)
+          .then(([readMolecules, fieldNames]) => {
+            setMolecules(readMolecules);
+            setScoresNames(fieldNames);
+          });
+      }
+    })
+    .finally(() => setIsMoleculesLoading(false));
 });

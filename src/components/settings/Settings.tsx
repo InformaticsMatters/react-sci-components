@@ -1,12 +1,25 @@
-import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
+import { Button, CircularProgress, TextField } from '@material-ui/core';
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import React from 'react';
 
+import { useMolecules } from '../../modules/molecules/molecules';
 import { setMoleculesPath } from '../../modules/settings/settings';
 
-const Settings = () => {
-  //   const settings = useSettings();
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    searchIndicator: {
+      position: 'absolute',
+    },
+  }),
+);
 
+const Settings = () => {
+  const { isMoleculesLoading } = useMolecules();
+
+  console.log(isMoleculesLoading);
+
+
+  const classes = useStyles();
   return (
     <form
       onSubmit={(e) => {
@@ -25,6 +38,7 @@ const Settings = () => {
       <TextField label="Molecules" name="moleculespath" />
       <Button type="submit" variant="contained" color="primary">
         Load
+        {isMoleculesLoading && <CircularProgress size={24} className={classes.searchIndicator} />}
       </Button>
     </form>
   );
