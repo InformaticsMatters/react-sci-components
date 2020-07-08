@@ -62,8 +62,7 @@ const parseSDF = (sdf: string) => {
     counter++;
   }
 
-  setScoresNames(fieldNames);
-  return readMolecules;
+  return [readMolecules, fieldNames] as const;
 };
 
 settingsStore.subscribe(({ proteinPath, moleculesPath }) => {
@@ -73,7 +72,8 @@ settingsStore.subscribe(({ proteinPath, moleculesPath }) => {
       resp
         .text()
         .then(parseSDF)
-        .then((readMolecules) => {
+        .then(([readMolecules, fieldNames]) => {
+          setScoresNames(fieldNames);
           setMolecules(readMolecules);
         });
     })
