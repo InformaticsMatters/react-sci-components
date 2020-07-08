@@ -73,8 +73,8 @@ settingsStore.subscribe(({ proteinPath, moleculesPath }) => {
         .text()
         .then(parseSDF)
         .then(([readMolecules, fieldNames]) => {
-          setScoresNames(fieldNames);
           setMolecules(readMolecules);
+          setScoresNames(fieldNames);
         });
     })
     .catch((reason) => {
@@ -84,8 +84,9 @@ settingsStore.subscribe(({ proteinPath, moleculesPath }) => {
       fetch('./moleculesmock.sdf')
         .then((resp) => resp.text())
         .then(parseSDF)
-        .then((readMolecules) => {
+        .then(([readMolecules, fieldNames]) => {
           setMolecules(readMolecules);
+          setScoresNames(fieldNames);
         });
     });
 });
