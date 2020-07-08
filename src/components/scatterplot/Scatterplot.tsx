@@ -1,57 +1,62 @@
-import { Datum, PlotDatum } from 'plotly.js';
-import React, { useState } from 'react';
+import { Datum, PlotDatum, PlotSelectionEvent } from 'plotly.js';
+import React from 'react';
 import Plot from 'react-plotly.js';
 
-import { useMolecules } from '../../modules/molecules/molecules';
+import { Molecule, useMolecules } from '../../modules/molecules/molecules';
+import { isNotUndefined, isUndefined } from '../../utils';
 import { useScatterplotConfiguration } from './plotConfiguration';
 import { selectPoints } from './plotSelection';
 import ScatterplotConfiguration from './ScatterplotConfiguration';
 
-type Selection = { x: Datum[]; y: Datum[]; n: number[] };
+interface SelectionPlotDatum extends PlotDatum {
+  customdata: Datum;
+}
+
+const getPropArrayFromMolecules = (molecules: Molecule[], prop: string | null) => {
+  return molecules.map((molecule) => molecule.scores.find((m) => m.name === prop)?.value);
+};
 
 const ScatterPlot = () => {
-  const [selectedPoints, setSelectedPoints] = useState<Selection>({ x: [], y: [], n: [] });
   const { molecules, scoresNames } = useMolecules();
 
-  const { xprop, yprop, size, colour: mkColor } = useScatterplotConfiguration();
+  let { xprop, yprop, size, colour: mkColor } = useScatterplotConfiguration();
 
-  const xaxis = molecules.map(
-    (molecule) =>
-      molecule.scores.filter((score) => score.name === xprop).map((score) => score.value)[0],
-  );
-  const yaxis = molecules.map(
-    (molecule) =>
-      molecule.scores.filter((score) => score.name === yprop).map((score) => score.value)[0],
-  );
+  let xaxis = getPropArrayFromMolecules(molecules, xprop);
+  if (xaxis.every(isUndefined)) {
+    xaxis = molecules.map((mol) => mol.id);
+    xprop = 'id';
+  }
+  let yaxis = getPropArrayFromMolecules(molecules, yprop);
+  if (yaxis.every(isUndefined)) {
+    yaxis = molecules.map((mol) => mol.id);
+    yprop = 'id';
+  }
+  let colouraxis: (number | undefined)[] | number = getPropArrayFromMolecules(molecules, mkColor);
+  if (colouraxis.every(isUndefined)) {
+    colouraxis = 1;
+  }
+  let sizeaxis: (number | undefined)[] | number = getPropArrayFromMolecules(molecules, size);
+  if (sizeaxis.every(isUndefined)) {
+    sizeaxis = 10;
+  } else {
+    // Scale points to
+    const min = Math.min(...sizeaxis.filter(isNotUndefined));
+    const max = Math.max(...sizeaxis.filter(isNotUndefined));
 
-  console.log(xaxis, yaxis);
-
-  const handleSelection = (points: PlotDatum[]) => {
-    const selectedData = {
-      x: points.map((p) => p.x),
-      y: points.map((p) => p.y),
-      n: points.map((p) => p.pointNumber),
-    };
-    setSelectedPoints(selectedData);
-    let molIds = convertPointsToMolecules(points);
-    selectPoints(molIds);
-    // points.map((p) => console.log(`selected point x=${p.x} and y=${p.y}`));
-  };
-
-  const convertPointsToMolecules = (points: PlotDatum[]) => {
-    return points.map((point) => {
-      return molecules.filter((molecule) => {
-        let xPropVal = molecule.scores.filter((score) => score.name === xprop)[0].value;
-        let yPropVal = molecule.scores.filter((score) => score.name === yprop)[0].value;
-        return xPropVal === point.x && yPropVal === point.y;
-      })[0].id;
+    sizeaxis = sizeaxis.map((v) => {
+      if (v !== undefined) {
+        return (25 * (v - min)) / max;
+      }
+      return v;
     });
-  };
+  }
 
-  let color = new Array(xaxis.length).fill(mkColor);
-  selectedPoints.n.forEach((n) => {
-    color[n] = 'orange';
-  });
+  console.log(xaxis, yaxis, colouraxis, sizeaxis);
+
+  const handleSelection = ({ points }: Readonly<PlotSelectionEvent>) => {
+    // @types is missing the customdata field in the type definitions
+    selectPoints(points.map((p) => (p as SelectionPlotDatum).customdata) as number[]);
+  };
 
   return (
     <>
@@ -59,11 +64,17 @@ const ScatterPlot = () => {
       <Plot
         data={[
           {
-            x: xaxis,
-            y: yaxis,
+            x: xaxis as number[],
+            y: yaxis as number[],
+            customdata: molecules.map((m) => m.id), // Add custom data for use in selection
             type: 'scatter',
             mode: 'markers',
-            marker: { color },
+            marker: {
+              color: colouraxis as number[],
+              size: sizeaxis as number[],
+              reversescale: true,
+              colorscale: 'Bluered',
+            },
           },
         ]}
         layout={{
@@ -74,7 +85,7 @@ const ScatterPlot = () => {
           xaxis: { title: xprop ?? 'Select a property to display' },
           yaxis: { title: yprop ?? 'Select a property to display' },
         }}
-        onSelected={(e) => handleSelection(e.points)}
+        onSelected={handleSelection}
         onRelayout={(...e) => console.log(e)}
       />
     </>
