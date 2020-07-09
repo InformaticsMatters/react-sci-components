@@ -40,7 +40,7 @@ jobs:
     name: Latest Image
     script:
     # Build and push the pipelines-rdkit image and its sd-poster
-#    - docker login -u "${DOCKER_USERNAME}" -p "${DOCKER_PASSWORD}"
+    - docker login -u=${DOCKER_USERNAME} -p=${DOCKER_PASSWORD}
     - docker build -t ${NAMESPACE}/${IMAGE}:latest .
 #    - docker push ${NAMESPACE}/${IMAGE}:latest
 
