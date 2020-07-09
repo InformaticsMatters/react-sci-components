@@ -1,0 +1,72 @@
+---
+
+# -----------------
+# Control variables (Travis Settings)
+# -----------------
+#
+# PUBLISH_IMAGES        Should be 'yes' to enable publishing to Docker Hub.
+#
+# If you set PUBLISH_IMAGES you must also set the following: -
+#
+# DOCKER_USERNAME       If PUBLISH_IMAGES is 'yes'
+# DOCKER_PASSWORD       If PUBLISH_IMAGES is 'yes'
+
+os: linux
+services:
+- docker
+
+stages:
+- name: publish latest
+  if: |
+    branch = master \
+    AND env(PUBLISH_IMAGES) = yes
+- name: test latest
+  if: |
+    branch = master \
+    AND env(PUBLISH_IMAGES) = yes
+- name: publish tag
+  if: |
+    tag IS present \
+    AND env(PUBLISH_IMAGES) = yes
+- name: publish stable
+  if: |
+    tag IS present \
+    AND tag =~ ^([0-9]+\.){1,2}[0-9]+$ \
+    AND env(PUBLISH_IMAGES) = yes
+
+env:
+  global:
+  - NAMESPACE=informaticsmatters
+  - IMAGE=im-mini-apps
+
+before_script:
+- docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
+
+jobs:
+  include:
+
+  # Publish-stage jobs...
+  # Every successful master build results in a latest image
+  # and every tag results in a tagged image in Docker Hub.
+
+  - stage: publish latest
+    name: Latest Image
+    script:
+    # Build and push the pipelines-rdkit image and its sd-poster
+    - docker build -t ${NAMESPACE}/${IMAGE}:latest .
+    - docker push ${NAMESPACE}/${IMAGE}:latest
+
+  - stage: publish tag
+    name: Tagged Image
+    script:
+    # Build and push the pipelines-rdkit image and its sd-poster
+    - docker build -t ${NAMESPACE}/${IMAGE}:${TRAVIS_TAG} .
+    - docker push ${NAMESPACE}/${IMAGE}:${TRAVIS_TAG}
+
+  - stage: publish stable
+    name: Stable Image
+    script:
+    # Pull the corresponding pipelines-rdkit image tag and push it as 'stable'
+    - docker pull ${NAMESPACE}/${IMAGE}:${TRAVIS_TAG}
+    - docker tag ${NAMESPACE}/${IMAGE}:${TRAVIS_TAG} ${NAMESPACE}/${IMAGE}:stable
+    - docker push ${NAMESPACE}/${IMAGE}:stable
