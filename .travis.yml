@@ -1,46 +1,34 @@
 ---
 
-# -----------------
-# Control variables (Travis Settings)
-# -----------------
-#
-# PUBLISH_IMAGES        Should be 'yes' to enable publishing to Docker Hub.
-#
-# If you set PUBLISH_IMAGES you must also set the following: -
-#
-# DOCKER_USERNAME       If PUBLISH_IMAGES is 'yes'
-# DOCKER_PASSWORD       If PUBLISH_IMAGES is 'yes'
-
 os: linux
 services:
 - docker
-
-stages:
-- name: publish latest
-  if: |
-    branch = master \
-    AND env(PUBLISH_IMAGES) = yes
-- name: test latest
-  if: |
-    branch = master \
-    AND env(PUBLISH_IMAGES) = yes
-- name: publish tag
-  if: |
-    tag IS present \
-    AND env(PUBLISH_IMAGES) = yes
-- name: publish stable
-  if: |
-    tag IS present \
-    AND tag =~ ^([0-9]+\.){1,2}[0-9]+$ \
-    AND env(PUBLISH_IMAGES) = yes
 
 env:
   global:
   - NAMESPACE=informaticsmatters
   - IMAGE=im-mini-apps
+  # Our CI/CD DOCKER username and password
+  - secure: fsuRinijwlHy7iz+W5ttzRAnnhx/xmMCI7DUh3i65bQIj/XmIqQL9P80MOuUO+elOZzXUaqJMWFTTC9nCYDkmiq7RbKawBKAHPZqcTetYAbacvFJuQ3SPH0n1jbYunuIoTKkib1yAfBt5G/svOmsdaN/bVHA1F0fZeLfmQ51KCfD1XhpBNjxqteakKQqtmT5+T4APF0njR5H6rZ+ONXQMwOk+jp3s5tj8VAP3qdaIcB+rTLVXXj7LXtrcqCwbNL56QOX0fwLHIuW62MXIoM+tZrjvYpvaLyHwZoyK3SrjR60C21IsnLJyOo0mOFI362UTX9DV1GdcvSv8Wjm+faEPmNx1WwfFtt1tVqhOiZCR8Ub3Y0Rc4PG6esUraOoa48f+Cwv0HDIYVdeVi8i2FkGWoz6YfOwM3iZW9OVQRqv7UrWsUZiyauFb7iJiHI1PPIoN9vKfHtA3NgPDsPaa1YesLoqDIL9Hg5RpF96LvNGl98h2/Fug1suD8O4y+9NRL6NCdja6DcmhA5xWf5d/6NKfOwiHl/mxYHKhHyBnIOdkAObgdRnwfydRAxQbAFgcwewhESzKEx7E152I6i3El05aNL4pok9Ts9vg8MXYDUcL0UXEKRUAOF0P8C7ZGCl5oaBazPNccqj9V1NsJ5pLI0YQD1cQluHEQhGNf3qt9/rP4w=
+  - secure: U8jqNlW/HS++NnUTVPCeOjBtu0KfkY5vv3mlvcl6faJy1C3n8UXHReR5IidEc2iQf4xEOnbl2Jhb8sy82zXhnk5e4/Ry/LVtoltBFSxG5kF89GPQGlCovt1kg5vdu+l9gRngsHk5OxUpp1gTGXV28Zne8dZZcZUrH3hZAUIns1CKIwinD8VfdhHE0q6xY/rx0b6cLJ0M52H3+iPI0EIuwSMKmaFOlDNIISnpfUIoaw95ziw1d9zOLSIcn1wRBto90afNd9Ormt2eLRb7LLnv01pZoxIq8eaWGgUUIFZTbpW+C1ZV2z6x9zNfH0aL2+DJueu5NUCpDpS6xXEbCQn72Fpcae1uLPXD0KYHl3/kNfPl7yIDMkW0w2c1foId+jSBCJjg/40z+lpkHUBlJmpr3imXov61B9D5ZYznmkSUWhl0SGNO8pZjUpIe0ZXix8CsAf1IYdaG1AJODGVZ+zPhjA2lJTNkAvcBaBe5y0dYioAF4JdyrtNDDMP3Qjh8KUib+3cdAekIWvviE+I/QOcM5izZ66oScMSmrSR4LiIYvX1D6TOfegSJL7mS/Kzvn8DpX3acPoGcCB8RlYfOWnIXfKtU6QL9PG2qctDvROoSm45pGJeqAT8EAYrvNUTkh8RitJGtKZlwL16KR7BG5wFmGET1zvGaYPBDDwgnNI4E3Cw=
+
+stages:
+- name: publish latest
+  if: |
+    branch = master
+- name: test latest
+  if: |
+    branch = master
+- name: publish tag
+  if: |
+    tag IS present
+- name: publish stable
+  if: |
+    tag IS present \
+    AND tag =~ ^([0-9]+\.){1,2}[0-9]+$
 
 before_script:
-- docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
+- echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
 
 jobs:
   include:
