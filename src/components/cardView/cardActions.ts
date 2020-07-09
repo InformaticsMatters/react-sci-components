@@ -42,10 +42,14 @@ export const getColour = (id: number, colours: Colour[]) => {
 
 export const [
   useCardActions,
-  { resetCardActions, setColour, toggleIsInNGLViewer },
+  { resetCardActions, clearColour, setColour, toggleIsInNGLViewer },
   cardActionsStore,
 ] = useRedux('cardActions', initialState, {
   resetCardActions: () => initialState,
+  clearColour: ({ colours, ...rest }, id: number) => ({
+    ...rest,
+    colours: colours.filter((c) => c.id !== id),
+  }),
   setColour: ({ colours, ...rest }, { id, colour }: SetColourPayload) => {
     const c = colours.find((colourObj) => colourObj.id === id);
     if (c === undefined) {

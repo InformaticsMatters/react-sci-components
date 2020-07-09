@@ -1,12 +1,18 @@
 import { Grow } from '@material-ui/core';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import { ColorPalette } from 'material-ui-color';
 import React from 'react';
 
 import { Molecule, useMolecules } from '../../modules/molecules/molecules';
 import { usePlotSelection } from '../scatterplot/plotSelection';
 import CalculationsTable from './CalculationsTable';
-import { CardActionsState, setColour, toggleIsInNGLViewer, useCardActions } from './cardActions';
+import {
+  CardActionsState,
+  clearColour,
+  setColour,
+  toggleIsInNGLViewer,
+  useCardActions,
+} from './cardActions';
+import ColourPicker from './ColourPicker';
 import MolCard from './MolCard';
 
 const moleculeSorter = ({ colours }: CardActionsState) => (ma: Molecule, mb: Molecule) => {
@@ -78,16 +84,29 @@ const CardView = () => {
               smiles={smiles}
               onClick={() => toggleIsInNGLViewer(id)}
               actionsProps={{ className: classes.actionsRoot }}
-              actions={(hover) => (
-                <Grow in={hover || !!colours.filter((c) => c.id === id).length}>
-                  <div>
-                    <ColorPalette
-                      palette={palette}
-                      onSelect={(colour) => setColour({ id, colour })}
+              actions={(hover) => {
+                const colour = colours.find((c) => c.id === id);
+                if (!!colour) {
+                  return (
+                    <ColourPicker
+                      colours={{ 'Current Colour': colour.colour }}
+                      setColour={(colour) => setColour({ id, colour })}
+                      clearColour={() => clearColour(id)}
                     />
-                  </div>
-                </Grow>
-              )}
+                  );
+                } else {
+                  return (
+                    <Grow in={hover}>
+                      <div>
+                        <ColourPicker
+                          colours={palette}
+                          setColour={(colour) => setColour({ id, colour })}
+                        />
+                      </div>
+                    </Grow>
+                  );
+                }
+              }}
             >
               <CalculationsTable properties={scores} fontSize={'0.6rem'} />
             </MolCard>
