@@ -11,8 +11,8 @@ env:
   # Our CI/CD DOCKER username and password
   # These encrypted values are branch-sensitive (only available to master)
   # so these variables are not available in stages like 'before_script'.
-  - secure: cuyWYAi3fzOpAp1uDyQahsYLqS9TwdNwBTko8XtApDMM1KJBi1Sz7IawmMUmjCHoD2Uoxs4dv3qS+QXXIt04v99HcAB8YFORxpeSgbr/Bsd32mCLo7tDlE6D9eRCzuRvyFuaF5fOgE9/Ku+J5vpPmZFLQJa2+WlYWlkojm/u4yl78mpoqv5/F3NuThoC53Is213S5+ntJHoDFxzZI6bBuyFT+n7EbMoOPvJca4myh7IkR0O6JmqmRBjF3OHSukPF6CFWQXjkulUgV2+CWrhVC9Tj30R8pxaw42SzISQ1hCHg0JRGiiDs6ApFldu2zEcXULUeJnLP1s2pOXo33IAErBZX6SVgfquB4YBoETD9HS5vKfGMye0nBZVdlJRYytHWfFc+xuE+G6k0zfoE8h+ICaGDccAUvIGZUYbSIp+qGWxlMvklV2gUo52GaBYGhXf9iYAzZJINsvh8bHPpNBL4b0UUGDAg+ta9qRcp1Vy5vcG7SN5arQkRcx7rRK7+KupuCd4XBOYIHRZhfHmPK5JV3+pbWg+tNsNHqb7vCs4ra7J9/UNVUOdMiCLkhien2KSlWJiJ0Xfwetng9hDnRB1/vplI5eiBqH82Ae9m3/unkjbZ+vZGggF6TFu6Qv8pa/L55RZQeki1F0obeuDP+lPfE9rhPe8Tguo5fgacJpIMxZ0=
-  - secure: qaFxjnM5Al/ac2utt1CVKsh3tUfhLPl1Bp/aDMPdPliJudvgx00hjuKa9vs8DiaBRQJx2jSga2oQDd2FkpoXTwvL5C9QjgWsfNpHQ57pbhLthyIiRtzq9KCQ63WL1FL+Vas+wUZLa1LCyZF5m5xOSjnI35/SBTLYoxNMfiaf4iYL4MS4jBls2I8MEzr+H4aqHgqNJ5ogvew8e+Phs35Rl/IGnnz/WTwURL74PSFDgy/iMINKKL5Ev2n2J7ffiT1RO/GroKF1997MHSVaqu6fRALQoocosZj/3NSjirnCMf0VykTbMbTXGbBM0Cub+N5zkVpj76wUuQzirer2ya2ckUS1xQSXIs9k+ifvh22bgEuM5PCexSvGYRn9oCFFBz/ZNVnSNvM/xysgccpfeTns3lVaZrcBgiFTKIuez6NWGD+3cirU1jXUxEYQdRBA8pJ5An8AHqOUH87/Dm8bNnn7cGFHRLfFr6CXtaDmR3tZwySUMcVdV/gDctLcgcJC6F+ssXepMlq2VoGvkp1O6ABAvBLsoaTM0/QRS3od4YTz0AWaTFs+vk8+0wzoA9G7gkDSGZs+lJAiR/BQwzxJVf+W9897CGTpc2F8Mq1f8PSYW+2+KN9Vy44nAOpM+oq7PivPpDGeY8KY5wbtyddkEPJwtOoQAwBCHk0IZGru9nyJUnk=
+  - secure: "C+o29DGKh/PhNGHsqftulL49/p03SYo37et8CgJSaAcOoVvPWXYq30tG6emjksI2m+FL0EXwoSbAWIiksEnNGwv/8cj+T2tGjmH9eiQzIk4R2obnyRyT8BrTCbUa85sCc0MGQZoUTzvBR+3HPCwB3yqD/o0AaDXIBwx7y+UuQbL1rIQuG+Vko1lh+Z3jRQjLxsKpu7pOzfF4LwOtLKkLYtwl1qNU34ea7BQh76FbfJgCzHvOb+px7ZLjxCwLKj7N2eSgjKyFwTLHVgHgglYqOb1mDIr4glrG4JJ9hKeo9Qn3eO33dgFn8AZyIc2X/YJVQQV/2e65XBvyyERKKyiEQ3M1BVFsLgiyBJFp5UF0A0M0/L65lH338irQfyuOiw0vrXtxeIE6ykGrxaUrNZ0tApHrXEIT0fieqjm/qWvi2LqO9cWYGeeG6+MJPfg/pIBau4Zzdb4rTwz2gDQirbhaKLlSVyn94+rB5doUccJyF4fpt7S3NTHqWMkcqoEw0Ntoj8boa6uKFlWlxxrXB7u7QyD41ovtSOIb1Nh14NDM6lv/9TmYLoBMU5/S90H8V6KSjQaQbzirVoAy5UluTbFWzVdAV42NjVp+dnzhSFMIOHmhZbKgyjzhw7ERZmDqarI1m2ZffsKZPZps8+4WELg5cRtNXgJqqQrDdiJxUYiLosY="
+  - secure: "j09KJeYNTRrtjvT3QsguA6iLfqiVmfdmVHro8mk58TXL7fe+Tl0VQInXS/ktifAjhwd2+U5P7hFeBm+xmJO71AEajlBYs7UwG03kyfWUnqlD6k8mFvWxuSg02a/cx4/MfUvcY/RVIlW0TtlgHCLtDuyCO+aJaNBLJFMGn7Ck02mQmV0d9no76qbZFJ4svIGYHaxuIhaslfBnE5vqm8YziYH3Q1GuIs6fK7Rfx3Z3j6x7j2r/0wIHVLEnRNRVEnoFCSvHmV3gUONbPSrMmho+3B5BxyYadIAvAB29w96kP2/YRxT1NiUL0WkK8mfqCOvx05Sg+0pk2P8smXKnbxuDuNduc0SVrRD7R6ynul21tE1oIdfA+Qkw5jZfN4LyP2IMhu+m7gtuFzfbk4j13Yl1pIgrLvmR8FTIiLawy2D/ualGlYwieEByVFDXyEdjcumCGmaz+ni4wrveMNWF01XwV5CJ8bXGkO986hA5X4JXAoE2ErHu+Xy8joolvjl4gCYxJGZDxH4evdna5E8yS5oE2lDpFjlrKX7t6gIBPtI3sUCuE7SZRZZJO+xX9J2VeINHt7GXooOO+L01vJV3Pr7Xm8x57WXVHS1crB/xUIcUY9oS7wG0W+cZjI0AZqax+uit7m3NqB0fvyVxS8x9ycU7BeZK7wjQqMun8MbNdbNgJDQ="
 
 stages:
 - name: publish latest
@@ -41,15 +41,15 @@ jobs:
     script:
     # Build and push the pipelines-rdkit image and its sd-poster
     - docker login -u=${DOCKER_USERNAME} -p=${DOCKER_PASSWORD}
-    - docker build -t ${NAMESPACE}/${IMAGE}:latest .
+#    - docker build -t ${NAMESPACE}/${IMAGE}:latest .
 #    - docker push ${NAMESPACE}/${IMAGE}:latest
 
-  - stage: publish tag
-    name: Tagged Image
-    script:
-    # Build and push the pipelines-rdkit image and its sd-poster
+#  - stage: publish tag
+#    name: Tagged Image
+#    script:
+#    # Build and push the pipelines-rdkit image and its sd-poster
 #    - docker login -u "${DOCKER_USERNAME}" -p "${DOCKER_PASSWORD}"
-    - docker build -t ${NAMESPACE}/${IMAGE}:${TRAVIS_TAG} .
+#    - docker build -t ${NAMESPACE}/${IMAGE}:${TRAVIS_TAG} .
 #    - docker push ${NAMESPACE}/${IMAGE}:${TRAVIS_TAG}
 
 #  - stage: publish stable
