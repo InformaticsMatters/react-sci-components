@@ -37,7 +37,7 @@ stages:
 env:
   global:
   - NAMESPACE=informaticsmatters
-  - IMAGE=react-sci-components
+  - IMAGE=im-mini-apps
 
 before_script:
 - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
