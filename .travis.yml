@@ -86,7 +86,7 @@ jobs:
     name: Tagged Image
     script:
     # Build and push the pipelines-rdkit image and its sd-poster
-    - docker build -t ${NAMESPACE}/${IMAGE}:${TRAVIS_TAG} .
+    - docker build --build-arg tag=${TRAVIS_TAG} -t ${NAMESPACE}/${IMAGE}:${TRAVIS_TAG} .
     - docker push ${NAMESPACE}/${IMAGE}:${TRAVIS_TAG}
 
   - stage: publish stable

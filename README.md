@@ -32,9 +32,31 @@ This repo will contain:
 
 The application is distributed as a container image, normally built
 automatically by Travis. To understand how to build the app refer
-to the project's `.travis.yml`.
+to the project's `.travis.yml`. Essentially it's a docker build command
+like: -
+
+    $ docker build -t informaticsmatters/im-mini-apps:latest .
+
+## Deployment
+
+Container images are automatically deployed from Travis using Job Templates
+on our AWX server. The Job Templates are launched using scripts from our
+[Trigger AWX] project.
+
+## Application versioning
+
+The application version (defined in `package.json`) is automatically set from
+within the Dockerfile. If the `tag` build argument is not defined the version
+of the application is `0.0.0`.
+
+The CI/CD process in Travis sets the tag to the prevailing git tag.
+So, to build and push version `1.0.0` tag the repository with `1.0.0`. 
+
+>   As a consequence you **MUST NOT** adjust the version line in the
+    package.json file.
 
 ---
 
 [fragalysis]: https://fragalysis.diamond.ac.uk/
 [fragnet-search]: https://fragnet.informaticsmatters.com/
+[trigger awx]: https://github.com/InformaticsMatters/trigger-awx
