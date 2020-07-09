@@ -9,8 +9,8 @@ env:
   - NAMESPACE=informaticsmatters
   - IMAGE=im-mini-apps
   # Our CI/CD DOCKER username and password
-  - secure: fsuRinijwlHy7iz+W5ttzRAnnhx/xmMCI7DUh3i65bQIj/XmIqQL9P80MOuUO+elOZzXUaqJMWFTTC9nCYDkmiq7RbKawBKAHPZqcTetYAbacvFJuQ3SPH0n1jbYunuIoTKkib1yAfBt5G/svOmsdaN/bVHA1F0fZeLfmQ51KCfD1XhpBNjxqteakKQqtmT5+T4APF0njR5H6rZ+ONXQMwOk+jp3s5tj8VAP3qdaIcB+rTLVXXj7LXtrcqCwbNL56QOX0fwLHIuW62MXIoM+tZrjvYpvaLyHwZoyK3SrjR60C21IsnLJyOo0mOFI362UTX9DV1GdcvSv8Wjm+faEPmNx1WwfFtt1tVqhOiZCR8Ub3Y0Rc4PG6esUraOoa48f+Cwv0HDIYVdeVi8i2FkGWoz6YfOwM3iZW9OVQRqv7UrWsUZiyauFb7iJiHI1PPIoN9vKfHtA3NgPDsPaa1YesLoqDIL9Hg5RpF96LvNGl98h2/Fug1suD8O4y+9NRL6NCdja6DcmhA5xWf5d/6NKfOwiHl/mxYHKhHyBnIOdkAObgdRnwfydRAxQbAFgcwewhESzKEx7E152I6i3El05aNL4pok9Ts9vg8MXYDUcL0UXEKRUAOF0P8C7ZGCl5oaBazPNccqj9V1NsJ5pLI0YQD1cQluHEQhGNf3qt9/rP4w=
-  - secure: U8jqNlW/HS++NnUTVPCeOjBtu0KfkY5vv3mlvcl6faJy1C3n8UXHReR5IidEc2iQf4xEOnbl2Jhb8sy82zXhnk5e4/Ry/LVtoltBFSxG5kF89GPQGlCovt1kg5vdu+l9gRngsHk5OxUpp1gTGXV28Zne8dZZcZUrH3hZAUIns1CKIwinD8VfdhHE0q6xY/rx0b6cLJ0M52H3+iPI0EIuwSMKmaFOlDNIISnpfUIoaw95ziw1d9zOLSIcn1wRBto90afNd9Ormt2eLRb7LLnv01pZoxIq8eaWGgUUIFZTbpW+C1ZV2z6x9zNfH0aL2+DJueu5NUCpDpS6xXEbCQn72Fpcae1uLPXD0KYHl3/kNfPl7yIDMkW0w2c1foId+jSBCJjg/40z+lpkHUBlJmpr3imXov61B9D5ZYznmkSUWhl0SGNO8pZjUpIe0ZXix8CsAf1IYdaG1AJODGVZ+zPhjA2lJTNkAvcBaBe5y0dYioAF4JdyrtNDDMP3Qjh8KUib+3cdAekIWvviE+I/QOcM5izZ66oScMSmrSR4LiIYvX1D6TOfegSJL7mS/Kzvn8DpX3acPoGcCB8RlYfOWnIXfKtU6QL9PG2qctDvROoSm45pGJeqAT8EAYrvNUTkh8RitJGtKZlwL16KR7BG5wFmGET1zvGaYPBDDwgnNI4E3Cw=
+  - secure: cuyWYAi3fzOpAp1uDyQahsYLqS9TwdNwBTko8XtApDMM1KJBi1Sz7IawmMUmjCHoD2Uoxs4dv3qS+QXXIt04v99HcAB8YFORxpeSgbr/Bsd32mCLo7tDlE6D9eRCzuRvyFuaF5fOgE9/Ku+J5vpPmZFLQJa2+WlYWlkojm/u4yl78mpoqv5/F3NuThoC53Is213S5+ntJHoDFxzZI6bBuyFT+n7EbMoOPvJca4myh7IkR0O6JmqmRBjF3OHSukPF6CFWQXjkulUgV2+CWrhVC9Tj30R8pxaw42SzISQ1hCHg0JRGiiDs6ApFldu2zEcXULUeJnLP1s2pOXo33IAErBZX6SVgfquB4YBoETD9HS5vKfGMye0nBZVdlJRYytHWfFc+xuE+G6k0zfoE8h+ICaGDccAUvIGZUYbSIp+qGWxlMvklV2gUo52GaBYGhXf9iYAzZJINsvh8bHPpNBL4b0UUGDAg+ta9qRcp1Vy5vcG7SN5arQkRcx7rRK7+KupuCd4XBOYIHRZhfHmPK5JV3+pbWg+tNsNHqb7vCs4ra7J9/UNVUOdMiCLkhien2KSlWJiJ0Xfwetng9hDnRB1/vplI5eiBqH82Ae9m3/unkjbZ+vZGggF6TFu6Qv8pa/L55RZQeki1F0obeuDP+lPfE9rhPe8Tguo5fgacJpIMxZ0=
+  - secure: qaFxjnM5Al/ac2utt1CVKsh3tUfhLPl1Bp/aDMPdPliJudvgx00hjuKa9vs8DiaBRQJx2jSga2oQDd2FkpoXTwvL5C9QjgWsfNpHQ57pbhLthyIiRtzq9KCQ63WL1FL+Vas+wUZLa1LCyZF5m5xOSjnI35/SBTLYoxNMfiaf4iYL4MS4jBls2I8MEzr+H4aqHgqNJ5ogvew8e+Phs35Rl/IGnnz/WTwURL74PSFDgy/iMINKKL5Ev2n2J7ffiT1RO/GroKF1997MHSVaqu6fRALQoocosZj/3NSjirnCMf0VykTbMbTXGbBM0Cub+N5zkVpj76wUuQzirer2ya2ckUS1xQSXIs9k+ifvh22bgEuM5PCexSvGYRn9oCFFBz/ZNVnSNvM/xysgccpfeTns3lVaZrcBgiFTKIuez6NWGD+3cirU1jXUxEYQdRBA8pJ5An8AHqOUH87/Dm8bNnn7cGFHRLfFr6CXtaDmR3tZwySUMcVdV/gDctLcgcJC6F+ssXepMlq2VoGvkp1O6ABAvBLsoaTM0/QRS3od4YTz0AWaTFs+vk8+0wzoA9G7gkDSGZs+lJAiR/BQwzxJVf+W9897CGTpc2F8Mq1f8PSYW+2+KN9Vy44nAOpM+oq7PivPpDGeY8KY5wbtyddkEPJwtOoQAwBCHk0IZGru9nyJUnk=
 
 stages:
 - name: publish latest
@@ -27,9 +27,6 @@ stages:
     tag IS present \
     AND tag =~ ^([0-9]+\.){1,2}[0-9]+$
 
-before_script:
-- echo "$DOCKER_PASSWORD" | docker login -u="$DOCKER_USERNAME" --password-stdin
-
 jobs:
   include:
 
@@ -41,6 +38,7 @@ jobs:
     name: Latest Image
     script:
     # Build and push the pipelines-rdkit image and its sd-poster
+    - echo "$DOCKER_PASSWORD" | docker login -u="$DOCKER_USERNAME" --password-stdin
     - docker build -t ${NAMESPACE}/${IMAGE}:latest .
     - docker push ${NAMESPACE}/${IMAGE}:latest
 
@@ -48,6 +46,7 @@ jobs:
     name: Tagged Image
     script:
     # Build and push the pipelines-rdkit image and its sd-poster
+    - echo "$DOCKER_PASSWORD" | docker login -u="$DOCKER_USERNAME" --password-stdin
     - docker build -t ${NAMESPACE}/${IMAGE}:${TRAVIS_TAG} .
     - docker push ${NAMESPACE}/${IMAGE}:${TRAVIS_TAG}
 
@@ -55,6 +54,7 @@ jobs:
     name: Stable Image
     script:
     # Pull the corresponding pipelines-rdkit image tag and push it as 'stable'
+    - echo "$DOCKER_PASSWORD" | docker login -u="$DOCKER_USERNAME" --password-stdin
     - docker pull ${NAMESPACE}/${IMAGE}:${TRAVIS_TAG}
     - docker tag ${NAMESPACE}/${IMAGE}:${TRAVIS_TAG} ${NAMESPACE}/${IMAGE}:stable
     - docker push ${NAMESPACE}/${IMAGE}:stable
