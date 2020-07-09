@@ -1,7 +1,7 @@
 # React components for scientific applications
 
 [![Build Status](https://travis-ci.com/InformaticsMatters/react-sci-components.svg?branch=master)](https://travis-ci.com/InformaticsMatters/react-sci-components)
-![GitHub release (latest SemVer including pre-releases)](https://img.shields.io/github/v/release/informaticsmatters/react-sci-components?include_prereleases)
+![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/InformaticsMatters/react-sci-components)
 
 This repository is a collection of re-usable React components that can be used
 to rapidly create what we term **mini-apps**, simple applications that are
