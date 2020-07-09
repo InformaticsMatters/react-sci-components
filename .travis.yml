@@ -40,23 +40,23 @@ jobs:
     name: Latest Image
     script:
     # Build and push the pipelines-rdkit image and its sd-poster
-    - docker login -u "${DOCKER_USERNAME}" -p "${DOCKER_PASSWORD}"
+#    - docker login -u "${DOCKER_USERNAME}" -p "${DOCKER_PASSWORD}"
     - docker build -t ${NAMESPACE}/${IMAGE}:latest .
-    - docker push ${NAMESPACE}/${IMAGE}:latest
+#    - docker push ${NAMESPACE}/${IMAGE}:latest
 
   - stage: publish tag
     name: Tagged Image
     script:
     # Build and push the pipelines-rdkit image and its sd-poster
-    - docker login -u "${DOCKER_USERNAME}" -p "${DOCKER_PASSWORD}"
+#    - docker login -u "${DOCKER_USERNAME}" -p "${DOCKER_PASSWORD}"
     - docker build -t ${NAMESPACE}/${IMAGE}:${TRAVIS_TAG} .
-    - docker push ${NAMESPACE}/${IMAGE}:${TRAVIS_TAG}
+#    - docker push ${NAMESPACE}/${IMAGE}:${TRAVIS_TAG}
 
-  - stage: publish stable
-    name: Stable Image
-    script:
-    # Pull the corresponding pipelines-rdkit image tag and push it as 'stable'
-    - docker login -u "${DOCKER_USERNAME}" -p "${DOCKER_PASSWORD}"
-    - docker pull ${NAMESPACE}/${IMAGE}:${TRAVIS_TAG}
-    - docker tag ${NAMESPACE}/${IMAGE}:${TRAVIS_TAG} ${NAMESPACE}/${IMAGE}:stable
-    - docker push ${NAMESPACE}/${IMAGE}:stable
+#  - stage: publish stable
+#    name: Stable Image
+#    script:
+#    # Pull the corresponding pipelines-rdkit image tag and push it as 'stable'
+#    - docker login -u "${DOCKER_USERNAME}" -p "${DOCKER_PASSWORD}"
+#    - docker pull ${NAMESPACE}/${IMAGE}:${TRAVIS_TAG}
+#    - docker tag ${NAMESPACE}/${IMAGE}:${TRAVIS_TAG} ${NAMESPACE}/${IMAGE}:stable
+#    - docker push ${NAMESPACE}/${IMAGE}:stable
