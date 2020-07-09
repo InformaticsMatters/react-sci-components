@@ -1,0 +1,62 @@
+---
+
+os: linux
+services:
+- docker
+
+env:
+  global:
+  - NAMESPACE=informaticsmatters
+  - IMAGE=im-mini-apps
+  # Our CI/CD DOCKER username and password
+  # These encrypted values are branch-sensitive (only available to master)
+  # so these variables are not available in stages like 'before_script'.
+  - secure: cuyWYAi3fzOpAp1uDyQahsYLqS9TwdNwBTko8XtApDMM1KJBi1Sz7IawmMUmjCHoD2Uoxs4dv3qS+QXXIt04v99HcAB8YFORxpeSgbr/Bsd32mCLo7tDlE6D9eRCzuRvyFuaF5fOgE9/Ku+J5vpPmZFLQJa2+WlYWlkojm/u4yl78mpoqv5/F3NuThoC53Is213S5+ntJHoDFxzZI6bBuyFT+n7EbMoOPvJca4myh7IkR0O6JmqmRBjF3OHSukPF6CFWQXjkulUgV2+CWrhVC9Tj30R8pxaw42SzISQ1hCHg0JRGiiDs6ApFldu2zEcXULUeJnLP1s2pOXo33IAErBZX6SVgfquB4YBoETD9HS5vKfGMye0nBZVdlJRYytHWfFc+xuE+G6k0zfoE8h+ICaGDccAUvIGZUYbSIp+qGWxlMvklV2gUo52GaBYGhXf9iYAzZJINsvh8bHPpNBL4b0UUGDAg+ta9qRcp1Vy5vcG7SN5arQkRcx7rRK7+KupuCd4XBOYIHRZhfHmPK5JV3+pbWg+tNsNHqb7vCs4ra7J9/UNVUOdMiCLkhien2KSlWJiJ0Xfwetng9hDnRB1/vplI5eiBqH82Ae9m3/unkjbZ+vZGggF6TFu6Qv8pa/L55RZQeki1F0obeuDP+lPfE9rhPe8Tguo5fgacJpIMxZ0=
+  - secure: qaFxjnM5Al/ac2utt1CVKsh3tUfhLPl1Bp/aDMPdPliJudvgx00hjuKa9vs8DiaBRQJx2jSga2oQDd2FkpoXTwvL5C9QjgWsfNpHQ57pbhLthyIiRtzq9KCQ63WL1FL+Vas+wUZLa1LCyZF5m5xOSjnI35/SBTLYoxNMfiaf4iYL4MS4jBls2I8MEzr+H4aqHgqNJ5ogvew8e+Phs35Rl/IGnnz/WTwURL74PSFDgy/iMINKKL5Ev2n2J7ffiT1RO/GroKF1997MHSVaqu6fRALQoocosZj/3NSjirnCMf0VykTbMbTXGbBM0Cub+N5zkVpj76wUuQzirer2ya2ckUS1xQSXIs9k+ifvh22bgEuM5PCexSvGYRn9oCFFBz/ZNVnSNvM/xysgccpfeTns3lVaZrcBgiFTKIuez6NWGD+3cirU1jXUxEYQdRBA8pJ5An8AHqOUH87/Dm8bNnn7cGFHRLfFr6CXtaDmR3tZwySUMcVdV/gDctLcgcJC6F+ssXepMlq2VoGvkp1O6ABAvBLsoaTM0/QRS3od4YTz0AWaTFs+vk8+0wzoA9G7gkDSGZs+lJAiR/BQwzxJVf+W9897CGTpc2F8Mq1f8PSYW+2+KN9Vy44nAOpM+oq7PivPpDGeY8KY5wbtyddkEPJwtOoQAwBCHk0IZGru9nyJUnk=
+
+stages:
+- name: publish latest
+  if: |
+    branch = master
+- name: test latest
+  if: |
+    branch = master
+- name: publish tag
+  if: |
+    tag IS present
+- name: publish stable
+  if: |
+    tag IS present \
+    AND tag =~ ^([0-9]+\.){1,2}[0-9]+$
+
+jobs:
+  include:
+
+  # Publish-stage jobs...
+  # Every successful master build results in a latest image
+  # and every tag results in a tagged image in Docker Hub.
+
+  - stage: publish latest
+    name: Latest Image
+    script:
+    # Build and push the pipelines-rdkit image and its sd-poster
+    - docker login -u "${DOCKER_USERNAME}" -p "${DOCKER_PASSWORD}"
+    - docker build -t ${NAMESPACE}/${IMAGE}:latest .
+    - docker push ${NAMESPACE}/${IMAGE}:latest
+
+  - stage: publish tag
+    name: Tagged Image
+    script:
+    # Build and push the pipelines-rdkit image and its sd-poster
+    - docker login -u "${DOCKER_USERNAME}" -p "${DOCKER_PASSWORD}"
+    - docker build -t ${NAMESPACE}/${IMAGE}:${TRAVIS_TAG} .
+    - docker push ${NAMESPACE}/${IMAGE}:${TRAVIS_TAG}
+
+  - stage: publish stable
+    name: Stable Image
+    script:
+    # Pull the corresponding pipelines-rdkit image tag and push it as 'stable'
+    - docker login -u "${DOCKER_USERNAME}" -p "${DOCKER_PASSWORD}"
+    - docker pull ${NAMESPACE}/${IMAGE}:${TRAVIS_TAG}
+    - docker tag ${NAMESPACE}/${IMAGE}:${TRAVIS_TAG} ${NAMESPACE}/${IMAGE}:stable
+    - docker push ${NAMESPACE}/${IMAGE}:stable
