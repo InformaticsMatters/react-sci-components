@@ -14,10 +14,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 const Settings = () => {
-  const { isMoleculesLoading } = useMolecules();
-
-  console.log(isMoleculesLoading);
-
+  const { isMoleculesLoading, moleculesLoadingProgress } = useMolecules();
 
   const classes = useStyles();
   return (
@@ -35,7 +32,12 @@ const Settings = () => {
         setMoleculesPath(target.moleculespath.value);
       }}
     >
-      <TextField label="Molecules" name="moleculespath" />
+      <TextField
+        autoFocus
+        helperText={moleculesLoadingProgress}
+        label="Molecules"
+        name="moleculespath"
+      />
       <Button type="submit" variant="contained" color="primary">
         Load
         {isMoleculesLoading && <CircularProgress size={24} className={classes.searchIndicator} />}

@@ -51,8 +51,6 @@ const ScatterPlot = () => {
     });
   }
 
-  console.log(xaxis, yaxis, colouraxis, sizeaxis);
-
   const handleSelection = ({ points }: Readonly<PlotSelectionEvent>) => {
     // @types is missing the customdata field in the type definitions
     selectPoints(points.map((p) => (p as SelectionPlotDatum).customdata) as number[]);
@@ -86,7 +84,6 @@ const ScatterPlot = () => {
           yaxis: { title: yprop ?? 'Select a property to display' },
         }}
         onSelected={handleSelection}
-        onRelayout={(...e) => console.log(e)}
       />
     </>
   );
