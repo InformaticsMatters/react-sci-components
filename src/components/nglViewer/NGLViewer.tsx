@@ -7,6 +7,7 @@ interface IProps {}
 
 const NGLViewer = () => {
   const classes = useStyles();
+  const { colours } = useCardActions();
 
   const { isInNGLViewerIds } = useCardActions();
 
@@ -15,7 +16,9 @@ const NGLViewer = () => {
       <h4>IDs of molecules in NGL viewer</h4>
       <ul>
         {isInNGLViewerIds.map((id) => (
-          <li>{id}</li>
+          <li>
+            {id}: {colours.find((c) => c.id === id)?.colour ?? 'none'}
+          </li>
         ))}
       </ul>
     </>

@@ -9,9 +9,11 @@ FROM node:14.5.0 AS builder
 COPY . .
 
 # Replace the application version (in package.json)
-# with any defined CI_COMMIT_ATG, otherwise leave it at 0.0.0.
+# with any defined 'tag', otherwise leave it at 0.0.0.
 # Then just display the head of the file for clarification.
-RUN sed -i s/'"0.0.0"'/'"'${CI_COMMIT_TAG:-0.0.0}'"'/ package.json && \
+ARG tag=0.0.0
+ENV TAG=$tag
+RUN sed -i s/'"0.0.0"'/'"'${TAG:-0.0.0}'"'/ package.json && \
     head package.json
 
 RUN npm install --only=production --unsafe-perm

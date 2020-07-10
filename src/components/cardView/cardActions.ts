@@ -1,3 +1,4 @@
+import { plotSelectionStore } from 'components/scatterplot/plotSelection';
 import { useRedux } from 'hooks-for-redux';
 
 import { moleculesStore } from '../../modules/molecules/molecules';
@@ -42,10 +43,21 @@ export const getColour = (id: number, colours: Colour[]) => {
 
 export const [
   useCardActions,
-  { resetCardActions, setColour, toggleIsInNGLViewer },
+  { resetCardActions, resetIdsInNGLViewer, clearColour, setColour, toggleIsInNGLViewer },
   cardActionsStore,
 ] = useRedux('cardActions', initialState, {
   resetCardActions: () => initialState,
+  resetIdsInNGLViewer: ({ isInNGLViewerIds, colours }) => {
+    const ids = colours.map((c) => c.id);
+    return {
+      colours: colours,
+      isInNGLViewerIds: isInNGLViewerIds.filter((id) => ids.includes(id)),
+    };
+  },
+  clearColour: ({ colours, ...rest }, id: number) => ({
+    ...rest,
+    colours: colours.filter((c) => c.id !== id),
+  }),
   setColour: ({ colours, ...rest }, { id, colour }: SetColourPayload) => {
     const c = colours.find((colourObj) => colourObj.id === id);
     if (c === undefined) {
@@ -63,3 +75,4 @@ export const [
 });
 
 moleculesStore.subscribe(() => resetCardActions());
+plotSelectionStore.subscribe(() => resetIdsInNGLViewer());
