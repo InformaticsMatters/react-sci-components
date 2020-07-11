@@ -30,6 +30,7 @@
     "reversescale",
     "scatterplot",
     "sizeaxis",
+    "ungzip",
     "xaxis",
     "xprop",
     "yaxis",
