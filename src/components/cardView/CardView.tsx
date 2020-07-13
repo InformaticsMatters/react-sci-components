@@ -14,6 +14,8 @@ import {
 } from './cardActions';
 import ColourPicker from './ColourPicker';
 import MolCard from './MolCard';
+import CardViewConfig from './CardViewConfig';
+import { useCardViewConfiguration } from './cardViewConfiguration';
 
 const moleculeSorter = ({ colours }: CardActionsState) => (ma: Molecule, mb: Molecule) => {
   const ca = colours.find((c) => c.id === ma.id);
@@ -66,6 +68,7 @@ const CardView = () => {
   const selectedMoleculesIds = usePlotSelection();
   const actions = useCardActions();
   const { isInNGLViewerIds, colours } = actions;
+  const { fields, enabledFields, fieldForDepiction } = useCardViewConfiguration();
 
   const displayMolecules = molecules.filter(({ id }) => {
     const isSelected = selectedMoleculesIds.includes(id);
@@ -75,43 +78,63 @@ const CardView = () => {
 
   return (
     <>
-      {displayMolecules.length && <h3>Click to enable a card in the NGL viewer.</h3>}
+      {displayMolecules.length && (
+        <>
+          <h3>Click to enable a card in the NGL viewer.</h3>
+          <CardViewConfig
+            fields={fields}
+            enabledFields={enabledFields}
+            depictionField={fieldForDepiction}
+          />
+        </>
+      )}
       <div className={classes.root}>
-        {displayMolecules.sort(moleculeSorter(actions)).map(({ id, smiles, scores }, index) => (
-          <span key={index}>
-            <MolCard
-              elevation={isInNGLViewerIds.includes(id) ? 10 : undefined}
-              smiles={smiles}
-              onClick={() => toggleIsInNGLViewer(id)}
-              actionsProps={{ className: classes.actionsRoot }}
-              actions={(hover) => {
-                const colour = colours.find((c) => c.id === id);
-                if (!!colour) {
-                  return (
-                    <ColourPicker
-                      colours={{ 'Current Colour': colour.colour }}
-                      setColour={(colour) => setColour({ id, colour })}
-                      clearColour={() => clearColour(id)}
-                    />
-                  );
-                } else {
-                  return (
-                    <Grow in={hover}>
-                      <div>
+        {displayMolecules
+          .sort(moleculeSorter(actions))
+          .map(({ id, fields: fieldValues }, index) => {
+            fieldValues.sort((a, b) => fields.indexOf(a.name) - fields.indexOf(b.name));
+            return (
+              <span key={index}>
+                <MolCard
+                  elevation={isInNGLViewerIds.includes(id) ? 10 : undefined}
+                  smiles={
+                    (fieldValues.find((field) => field.name === fieldForDepiction)
+                      ?.value as string) ?? ''
+                  }
+                  onClick={() => toggleIsInNGLViewer(id)}
+                  actionsProps={{ className: classes.actionsRoot }}
+                  actions={(hover) => {
+                    const colour = colours.find((c) => c.id === id);
+                    if (!!colour) {
+                      return (
                         <ColourPicker
-                          colours={palette}
+                          colours={{ 'Current Colour': colour.colour }}
                           setColour={(colour) => setColour({ id, colour })}
+                          clearColour={() => clearColour(id)}
                         />
-                      </div>
-                    </Grow>
-                  );
-                }
-              }}
-            >
-              <CalculationsTable properties={scores} fontSize={'0.6rem'} />
-            </MolCard>
-          </span>
-        ))}
+                      );
+                    } else {
+                      return (
+                        <Grow in={hover}>
+                          <div>
+                            <ColourPicker
+                              colours={palette}
+                              setColour={(colour) => setColour({ id, colour })}
+                            />
+                          </div>
+                        </Grow>
+                      );
+                    }
+                  }}
+                >
+                  <CalculationsTable
+                    properties={fieldValues.filter(({ name }) => enabledFields.includes(name))}
+                    fontSize={'0.6rem'}
+                  />
+                </MolCard>
+              </span>
+            );
+          })}
       </div>
     </>
   );

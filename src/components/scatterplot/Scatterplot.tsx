@@ -3,64 +3,67 @@ import React from 'react';
 import Plot from 'react-plotly.js';
 
 import { Molecule, useMolecules } from '../../modules/molecules/molecules';
-import { isNotUndefined, isUndefined } from '../../utils';
+import { isUndefined, isNumber } from '../../utils';
 import { useScatterplotConfiguration } from './plotConfiguration';
 import { selectPoints } from './plotSelection';
-import ScatterplotConfiguration from './ScatterplotConfiguration';
+import ScatterplotConfiguration from './ScatterplotConfig';
 
+// TODO: update @types/plotly.js to fix this
 interface SelectionPlotDatum extends PlotDatum {
   customdata: Datum;
 }
 
 const getPropArrayFromMolecules = (molecules: Molecule[], prop: string | null) => {
-  return molecules.map((molecule) => molecule.scores.find((m) => m.name === prop)?.value);
+  return molecules.map((molecule) => molecule.fields.find((m) => m.name === prop)?.value);
 };
 
+type AxisSeries = ReturnType<typeof getPropArrayFromMolecules> | number;
+
 const ScatterPlot = () => {
-  const { molecules, scoresNames } = useMolecules();
+  const { molecules, fieldNames } = useMolecules();
 
   let { xprop, yprop, size, colour: mkColor } = useScatterplotConfiguration();
 
-  let xaxis = getPropArrayFromMolecules(molecules, xprop);
+  let xaxis: AxisSeries = getPropArrayFromMolecules(molecules, xprop);
   if (xaxis.every(isUndefined)) {
     xaxis = molecules.map((mol) => mol.id);
     xprop = 'id';
   }
-  let yaxis = getPropArrayFromMolecules(molecules, yprop);
+  let yaxis: AxisSeries = getPropArrayFromMolecules(molecules, yprop);
   if (yaxis.every(isUndefined)) {
     yaxis = molecules.map((mol) => mol.id);
     yprop = 'id';
   }
-  let colouraxis: (number | undefined)[] | number = getPropArrayFromMolecules(molecules, mkColor);
-  if (colouraxis.every(isUndefined)) {
+  let colouraxis: AxisSeries = getPropArrayFromMolecules(molecules, mkColor);
+  if (colouraxis.every(isNumber)) {
+  } else {
     colouraxis = 1;
   }
-  let sizeaxis: (number | undefined)[] | number = getPropArrayFromMolecules(molecules, size);
-  if (sizeaxis.every(isUndefined)) {
-    sizeaxis = 10;
-  } else {
+  let sizeaxis: AxisSeries = getPropArrayFromMolecules(molecules, size);
+  if (sizeaxis.every(isNumber)) {
     // Scale points to
-    const min = Math.min(...sizeaxis.filter(isNotUndefined));
-    const max = Math.max(...sizeaxis.filter(isNotUndefined));
+    const min = Math.min(...sizeaxis.filter(isNumber));
+    const max = Math.max(...sizeaxis.filter(isNumber));
 
     sizeaxis = sizeaxis.map((v) => {
-      if (v !== undefined) {
+      if (v !== undefined && typeof v !== 'string') {
         return (25 * (v - min)) / max;
       }
       return v;
     });
+  } else {
+    sizeaxis = 10;
   }
-
-  console.log(xaxis, yaxis, colouraxis, sizeaxis);
 
   const handleSelection = ({ points }: Readonly<PlotSelectionEvent>) => {
     // @types is missing the customdata field in the type definitions
+    // TODO: This is fixed in latest @types/plotly.js
     selectPoints(points.map((p) => (p as SelectionPlotDatum).customdata) as number[]);
   };
 
   return (
     <>
-      <ScatterplotConfiguration properties={scoresNames} />
+      <ScatterplotConfiguration properties={fieldNames} />
       <Plot
         data={[
           {

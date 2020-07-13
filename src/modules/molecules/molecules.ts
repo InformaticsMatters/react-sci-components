@@ -3,31 +3,29 @@ import { SDFileParser } from 'openchemlib/minimal';
 
 import { settingsStore } from '../settings/settings';
 
-export type Score = { name: string; value: number };
+export type Field = { name: 'oclSmiles' | string; value: number | string };
 
 export interface Molecule {
   id: number;
-  name: string;
-  smiles: string;
-  scores: Score[];
+  fields: Field[];
   molFile: string;
 }
 
 export interface MoleculesState {
   isMoleculesLoading: boolean;
   molecules: Molecule[];
-  scoresNames: string[];
+  fieldNames: string[];
 }
 
 const initialState: MoleculesState = {
   isMoleculesLoading: false,
   molecules: [],
-  scoresNames: [],
+  fieldNames: [],
 };
 
 export const [
   useMolecules,
-  { setIsMoleculesLoading, setMolecules, setScoresNames },
+  { setIsMoleculesLoading, setMolecules, setFieldNames },
   moleculesStore,
 ] = useRedux('molecules', initialState, {
   setIsMoleculesLoading: (state, isMoleculesLoading: boolean) => ({
@@ -35,7 +33,7 @@ export const [
     isMoleculesLoading,
   }),
   setMolecules: (state, molecules: Molecule[]) => ({ ...state, molecules }),
-  setScoresNames: (state, scoresNames: string[]) => ({ ...state, scoresNames }),
+  setFieldNames: (state, fieldNames: string[]) => ({ ...state, fieldNames }),
 });
 
 const parseSDF = (sdf: string) => {
@@ -47,10 +45,9 @@ const parseSDF = (sdf: string) => {
   let counter = 0;
   while (parser.next()) {
     const sdfMolecule = parser.getMolecule();
-    const molName = sdfMolecule.getName();
     const currentMolFile = sdfMolecule.toMolfile();
     const smiles = sdfMolecule.toIsomericSmiles();
-    const fields: Score[] = [];
+    const fields: Field[] = [{ name: 'oclSmiles', value: smiles }];
 
     fieldNames.forEach((fieldName) => {
       let fieldValue = parser.getField(fieldName);
@@ -58,15 +55,15 @@ const parseSDF = (sdf: string) => {
         fields.push({ name: fieldName, value: parseFloat(fieldValue) });
       }
     });
+
     readMolecules.push({
       id: counter,
-      name: molName,
-      smiles,
       molFile: currentMolFile,
-      scores: fields,
+      fields: fields,
     });
     counter++;
   }
+  fieldNames.unshift('oclSmiles');
 
   return [readMolecules, fieldNames] as const;
 };
@@ -81,7 +78,7 @@ settingsStore.subscribe(({ proteinPath, moleculesPath }) => {
         .then(parseSDF)
         .then(([readMolecules, fieldNames]) => {
           setMolecules(readMolecules);
-          setScoresNames(fieldNames);
+          setFieldNames(fieldNames);
         });
     })
     .catch((reason) => {
@@ -97,7 +94,7 @@ settingsStore.subscribe(({ proteinPath, moleculesPath }) => {
           .then(parseSDF)
           .then(([readMolecules, fieldNames]) => {
             setMolecules(readMolecules);
-            setScoresNames(fieldNames);
+            setFieldNames(fieldNames);
           });
       }
     })
