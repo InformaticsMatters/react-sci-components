@@ -1,4 +1,5 @@
 import './index.css';
+import './store'; // Must be imported before hooks4redux implicitly creates a store
 
 import { Provider } from 'hooks-for-redux';
 import React from 'react';
