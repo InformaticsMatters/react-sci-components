@@ -15,9 +15,11 @@ import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Configuration from '../configuration/Configuration';
 import {
   moveFieldPosition,
-  toggleFieldIsEnabled,
   setDepictionField,
+  toggleFieldIsEnabled,
 } from './cardViewConfiguration';
+
+import type { DropResult } from 'react-smooth-dnd';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -33,32 +35,33 @@ interface IProps {
 }
 
 const CardViewConfiguration = ({ fields = [], enabledFields = [], depictionField }: IProps) => {
-  const classes = useStyles();
-
-  const [showDisabled, setShowDisabled] = useState(true);
-  // TODO: need to make reordering respect this
-
   const title = 'Card View';
   const depictionSelectionId = `${title}-depiction-field-selection`;
 
-  const displayFields = fields.filter((field) => enabledFields.includes(field) || showDisabled);
+  const classes = useStyles();
+
+  const [showHidden, setShowHidden] = useState(true);
+  // TODO: need to make reordering respect this
+
+  const displayFields = fields.filter((field) => enabledFields.includes(field) || showHidden);
+
+  const handleMoveFieldPosition = ({ removedIndex, addedIndex }: DropResult) => {
+    // Need to handle indexes different if fields are hidden
+    if (showHidden) {
+      moveFieldPosition({ removedIndex, addedIndex });
+    } else if (removedIndex !== null && addedIndex !== null) {
+      const removedField = displayFields[removedIndex];
+      const addedField = displayFields[addedIndex];
+
+      const fixedRemovedIndex = fields.indexOf(removedField);
+      const fixedAddedIndex = fields.indexOf(addedField);
+
+      moveFieldPosition({ removedIndex: fixedRemovedIndex, addedIndex: fixedAddedIndex });
+    }
+  };
 
   return (
     <Configuration title={title}>
-      <div className={classes.header}>
-        <Tooltip arrow title={'Toggle visibility of disabled fields'}>
-          <Checkbox checked={showDisabled} onClick={() => setShowDisabled(!showDisabled)} />
-        </Tooltip>
-        <Typography variant="h6" display="inline">
-          Enabled Fields
-        </Typography>
-      </div>
-      <DraggableList
-        fields={displayFields}
-        checked={displayFields.map((field) => enabledFields.includes(field))}
-        moveFieldPosition={moveFieldPosition}
-        toggleCheckbox={toggleFieldIsEnabled}
-      />
       <div className={classes.selects}>
         <Typography variant="h6" display="inline">
           Depiction Field
@@ -78,6 +81,20 @@ const CardViewConfiguration = ({ fields = [], enabledFields = [], depictionField
           </Select>
         </FormControl>
       </div>
+      <div className={classes.header}>
+        <Tooltip arrow title={'Toggle visibility of disabled fields'}>
+          <Checkbox checked={showHidden} onClick={() => setShowHidden(!showHidden)} />
+        </Tooltip>
+        <Typography variant="h6" display="inline">
+          Toggle Hidden Fields
+        </Typography>
+      </div>
+      <DraggableList
+        fields={displayFields}
+        checked={displayFields.map((field) => enabledFields.includes(field))}
+        moveFieldPosition={handleMoveFieldPosition}
+        toggleCheckbox={toggleFieldIsEnabled}
+      />
     </Configuration>
   );
 };

@@ -1,5 +1,5 @@
 import { Grow } from '@material-ui/core';
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
+import { createStyles, makeStyles, Theme, useTheme } from '@material-ui/core/styles';
 import React from 'react';
 
 import { Molecule, useMolecules } from '../../modules/molecules/molecules';
@@ -46,9 +46,10 @@ const useStyles = makeStyles((theme: Theme) =>
       display: 'grid',
       gridTemplateColumns: 'repeat(auto-fill, minmax(9rem, 1fr))',
       gridAutoRows: 'max-content',
-      gridGap: '1rem',
+      gridGap: theme.spacing(2),
       overflowY: 'scroll',
-      height: '85vh',
+      height: `calc(100vh - ${48 + 2 * theme.spacing(2)}px)`, // Height of elements above the grid
+      padding: theme.spacing(2),
     },
     actionsRoot: {
       position: 'absolute',
@@ -63,6 +64,7 @@ interface IProps {}
 
 const CardView = () => {
   const classes = useStyles();
+  const theme = useTheme();
 
   const { molecules } = useMolecules();
   const selectedMoleculesIds = usePlotSelection();
@@ -79,28 +81,28 @@ const CardView = () => {
   return (
     <>
       {displayMolecules.length && (
-        <>
-          <h3>Click to enable a card in the NGL viewer.</h3>
-          <CardViewConfig
-            fields={fields}
-            enabledFields={enabledFields}
-            depictionField={fieldForDepiction}
-          />
-        </>
+        <CardViewConfig
+          fields={fields}
+          enabledFields={enabledFields}
+          depictionField={fieldForDepiction}
+        />
       )}
       <div className={classes.root}>
         {displayMolecules
           .sort(moleculeSorter(actions))
           .map(({ id, fields: fieldValues }, index) => {
+            let smiles = fieldValues.find((field) => field.name === fieldForDepiction)?.value;
+            if (typeof smiles !== 'string') {
+              smiles = '';
+            }
             fieldValues.sort((a, b) => fields.indexOf(a.name) - fields.indexOf(b.name));
+            const selected = isInNGLViewerIds.includes(id);
             return (
               <span key={index}>
                 <MolCard
-                  elevation={isInNGLViewerIds.includes(id) ? 10 : undefined}
-                  smiles={
-                    (fieldValues.find((field) => field.name === fieldForDepiction)
-                      ?.value as string) ?? ''
-                  }
+                  elevation={selected ? 10 : undefined}
+                  bgColor={selected ? theme.palette.grey[100] : undefined}
+                  smiles={smiles}
                   onClick={() => toggleIsInNGLViewer(id)}
                   actionsProps={{ className: classes.actionsRoot }}
                   actions={(hover) => {

@@ -2,6 +2,7 @@ import { useRedux } from 'hooks-for-redux';
 import { SDFileParser } from 'openchemlib/minimal';
 
 import { settingsStore } from '../settings/settings';
+import { isNumeric } from 'utils';
 
 export type Field = { name: 'oclSmiles' | string; value: number | string };
 
@@ -49,11 +50,15 @@ const parseSDF = (sdf: string) => {
     const smiles = sdfMolecule.toIsomericSmiles();
     const fields: Field[] = [{ name: 'oclSmiles', value: smiles }];
 
-    fieldNames.forEach((fieldName) => {
-      let fieldValue = parser.getField(fieldName);
-      if (!isNaN(fieldValue as any)) {
-        fields.push({ name: fieldName, value: parseFloat(fieldValue) });
+    fieldNames.forEach((name) => {
+      const fieldValue = parser.getField(name);
+      let value;
+      if (isNumeric(fieldValue)) {
+        value = parseFloat(fieldValue);
+      } else {
+        value = fieldValue;
       }
+      fields.push({ name, value });
     });
 
     readMolecules.push({

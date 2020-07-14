@@ -12,17 +12,15 @@ interface IProps {
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    tableHeader: {
-      maxWidth: '1rem',
-    },
     cell: {
       fontSize: ({ fontSize }: IProps) => fontSize,
-      paddingLeft: theme.spacing(1),
-      paddingRight: theme.spacing(1),
-      textAlign: 'left',
+      paddingLeft: 0,
+      paddingRight: 0,
     },
     cellData: {
-      maxWidth: '2rem',
+      maxWidth: '3rem',
+      fontSize: ({ fontSize }: IProps) => fontSize,
+      marginLeft: theme.spacing(1),
     },
   }),
 );
@@ -40,7 +38,6 @@ const CalculationsTable = (props: Readonly<IProps>) => {
             if (typeof value === 'number') {
               value = +value.toFixed(2); // Round to 2 sig fig and remove pad.
             }
-            console.log(value);
 
             return (
               <TableRow key={index}>
@@ -48,7 +45,7 @@ const CalculationsTable = (props: Readonly<IProps>) => {
                   {calcs?.[name] ?? name}
                 </TableCell>
                 <TableCell size="small" className={classes.cell} align="right">
-                  <Typography className={classes.cellData} variant="body2" noWrap>
+                  <Typography className={classes.cellData} noWrap>
                     {value}
                   </Typography>
                 </TableCell>

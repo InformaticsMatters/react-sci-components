@@ -37,6 +37,9 @@ const AccordionView = ({ children, labels }: IProps) => {
     }
   };
 
+  const grows = [0, 1, 1];
+  const basis = [500, 400, undefined];
+
   return (
     <>
       {React.Children.map(children, (child, index) => (
@@ -48,8 +51,8 @@ const AccordionView = ({ children, labels }: IProps) => {
           </VerticalButton>
           <div
             style={{
-              flexGrow: index === 0 ? 0 : open[index] ? 1 : 0,
-              flexBasis: index === 0 && open[index] ? 500 : undefined,
+              flexGrow: open[index] ? grows[index] : 0,
+              flexBasis: open[index] ? basis[index] : undefined,
             }}
             className={open[index] ? classes.visible : classes.hidden}
           >
