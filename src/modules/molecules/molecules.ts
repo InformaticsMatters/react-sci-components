@@ -1,5 +1,6 @@
 import { useRedux } from 'hooks-for-redux';
 import { SDFileParser } from 'openchemlib/minimal';
+import { ungzip } from 'pako';
 
 import { settingsStore } from '../settings/settings';
 
@@ -76,13 +77,31 @@ settingsStore.subscribe(({ proteinPath, moleculesPath }) => {
   const proxyurl = 'https://cors-anywhere.herokuapp.com/';
   fetch(proxyurl + moleculesPath, { mode: 'cors' })
     .then((resp) => {
-      resp
-        .text()
-        .then(parseSDF)
-        .then(([readMolecules, fieldNames]) => {
-          setMolecules(readMolecules);
-          setScoresNames(fieldNames);
-        });
+      if (moleculesPath.endsWith('.sdf')) {
+        resp
+          .text()
+          .then(parseSDF)
+          .then(([readMolecules, fieldNames]) => {
+            setMolecules(readMolecules);
+            setScoresNames(fieldNames);
+          });
+      } else if (moleculesPath.endsWith('gzip') || moleculesPath.endsWith('gz')) {
+        resp
+          .arrayBuffer()
+          .then((buffer) => ungzip(new Uint8Array(buffer)))
+          .then((unzipped) => {
+            let str = '';
+            for (let i of unzipped) {
+              str += String.fromCharCode(i);
+            }
+            return str;
+          })
+          .then(parseSDF)
+          .then(([readMolecules, fieldNames]) => {
+            setMolecules(readMolecules);
+            setScoresNames(fieldNames);
+          });
+      }
     })
     .catch((reason) => {
       console.log('Request failed due to');
