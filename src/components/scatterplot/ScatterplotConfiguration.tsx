@@ -25,8 +25,6 @@ const ScatterplotConfiguration = ({ properties }: IProps) => {
       <div className={classes.selects}>
         {properties.length ? (
           Object.entries(config).map(([name, value], i) => {
-            // console.log(name, value);
-
             return (
               <FormControl key={i}>
                 <InputLabel id={`${title}-${name}`}>{name}</InputLabel>
@@ -37,6 +35,7 @@ const ScatterplotConfiguration = ({ properties }: IProps) => {
                     setConfigurationItem({ name, value: value as string })
                   }
                 >
+                  <MenuItem value={'id'}>id</MenuItem>
                   {properties.map((prop, j) => (
                     <MenuItem key={j} value={prop}>
                       {prop}
