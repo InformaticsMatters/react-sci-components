@@ -3,50 +3,52 @@ import React from 'react';
 import Plot from 'react-plotly.js';
 
 import { Molecule, useMolecules } from '../../modules/molecules/molecules';
-import { isNotUndefined, isUndefined } from '../../utils';
+import { isUndefined, isNumber } from '../../utils';
 import { useScatterplotConfiguration } from './plotConfiguration';
 import { selectPoints } from './plotSelection';
-import ScatterplotConfiguration from './ScatterplotConfiguration';
+import ScatterplotConfiguration from './ScatterplotConfig';
 
 const getPropArrayFromMolecules = (molecules: Molecule[], prop: string | null) => {
   if (prop === 'id') {
     return molecules.map((molecules) => molecules.id);
   } else {
-    return molecules.map((molecule) => molecule.scores.find((m) => m.name === prop)?.value);
+    return molecules.map((molecule) => molecule.fields.find((m) => m.name === prop)?.value);
   }
 };
 
+type AxisSeries = ReturnType<typeof getPropArrayFromMolecules> | number;
+
 const ScatterPlot = () => {
-  const { molecules, scoresNames } = useMolecules();
+  const { molecules, fieldNames } = useMolecules();
 
   let { xprop, yprop, size, colour } = useScatterplotConfiguration();
 
   let xaxis = getPropArrayFromMolecules(molecules, xprop);
   let yaxis = getPropArrayFromMolecules(molecules, yprop);
 
-  let colouraxis: (number | undefined)[] | number = getPropArrayFromMolecules(molecules, colour);
+  let colouraxis: AxisSeries = getPropArrayFromMolecules(molecules, colour);
   if (colouraxis.every(isUndefined)) {
     colouraxis = 1;
   }
-  let sizeaxis: (number | undefined)[] | number = getPropArrayFromMolecules(molecules, size);
-  if (sizeaxis.every(isUndefined)) {
-    sizeaxis = 10;
-  } else {
+  let sizeaxis: AxisSeries = getPropArrayFromMolecules(molecules, size);
+  if (sizeaxis.every(isNumber)) {
     // Scale points to
-    const min = Math.min(...sizeaxis.filter(isNotUndefined));
-    const max = Math.max(...sizeaxis.filter(isNotUndefined));
+    const min = Math.min(...sizeaxis.filter(isNumber));
+    const max = Math.max(...sizeaxis.filter(isNumber));
 
     sizeaxis = sizeaxis.map((v) => {
-      if (v !== undefined) {
+      if (v !== undefined && typeof v !== 'string') {
         return (25 * (v - min)) / max;
       }
       return v;
     });
+  } else {
+    sizeaxis = 10;
   }
 
   return (
     <>
-      <ScatterplotConfiguration properties={scoresNames} />
+      <ScatterplotConfiguration properties={fieldNames} />
       <Plot
         data={[
           {
@@ -63,8 +65,8 @@ const ScatterPlot = () => {
           },
         ]}
         layout={{
-          width: 480,
-          height: 480,
+          width: 450,
+          height: 450,
           margin: { t: 10, r: 10, b: 50, l: 50 },
           dragmode: 'select',
           hovermode: 'closest',

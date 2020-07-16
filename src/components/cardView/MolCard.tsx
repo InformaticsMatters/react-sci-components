@@ -23,9 +23,7 @@ interface Props extends CardProps {
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     paper: {
-      width: 160,
       position: 'relative',
-      backgroundColor: ({ bgColor }: Props) => bgColor,
       cursor: ({ onClick }: Props) => onClick && 'pointer',
     },
   }),
@@ -54,6 +52,7 @@ const MolCard = (props: Props) => {
   return (
     <Card
       {...cardProps}
+      style={{ backgroundColor: bgColor }}
       className={classes.paper}
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}

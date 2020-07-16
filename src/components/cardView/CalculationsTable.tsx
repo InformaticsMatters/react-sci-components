@@ -1,10 +1,10 @@
-import { Table, TableBody, TableCell, TableRow } from '@material-ui/core';
+import { Table, TableBody, TableCell, TableRow, Typography } from '@material-ui/core';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import { Score } from 'modules/molecules/molecules';
+
 import React from 'react';
 
 interface IProps {
-  properties: Score[];
+  properties: { name: string; value: number | string }[];
   calcs?: { [key: string]: string };
   blacklist?: string[];
   fontSize?: number | string;
@@ -12,12 +12,15 @@ interface IProps {
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    tableHeader: {
-      maxWidth: '1rem',
-    },
     cell: {
       fontSize: ({ fontSize }: IProps) => fontSize,
-      padding: theme.spacing(1),
+      paddingLeft: 0,
+      paddingRight: 0,
+    },
+    cellData: {
+      maxWidth: '3rem',
+      fontSize: ({ fontSize }: IProps) => fontSize,
+      marginLeft: theme.spacing(1),
     },
   }),
 );
@@ -31,16 +34,24 @@ const CalculationsTable = (props: Readonly<IProps>) => {
       <TableBody>
         {properties
           .filter((property) => !blacklist.includes(property.name))
-          .map(({ name, value }, index) => (
-            <TableRow key={index}>
-              <TableCell className={classes.cell} component="th">
-                {calcs?.[name] || name}
-              </TableCell>
-              <TableCell className={classes.cell} align="right">
-                {+value.toFixed(2)}
-              </TableCell>
-            </TableRow>
-          ))}
+          .map(({ name, value }, index) => {
+            if (typeof value === 'number') {
+              value = +value.toFixed(2); // Round to 2 sig fig and remove pad.
+            }
+
+            return (
+              <TableRow key={index}>
+                <TableCell size="small" className={classes.cell} component="th">
+                  {calcs?.[name] ?? name}
+                </TableCell>
+                <TableCell size="small" className={classes.cell} align="right">
+                  <Typography className={classes.cellData} noWrap>
+                    {value}
+                  </Typography>
+                </TableCell>
+              </TableRow>
+            );
+          })}
       </TableBody>
     </Table>
   );

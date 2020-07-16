@@ -16,9 +16,6 @@ const useStyles = makeStyles((theme: Theme) =>
 const Settings = () => {
   const { isMoleculesLoading } = useMolecules();
 
-  console.log(isMoleculesLoading);
-
-
   const classes = useStyles();
   return (
     <form

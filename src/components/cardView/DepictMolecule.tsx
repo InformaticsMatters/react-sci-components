@@ -62,8 +62,8 @@ const DepictMolecule = (props: Readonly<Props>) => {
 
   return (
     <img
-      src={`${fragnet_server}${depict_route}?${searchParams.join('&')}`}
-      alt={smiles}
+      src={smiles && `${fragnet_server}${depict_route}?${searchParams.join('&')}`}
+      alt={smiles || 'invalid smiles'}
       className={classes.image}
     />
   );
