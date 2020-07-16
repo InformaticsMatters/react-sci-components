@@ -80,7 +80,7 @@ const CardView = () => {
 
   return (
     <>
-      {displayMolecules.length && (
+      {!!displayMolecules.length && (
         <CardViewConfig
           fields={fields}
           enabledFields={enabledFields}
