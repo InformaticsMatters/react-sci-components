@@ -1,6 +1,7 @@
-import { Grow } from '@material-ui/core';
+import { Grow, Button } from '@material-ui/core';
 import { createStyles, makeStyles, Theme, useTheme } from '@material-ui/core/styles';
-import React from 'react';
+import React, { useState } from 'react';
+import styled from 'styled-components';
 
 import { Molecule, useMolecules } from '../../modules/molecules/molecules';
 import { usePlotSelection } from '../scatterplot/plotSelection';
@@ -16,6 +17,8 @@ import ColourPicker from './ColourPicker';
 import MolCard from './MolCard';
 import CardViewConfig from './CardViewConfig';
 import { useCardViewConfiguration } from './cardViewConfiguration';
+
+const CARDS_PER_PAGE = 50;
 
 const moleculeSorter = ({ colours }: CardActionsState) => (ma: Molecule, mb: Molecule) => {
   const ca = colours.find((c) => c.id === ma.id);
@@ -43,13 +46,10 @@ const palette = {
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
-      display: 'grid',
-      gridTemplateColumns: 'repeat(auto-fill, minmax(9rem, 1fr))',
-      gridAutoRows: 'max-content',
-      gridGap: theme.spacing(2),
-      overflowY: 'scroll',
       height: `calc(100vh - ${48 + 2 * theme.spacing(2)}px)`, // Height of elements above the grid
       padding: theme.spacing(2),
+      overflowY: 'scroll',
+      textAlign: 'center',
     },
     actionsRoot: {
       position: 'absolute',
@@ -58,6 +58,10 @@ const useStyles = makeStyles((theme: Theme) =>
       right: 0,
       justifyContent: 'center',
     },
+    button: {
+      marginTop: theme.spacing(2),
+      marginButton: theme.spacing(2),
+    },
   }),
 );
 interface IProps {}
@@ -65,6 +69,8 @@ interface IProps {}
 const CardView = () => {
   const classes = useStyles();
   const theme = useTheme();
+
+  const [loadMoreCount, setLoadMoreCount] = useState(1);
 
   const { molecules } = useMolecules();
   const selectedMoleculesIds = usePlotSelection();
@@ -88,58 +94,78 @@ const CardView = () => {
         />
       )}
       <div className={classes.root}>
-        {displayMolecules
-          .sort(moleculeSorter(actions))
-          .map(({ id, fields: fieldValues }, index) => {
-            let smiles = fieldValues.find((field) => field.name === fieldForDepiction)?.value;
-            if (typeof smiles !== 'string') {
-              smiles = '';
-            }
-            fieldValues.sort((a, b) => fields.indexOf(a.name) - fields.indexOf(b.name));
-            const selected = isInNGLViewerIds.includes(id);
-            return (
-              <span key={index}>
-                <MolCard
-                  elevation={selected ? 10 : undefined}
-                  bgColor={selected ? theme.palette.grey[100] : undefined}
-                  smiles={smiles}
-                  onClick={() => toggleIsInNGLViewer(id)}
-                  actionsProps={{ className: classes.actionsRoot }}
-                  actions={(hover) => {
-                    const colour = colours.find((c) => c.id === id);
-                    if (!!colour) {
-                      return (
-                        <ColourPicker
-                          colours={{ 'Current Colour': colour.colour }}
-                          setColour={(colour) => setColour({ id, colour })}
-                          clearColour={() => clearColour(id)}
-                        />
-                      );
-                    } else {
-                      return (
-                        <Grow in={hover}>
-                          <div>
-                            <ColourPicker
-                              colours={palette}
-                              setColour={(colour) => setColour({ id, colour })}
-                            />
-                          </div>
-                        </Grow>
-                      );
-                    }
-                  }}
-                >
-                  <CalculationsTable
-                    properties={fieldValues.filter(({ name }) => enabledFields.includes(name))}
-                    fontSize={'0.6rem'}
-                  />
-                </MolCard>
-              </span>
-            );
-          })}
+        <Grid gap={theme.spacing(2)}>
+          {displayMolecules
+            .sort(moleculeSorter(actions))
+            .splice(0, CARDS_PER_PAGE * loadMoreCount)
+            .map(({ id, fields: fieldValues }, index) => {
+              let smiles = fieldValues.find((field) => field.name === fieldForDepiction)?.value;
+              if (typeof smiles !== 'string') {
+                smiles = '';
+              }
+              fieldValues.sort((a, b) => fields.indexOf(a.name) - fields.indexOf(b.name));
+              const selected = isInNGLViewerIds.includes(id);
+              return (
+                <span key={index}>
+                  <MolCard
+                    elevation={selected ? 10 : undefined}
+                    bgColor={selected ? theme.palette.grey[100] : undefined}
+                    smiles={smiles}
+                    onClick={() => toggleIsInNGLViewer(id)}
+                    actionsProps={{ className: classes.actionsRoot }}
+                    actions={(hover) => {
+                      const colour = colours.find((c) => c.id === id);
+                      if (!!colour) {
+                        return (
+                          <ColourPicker
+                            colours={{ 'Current Colour': colour.colour }}
+                            setColour={(colour) => setColour({ id, colour })}
+                            clearColour={() => clearColour(id)}
+                          />
+                        );
+                      } else {
+                        return (
+                          <Grow in={hover}>
+                            <div>
+                              <ColourPicker
+                                colours={palette}
+                                setColour={(colour) => setColour({ id, colour })}
+                              />
+                            </div>
+                          </Grow>
+                        );
+                      }
+                    }}
+                  >
+                    <CalculationsTable
+                      properties={fieldValues.filter(({ name }) => enabledFields.includes(name))}
+                      fontSize={'0.6rem'}
+                    />
+                  </MolCard>
+                </span>
+              );
+            })}
+        </Grid>
+        {!!(CARDS_PER_PAGE * loadMoreCount < selectedMoleculesIds.length) && (
+          <Button
+            className={classes.button}
+            variant="text"
+            color="default"
+            onClick={() => setLoadMoreCount(loadMoreCount + 1)}
+          >
+            Load More
+          </Button>
+        )}
       </div>
     </>
   );
 };
+
+const Grid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr));
+  grid-auto-rows: max-content;
+  grid-gap: ${({ gap }: { gap: number }) => gap}px;
+`;
 
 export default CardView;

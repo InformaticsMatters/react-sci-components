@@ -23,7 +23,6 @@ interface Props extends CardProps {
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     paper: {
-      width: 160,
       position: 'relative',
       cursor: ({ onClick }: Props) => onClick && 'pointer',
     },

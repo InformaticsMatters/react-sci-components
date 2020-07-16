@@ -13,8 +13,8 @@ import Settings from './components/settings/Settings';
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     main: {
-      width: '100%',
       display: 'flex',
+      overflowX: 'hidden',
     },
     first: {
       padding: theme.spacing(2),
