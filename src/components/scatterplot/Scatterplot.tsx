@@ -3,7 +3,7 @@ import React from 'react';
 import Plot from 'react-plotly.js';
 
 import { Molecule, useMolecules } from '../../modules/molecules/molecules';
-import { isUndefined, isNumeric, isNumber } from '../../utils';
+import { isUndefined, isNumber } from '../../utils';
 import { useScatterplotConfiguration } from './plotConfiguration';
 import { selectPoints } from './plotSelection';
 import ScatterplotConfiguration from './ScatterplotConfig';
@@ -12,7 +12,7 @@ const getPropArrayFromMolecules = (molecules: Molecule[], prop: string | null) =
   if (prop === 'id') {
     return molecules.map((molecules) => molecules.id);
   } else {
-    return molecules.map((molecule) => molecule.scores.find((m) => m.name === prop)?.value);
+    return molecules.map((molecule) => molecule.fields.find((m) => m.name === prop)?.value);
   }
 };
 
@@ -26,7 +26,7 @@ const ScatterPlot = () => {
   let xaxis = getPropArrayFromMolecules(molecules, xprop);
   let yaxis = getPropArrayFromMolecules(molecules, yprop);
 
-  let colouraxis: (number | undefined)[] | number = getPropArrayFromMolecules(molecules, colour);
+  let colouraxis: AxisSeries = getPropArrayFromMolecules(molecules, colour);
   if (colouraxis.every(isUndefined)) {
     colouraxis = 1;
   }

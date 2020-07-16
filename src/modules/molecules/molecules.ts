@@ -85,7 +85,7 @@ settingsStore.subscribe(({ proteinPath, moleculesPath }) => {
           .then(parseSDF)
           .then(([readMolecules, fieldNames]) => {
             setMolecules(readMolecules);
-            setScoresNames(fieldNames);
+            setFieldNames(fieldNames);
           });
       } else if (moleculesPath.endsWith('gzip') || moleculesPath.endsWith('gz')) {
         resp
@@ -101,7 +101,7 @@ settingsStore.subscribe(({ proteinPath, moleculesPath }) => {
           .then(parseSDF)
           .then(([readMolecules, fieldNames]) => {
             setMolecules(readMolecules);
-            setScoresNames(fieldNames);
+            setFieldNames(fieldNames);
           });
       }
     })
