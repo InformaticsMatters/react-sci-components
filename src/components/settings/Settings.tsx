@@ -10,6 +10,7 @@ const useStyles = makeStyles((theme: Theme) =>
     searchIndicator: {
       position: 'absolute',
     },
+    searchField: { width: '100%' },
   }),
 );
 
@@ -32,7 +33,7 @@ const Settings = () => {
         setMoleculesPath(target.moleculespath.value);
       }}
     >
-      <TextField label="Molecules" name="moleculespath" />
+      <TextField className={classes.searchField} label="Molecules" name="moleculespath" />
       <Button type="submit" variant="contained" color="primary">
         Load
         {isMoleculesLoading && <CircularProgress size={24} className={classes.searchIndicator} />}
