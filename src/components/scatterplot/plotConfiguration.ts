@@ -6,8 +6,8 @@ type ConfigOptions = 'xprop' | 'yprop' | 'colour' | 'size';
 type Config = Record<ConfigOptions, string | null>;
 
 const initialState: Config = {
-  xprop: null,
-  yprop: null,
+  xprop: 'id',
+  yprop: 'id',
   colour: null,
   size: null,
 };
