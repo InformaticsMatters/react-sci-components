@@ -1,8 +1,10 @@
 import './App.css';
 
-import { Container } from '@material-ui/core';
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import React from 'react';
+import { ThemeProvider } from 'styled-components';
+
+import { Container } from '@material-ui/core';
+import { createStyles, makeStyles, Theme, useTheme } from '@material-ui/core/styles';
 
 import AccordionView from './components/AccordionView';
 import CardView from './components/cardView/CardView';
@@ -24,18 +26,21 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const App = () => {
   const classes = useStyles();
+  const theme = useTheme();
 
   return (
-    <Container maxWidth="xl" className={classes.main}>
-      <AccordionView labels={['Settings / Scatter Plot', 'Card View', 'NGL Viewer']}>
-        <div className={classes.first}>
-          <Settings />
-          <ScatterPlot />
-        </div>
-        <CardView />
-        <NGLViewer />
-      </AccordionView>
-    </Container>
+    <ThemeProvider theme={theme}>
+      <Container maxWidth="xl" className={classes.main}>
+        <AccordionView labels={['Settings / Scatter Plot', 'Card View', 'NGL Viewer']}>
+          <div className={classes.first}>
+            <Settings />
+            <ScatterPlot />
+          </div>
+          <CardView />
+          <NGLViewer />
+        </AccordionView>
+      </Container>
+    </ThemeProvider>
   );
 };
 

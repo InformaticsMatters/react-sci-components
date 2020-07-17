@@ -1,7 +1,8 @@
-import { Grow, Button } from '@material-ui/core';
-import { createStyles, makeStyles, Theme, useTheme } from '@material-ui/core/styles';
 import React, { useState } from 'react';
 import styled from 'styled-components';
+
+import { Button } from '@material-ui/core';
+import { createStyles, makeStyles, Theme, useTheme } from '@material-ui/core/styles';
 
 import { Molecule, useMolecules } from '../../modules/molecules/molecules';
 import { usePlotSelection } from '../scatterplot/plotSelection';
@@ -13,10 +14,10 @@ import {
   toggleIsInNGLViewer,
   useCardActions,
 } from './cardActions';
-import ColourPicker from './ColourPicker';
-import MolCard from './MolCard';
 import CardViewConfig from './CardViewConfig';
 import { useCardViewConfiguration } from './cardViewConfiguration';
+import ColourPicker from './ColourPicker';
+import MolCard from './MolCard';
 
 const CARDS_PER_PAGE = 50;
 
@@ -115,26 +116,15 @@ const CardView = () => {
                     actionsProps={{ className: classes.actionsRoot }}
                     actions={(hover) => {
                       const colour = colours.find((c) => c.id === id);
-                      if (!!colour) {
-                        return (
-                          <ColourPicker
-                            colours={{ 'Current Colour': colour.colour }}
-                            setColour={(colour) => setColour({ id, colour })}
-                            clearColour={() => clearColour(id)}
-                          />
-                        );
-                      } else {
-                        return (
-                          <Grow in={hover}>
-                            <div>
-                              <ColourPicker
-                                colours={palette}
-                                setColour={(colour) => setColour({ id, colour })}
-                              />
-                            </div>
-                          </Grow>
-                        );
-                      }
+                      return (
+                        <ColourPicker
+                          iconColour={colour?.colour}
+                          enabled={!!hover}
+                          colours={palette}
+                          setColour={(colour) => setColour({ id, colour })}
+                          clearColour={() => clearColour(id)}
+                        />
+                      );
                     }}
                   >
                     <CalculationsTable
