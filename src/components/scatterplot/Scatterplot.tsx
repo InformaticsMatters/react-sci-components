@@ -38,7 +38,7 @@ const ScatterPlot = () => {
 
     sizeaxis = sizeaxis.map((v) => {
       if (v !== undefined && typeof v !== 'string') {
-        return (47 * (v - min)) / max + 5;
+        return (45 * (v - min)) / max + 5;
       }
       return v;
     });
