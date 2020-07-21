@@ -1,7 +1,8 @@
 import { useRedux } from 'hooks-for-redux';
-import type { DropResult } from 'react-smooth-dnd';
 
 import { moleculesStore } from '../../modules/molecules/molecules';
+
+import type { DropResult } from 'react-smooth-dnd';
 
 interface Config {
   fields: string[];

@@ -1,32 +1,16 @@
-import { Button, Typography } from '@material-ui/core';
-import { createStyles, makeStyles, Theme, withStyles } from '@material-ui/core/styles';
 import React, { useState } from 'react';
+
+import styled from 'styled-components';
+
+import { Button, Typography } from '@material-ui/core';
+import { withStyles } from '@material-ui/core/styles';
 
 interface IProps {
   children: React.ReactNode;
   labels: string[];
 }
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    visible: {
-      height: '100vh',
-      visibility: 'visible',
-      width: 'auto',
-      minWidth: 0,
-    },
-    hidden: {
-      height: '100vh',
-      visibility: 'hidden',
-      width: 0,
-      minWidth: 0,
-    },
-  }),
-);
-
 const AccordionView = ({ children, labels }: IProps) => {
-  const classes = useStyles();
-
   const [open, setIsOpen] = useState([true, true, true]);
 
   const createHandleChange = (index: number) => () => {
@@ -49,15 +33,13 @@ const AccordionView = ({ children, labels }: IProps) => {
               {labels[index]}
             </Typography>
           </VerticalButton>
-          <div
-            style={{
-              flexGrow: open[index] ? grows[index] : 0,
-              flexBasis: open[index] ? basis[index] : undefined,
-            }}
-            className={open[index] ? classes.visible : classes.hidden}
+          <AccordionColumn
+            visible={open[index]}
+            grow={open[index] ? grows[index] : 0}
+            basis={open[index] ? basis[index] : undefined}
           >
             {child}
-          </div>
+          </AccordionColumn>
         </>
       ))}
     </>
@@ -84,3 +66,18 @@ const VerticalButton = withStyles((theme) => ({
     width: '80vh',
   },
 }))(Button);
+
+type ColumnExtraProps = {
+  visible: boolean;
+  grow: number;
+  basis: number | undefined;
+};
+
+const AccordionColumn = styled.div<ColumnExtraProps>`
+  height: 100vh;
+  min-width: 0;
+  flex-grow: ${({ grow }) => grow};
+  flex-basis: ${({ basis }) => basis};
+  visibility: ${({ visible }) => (visible ? 'visible' : 'hidden')};
+  width: ${({ visible }) => (visible ? 'auto' : 0)};
+`;

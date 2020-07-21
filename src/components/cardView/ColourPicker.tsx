@@ -1,9 +1,9 @@
-import { ColorButton } from 'material-ui-color';
 import React, { useEffect } from 'react';
+
+import { ColorButton } from 'material-ui-color';
 import styled from 'styled-components';
 
 import { Fade, IconButton, Paper, Popper } from '@material-ui/core';
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import PaletteIcon from '@material-ui/icons/Palette';
 
 interface IProps {
@@ -14,17 +14,7 @@ interface IProps {
   clearColour?: () => void;
 }
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    colours: {
-      marginTop: theme.spacing(2),
-    },
-  }),
-);
-
 const ColourPicker = ({ enabled, colours, iconColour, setColour, clearColour }: IProps) => {
-  const classes = useStyles();
-
   const id = 'colour-picker';
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -81,10 +71,8 @@ const ColourPicker = ({ enabled, colours, iconColour, setColour, clearColour }: 
 export default ColourPicker;
 
 const PickerPaper = styled(Paper)`
-  ${({ theme }) => `
-  padding: ${theme.spacing(2)}px;
-  grid-gap: ${theme.spacing(1)}px;
+  padding: ${({ theme }) => theme.spacing(2)}px;
+  grid-gap: ${({ theme }) => theme.spacing(1)}px;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
-  `}
 `;

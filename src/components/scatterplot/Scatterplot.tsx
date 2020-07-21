@@ -1,9 +1,10 @@
-import { Datum } from 'plotly.js';
 import React from 'react';
+
+import { Datum } from 'plotly.js';
 import Plot from 'react-plotly.js';
 
 import { Molecule, useMolecules } from '../../modules/molecules/molecules';
-import { isUndefined, isNumber } from '../../utils';
+import { isNumber, isUndefined } from '../../utils';
 import { useScatterplotConfiguration } from './plotConfiguration';
 import { selectPoints } from './plotSelection';
 import ScatterplotConfiguration from './ScatterplotConfig';
@@ -48,7 +49,9 @@ const ScatterPlot = () => {
 
   return (
     <>
-      <ScatterplotConfiguration properties={fieldNames} />
+      <div>
+        <ScatterplotConfiguration properties={fieldNames} />
+      </div>
       <Plot
         data={[
           {

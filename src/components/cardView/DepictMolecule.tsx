@@ -1,5 +1,6 @@
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import React from 'react';
+
+import styled from 'styled-components';
 
 interface Props {
   smiles: string;
@@ -21,15 +22,6 @@ interface Props {
   depict_route?: string;
 }
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    image: {
-      width: (props: Props) => (props.width ? props.width : '100%'),
-      maxHeight: (props: Props) => (props.height ? props.height : '100%'),
-    },
-  }),
-);
-
 const DepictMolecule = (props: Readonly<Props>) => {
   const {
     smiles,
@@ -43,8 +35,6 @@ const DepictMolecule = (props: Readonly<Props>) => {
     fragnet_server = 'https://fragnet.informaticsmatters.com',
     depict_route = '/fragnet-depict/moldepict',
   } = props;
-
-  const classes = useStyles(props);
 
   const params = {
     mol: smiles,
@@ -61,12 +51,23 @@ const DepictMolecule = (props: Readonly<Props>) => {
   );
 
   return (
-    <img
+    <Image
+      width={width}
+      height={height}
       src={smiles && `${fragnet_server}${depict_route}?${searchParams.join('&')}`}
       alt={smiles || 'invalid smiles'}
-      className={classes.image}
     />
   );
 };
 
 export default DepictMolecule;
+
+interface ImageExtraProps {
+  height?: number;
+  width?: number;
+}
+
+const Image = styled.img<ImageExtraProps>`
+  width: ${({ width }) => (width ? `${width}px` : '100%')};
+  max-height: ${({ height }) => (height ? `${height}px` : '100%')};
+`;

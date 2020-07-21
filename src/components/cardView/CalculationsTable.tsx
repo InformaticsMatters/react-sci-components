@@ -1,7 +1,8 @@
-import { Table, TableBody, TableCell, TableRow, Typography } from '@material-ui/core';
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-
 import React from 'react';
+
+import styled from 'styled-components';
+
+import { Table, TableBody, TableCell, TableRow, Typography } from '@material-ui/core';
 
 interface IProps {
   properties: { name: string; value: number | string }[];
@@ -10,27 +11,9 @@ interface IProps {
   fontSize?: number | string;
 }
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    cell: {
-      fontSize: ({ fontSize }: IProps) => fontSize,
-      paddingLeft: 0,
-      paddingRight: 0,
-    },
-    cellData: {
-      maxWidth: '3rem',
-      fontSize: ({ fontSize }: IProps) => fontSize,
-      marginLeft: theme.spacing(1),
-    },
-  }),
-);
-
-const CalculationsTable = (props: Readonly<IProps>) => {
-  const { calcs, blacklist = [], properties } = props;
-  const classes = useStyles(props);
-
+const CalculationsTable = ({ calcs, blacklist = [], properties, fontSize }: Readonly<IProps>) => {
   return (
-    <Table size="small">
+    <Table>
       <TableBody>
         {properties
           .filter((property) => !blacklist.includes(property.name))
@@ -41,14 +24,14 @@ const CalculationsTable = (props: Readonly<IProps>) => {
 
             return (
               <TableRow key={index}>
-                <TableCell size="small" className={classes.cell} component="th">
+                <Cell fontSize={fontSize} component="th">
                   {calcs?.[name] ?? name}
-                </TableCell>
-                <TableCell size="small" className={classes.cell} align="right">
-                  <Typography className={classes.cellData} noWrap>
+                </Cell>
+                <CellTd fontSize={fontSize} align="left">
+                  <CellText fontSize={fontSize} noWrap>
                     {value}
-                  </Typography>
-                </TableCell>
+                  </CellText>
+                </CellTd>
               </TableRow>
             );
           })}
@@ -58,3 +41,24 @@ const CalculationsTable = (props: Readonly<IProps>) => {
 };
 
 export default CalculationsTable;
+
+type CellExtraProps = { fontSize: number | string | undefined };
+
+const Cell = styled(TableCell)<CellExtraProps>`
+  font-size: ${({ fontSize }) => fontSize};
+  padding-top: ${({ theme }) => theme.spacing(0.5)}px;
+  padding-bottom: ${({ theme }) => theme.spacing(0.5)}px;
+  padding-right: 0;
+  padding-left: 0;
+`;
+
+const CellTd = styled(Cell)`
+  width: 100%;
+  padding-left: ${({ theme }) => theme.spacing(1)}px;
+`;
+
+const CellText = styled(Typography)<CellExtraProps>`
+  font-size: inherit; /* Inherit from Cell */
+  width: 0;
+  min-width: 100%;
+`;

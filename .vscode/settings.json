@@ -17,9 +17,12 @@
     "colorscale",
     "colouraxis",
     "customdata",
+    "depictmcs",
     "devtools",
     "dragmode",
+    "fragnet",
     "hovermode",
+    "minmax",
     "moleculespath",
     "mols",
     "openchemlib",
@@ -35,5 +38,34 @@
     "xprop",
     "yaxis",
     "yprop"
+  ],
+  "importSorter.generalConfiguration.sortOnBeforeSave": true,
+  "importSorter.importStringConfiguration.maximumNumberOfImportExpressionsPerLine.type": "newLineEachExpressionAfterCountLimit",
+  "importSorter.importStringConfiguration.tabSize": 2,
+  "importSorter.importStringConfiguration.trailingComma": "multiLine",
+  "importSorter.sortConfiguration.removeUnusedImports": true,
+  "importSorter.sortConfiguration.customOrderingRules.rules": [
+    {
+      "regex": "^react(-dom)?$",
+      "orderLevel": 1,
+    },
+    {
+      "type": "importMember",
+      "regex": "^$",
+      "orderLevel": 5,
+      "disableSort": true
+    },
+    {
+      "regex": "^[^.@]",
+      "orderLevel": 10
+    },
+    {
+      "regex": "^[@]",
+      "orderLevel": 15
+    },
+    {
+      "regex": "^[.]",
+      "orderLevel": 30
+    }
   ],
 }

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+
 import styled from 'styled-components';
 
 import { Button } from '@material-ui/core';
@@ -44,24 +45,16 @@ const palette = {
   orange: 'orange',
 };
 
+// Need to pass styles for action render prop
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    root: {
-      height: `calc(100vh - ${48 + 2 * theme.spacing(2)}px)`, // Height of elements above the grid
-      padding: theme.spacing(2),
-      overflowY: 'scroll',
-      textAlign: 'center',
-    },
+    // Positioning of buttons in card
     actionsRoot: {
       position: 'absolute',
       top: -theme.spacing(1),
       left: 0,
       right: 0,
       justifyContent: 'center',
-    },
-    button: {
-      marginTop: theme.spacing(2),
-      marginButton: theme.spacing(2),
     },
   }),
 );
@@ -94,7 +87,7 @@ const CardView = () => {
           depictionField={fieldForDepiction}
         />
       )}
-      <div className={classes.root}>
+      <GridWrapper>
         <Grid gap={theme.spacing(2)}>
           {displayMolecules
             .sort(moleculeSorter(actions))
@@ -137,25 +130,38 @@ const CardView = () => {
             })}
         </Grid>
         {!!(CARDS_PER_PAGE * loadMoreCount < selectedMoleculesIds.length) && (
-          <Button
-            className={classes.button}
+          <LoadMoreButton
             variant="text"
             color="default"
             onClick={() => setLoadMoreCount(loadMoreCount + 1)}
           >
             Load More
-          </Button>
+          </LoadMoreButton>
         )}
-      </div>
+      </GridWrapper>
     </>
   );
 };
+
+const LoadMoreButton = styled(Button)`
+  margin-top: ${({ theme }) => theme.spacing(2)};
+  margin-bottom: ${({ theme }) => theme.spacing(2)};
+`;
 
 const Grid = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr));
   grid-auto-rows: max-content;
   grid-gap: ${({ gap }: { gap: number }) => gap}px;
+`;
+
+// Scrolling and height of grid region
+const GridWrapper = styled.div`
+  /* Height of elements above the grid */
+  height: calc(100vh - ${({ theme }) => 48 + 2 * theme.spacing(2)}px);
+  padding: ${({ theme }) => theme.spacing(2)}px;
+  overflow-y: scroll;
+  text-align: center;
 `;
 
 export default CardView;

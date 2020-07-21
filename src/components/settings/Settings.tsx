@@ -1,23 +1,14 @@
-import { Button, CircularProgress, TextField } from '@material-ui/core';
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import React from 'react';
+
+import styled from 'styled-components';
+
+import { Button, CircularProgress, TextField } from '@material-ui/core';
 
 import { useMolecules } from '../../modules/molecules/molecules';
 import { setMoleculesPath } from '../../modules/settings/settings';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    searchIndicator: {
-      position: 'absolute',
-    },
-    searchField: { width: '100%' },
-  }),
-);
-
 const Settings = () => {
   const { isMoleculesLoading } = useMolecules();
-
-  const classes = useStyles();
   return (
     <form
       onSubmit={(e) => {
@@ -33,12 +24,21 @@ const Settings = () => {
         setMoleculesPath(target.moleculespath.value);
       }}
     >
-      <TextField className={classes.searchField} label="Molecules" name="moleculespath" />
+      <SDFField label="Molecules" name="moleculespath" />
       <Button type="submit" variant="contained" color="primary">
         Load
-        {isMoleculesLoading && <CircularProgress size={24} className={classes.searchIndicator} />}
+        {isMoleculesLoading && <LoadingIndicator size={24} />}
       </Button>
     </form>
   );
 };
 export default Settings;
+
+const LoadingIndicator = styled(CircularProgress)`
+  position: 'absolute';
+  color: currentColor;
+`;
+
+const SDFField = styled(TextField)`
+  width: 100%;
+`;

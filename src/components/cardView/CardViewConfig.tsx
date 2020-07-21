@@ -1,5 +1,6 @@
-import DraggableList from 'components/DraggableList';
 import React, { useState } from 'react';
+
+import styled from 'styled-components';
 
 import {
   Checkbox,
@@ -10,8 +11,8 @@ import {
   Tooltip,
   Typography,
 } from '@material-ui/core';
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 
+import DraggableList from '../../components/DraggableList';
 import Configuration from '../configuration/Configuration';
 import {
   moveFieldPosition,
@@ -20,13 +21,6 @@ import {
 } from './cardViewConfiguration';
 
 import type { DropResult } from 'react-smooth-dnd';
-
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    header: { display: 'flex', alignItems: 'center' },
-    selects: { display: 'flex', flexDirection: 'column', marginBottom: theme.spacing(2) },
-  }),
-);
 
 interface IProps {
   fields?: string[];
@@ -37,8 +31,6 @@ interface IProps {
 const CardViewConfiguration = ({ fields = [], enabledFields = [], depictionField }: IProps) => {
   const title = 'Card View';
   const depictionSelectionId = `${title}-depiction-field-selection`;
-
-  const classes = useStyles();
 
   const [showHidden, setShowHidden] = useState(true);
   // TODO: need to make reordering respect this
@@ -62,7 +54,7 @@ const CardViewConfiguration = ({ fields = [], enabledFields = [], depictionField
 
   return (
     <Configuration title={title}>
-      <div className={classes.selects}>
+      <DepictionFieldWrapper>
         <Typography variant="h6" display="inline">
           Depiction Field
         </Typography>
@@ -80,15 +72,15 @@ const CardViewConfiguration = ({ fields = [], enabledFields = [], depictionField
             ))}
           </Select>
         </FormControl>
-      </div>
-      <div className={classes.header}>
+      </DepictionFieldWrapper>
+      <ListHeader>
         <Tooltip arrow title={'Toggle visibility of disabled fields'}>
           <Checkbox checked={showHidden} onClick={() => setShowHidden(!showHidden)} />
         </Tooltip>
         <Typography variant="h6" display="inline">
           Toggle Hidden Fields
         </Typography>
-      </div>
+      </ListHeader>
       <DraggableList
         fields={displayFields}
         checked={displayFields.map((field) => enabledFields.includes(field))}
@@ -100,3 +92,14 @@ const CardViewConfiguration = ({ fields = [], enabledFields = [], depictionField
 };
 
 export default CardViewConfiguration;
+
+const DepictionFieldWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-bottom: ${({ theme }) => theme.spacing(2)}px;
+`;
+
+const ListHeader = styled.div`
+  display: flex;
+  align-items: center;
+`;

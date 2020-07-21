@@ -1,12 +1,10 @@
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import { useCardActions } from 'components/cardView/cardActions';
 import React from 'react';
 
-const useStyles = makeStyles((theme: Theme) => createStyles({}));
+import { useCardActions } from 'components/cardView/cardActions';
+
 interface IProps {}
 
 const NGLViewer = () => {
-  const classes = useStyles();
   const { colours } = useCardActions();
 
   const { isInNGLViewerIds } = useCardActions();

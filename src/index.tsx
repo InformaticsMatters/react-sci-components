@@ -1,9 +1,10 @@
+import React from 'react';
+import ReactDOM from 'react-dom';
+
 import './index.css';
 import './store'; // Must be imported before hooks4redux implicitly creates a store
 
 import { Provider } from 'hooks-for-redux';
-import React from 'react';
-import ReactDOM from 'react-dom';
 
 import App from './App';
 import * as serviceWorker from './serviceWorker';

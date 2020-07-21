@@ -1,20 +1,17 @@
-import { FormControl, InputLabel, MenuItem, Select } from '@material-ui/core';
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import React from 'react';
+
+import styled from 'styled-components';
+
+import { FormControl, InputLabel, MenuItem, Select } from '@material-ui/core';
 
 import Configuration from '../configuration/Configuration';
 import { setConfigurationItem, useScatterplotConfiguration } from './plotConfiguration';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({ selects: { display: 'flex', flexDirection: 'column' } }),
-);
 interface IProps {
   properties: string[];
 }
 
 const ScatterplotConfiguration = ({ properties }: IProps) => {
-  const classes = useStyles();
-
   const config = useScatterplotConfiguration();
 
   const title = 'Scatterplot';
@@ -22,7 +19,7 @@ const ScatterplotConfiguration = ({ properties }: IProps) => {
   return (
     <Configuration title={title}>
       <h3>Displayed Scores</h3>
-      <div className={classes.selects}>
+      <SelectsWrapper>
         {properties.length ? (
           Object.entries(config).map(([name, value], i) => {
             return (
@@ -48,9 +45,14 @@ const ScatterplotConfiguration = ({ properties }: IProps) => {
         ) : (
           <p>Please load some molecules to set the axis props</p>
         )}
-      </div>
+      </SelectsWrapper>
     </Configuration>
   );
 };
 
 export default ScatterplotConfiguration;
+
+const SelectsWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+`;

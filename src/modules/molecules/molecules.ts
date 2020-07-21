@@ -1,9 +1,9 @@
 import { useRedux } from 'hooks-for-redux';
 import { SDFileParser } from 'openchemlib/minimal';
 import { ungzip } from 'pako';
+import { isNumeric } from 'utils';
 
 import { settingsStore } from '../settings/settings';
-import { isNumeric } from 'utils';
 
 export type Field = { name: 'oclSmiles' | string; value: number | string };
 

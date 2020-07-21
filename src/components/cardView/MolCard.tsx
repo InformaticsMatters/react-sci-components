@@ -1,11 +1,12 @@
-import { CardActions, CardContent } from '@material-ui/core';
-import Card, { CardProps } from '@material-ui/core/Card';
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import React, { Children, useState } from 'react';
+
+import styled from 'styled-components';
+
+import { Card as MuiCard, CardActions, CardContent, CardProps } from '@material-ui/core';
 
 import DepictMolecule from './DepictMolecule';
 
-interface Props extends CardProps {
+interface IProps extends CardProps {
   smiles: string;
   children?: React.ReactNode;
   depictNoStereo?: boolean;
@@ -20,40 +21,26 @@ interface Props extends CardProps {
   onClick?: () => void;
 }
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    paper: {
-      position: 'relative',
-      cursor: ({ onClick }: Props) => onClick && 'pointer',
-    },
-  }),
-);
-
-const MolCard = (props: Props) => {
-  /* Generic card rendering molecule depiction with optional content and actions. */
-  const {
-    children,
-    smiles,
-    depictNoStereo = false,
-    depictWidth,
-    depictHeight,
-    depictmcs,
-    bgColor,
-    actions = () => undefined,
-    actionsProps,
-    onClick,
-    ...cardProps
-  } = props;
-
-  const classes = useStyles(props);
-
+/* Generic card rendering molecule depiction with optional content and actions. */
+const MolCard = ({
+  children,
+  smiles,
+  depictNoStereo = false,
+  depictWidth,
+  depictHeight,
+  depictmcs,
+  bgColor,
+  actions = () => undefined,
+  actionsProps,
+  onClick,
+  ...cardProps
+}: IProps) => {
   const [hover, setHover] = useState<boolean>(false);
 
   return (
     <Card
       {...cardProps}
       style={{ backgroundColor: bgColor }}
-      className={classes.paper}
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
       onClick={onClick}
@@ -74,5 +61,10 @@ const MolCard = (props: Props) => {
     </Card>
   );
 };
+
+const Card = styled(MuiCard)`
+  position: relative; /* Needed to allow actions to be position relative to this */
+  cursor: ${({ onClick }) => !!onClick && 'pointer'};
+`;
 
 export default MolCard;

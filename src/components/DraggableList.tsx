@@ -1,8 +1,14 @@
 import React from 'react';
+
 import { Container, Draggable, DropResult } from 'react-smooth-dnd';
 
 import {
-    Checkbox, List, ListItem, ListItemIcon, ListItemSecondaryAction, ListItemText
+  Checkbox,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemSecondaryAction,
+  ListItemText,
 } from '@material-ui/core';
 import DragHandleIcon from '@material-ui/icons/DragHandle';
 
@@ -43,9 +49,7 @@ const DraggableList = ({
               )}
               <ListItemText primary={field} />
               <ListItemSecondaryAction>
-                <ListItemIcon className="drag-handle">
-                  <DragHandleIcon />
-                </ListItemIcon>
+                <DragHandleIcon className="drag-handle" />
               </ListItemSecondaryAction>
             </ListItem>
           </Draggable>
