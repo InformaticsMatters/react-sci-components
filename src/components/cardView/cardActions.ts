@@ -3,13 +3,13 @@ import { useRedux } from 'hooks-for-redux';
 
 import { moleculesStore } from '../../modules/molecules/molecules';
 
-/*
+/**
  * Redux store to manage the card state.
  *
  * Each card can be:
- * - made sticky
- * - coloured for use in the NGL viewer
- * - can be toggled for view in the NGL viewer
+ * * made sticky
+ * * coloured for use in the NGL viewer
+ * * can be toggled for view in the NGL viewer
  */
 // Types
 
