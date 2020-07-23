@@ -41,6 +41,7 @@ const DataLoader = () => {
               helperText="Paste a url to a .sdf or .sdf.gz file"
               placeholder="Source"
               variant="outlined"
+              color="secondary"
             />
           )}
         />
@@ -51,6 +52,7 @@ const DataLoader = () => {
             placeholder="Max. Records"
             variant="outlined"
             size="small"
+            color="secondary"
           />
           <Button variant="contained" color="primary">
             Load
@@ -71,16 +73,16 @@ const DataLoader = () => {
             {fields.map((f, index) => (
               <FieldRow row key={index}>
                 <Typography>{f}</Typography>
-                <NumericField width="8rem" size="small" variant="outlined" label="Rename Field" />
+                <NumericField width="8rem" size="small" variant="outlined" color="secondary" label="Rename Field" />
                 <FormControl size="small" variant="outlined">
-                  <InputLabel id={`rank-${index}`}>Rank</InputLabel>
-                  <Select labelId={`rank-${index}`} defaultValue="asc" label="Rank">
+                  <InputLabel color="secondary" id={`rank-${index}`}>Rank</InputLabel>
+                  <Select color="secondary" labelId={`rank-${index}`} defaultValue="asc" label="Rank">
                     <MenuItem value="asc">ASC</MenuItem>
                     <MenuItem value="desc">DESC</MenuItem>
                   </Select>
                 </FormControl>
-                <FormControl disabled size="small" variant="outlined">
-                  <InputLabel id={`rank-${index}`}>dtype</InputLabel>
+                <FormControl disabled size="small" variant="outlined" color="secondary">
+                  <InputLabel color="secondary" id={`rank-${index}`}>dtype</InputLabel>
                   <Select labelId={`rank-${index}`} defaultValue="float" label="Rank">
                     <MenuItem value="float">float</MenuItem>
                     <MenuItem value="int">int</MenuItem>
@@ -89,23 +91,25 @@ const DataLoader = () => {
                 </FormControl>
                 <FormControl disabled size="small" variant="outlined">
                   <InputLabel id={`rank-${index}`}>Transform</InputLabel>
-                  <Select labelId={`rank-${index}`} defaultValue="log10" label="Rank">
+                  <Select color="secondary" labelId={`rank-${index}`} defaultValue="log10" label="Rank">
                     <MenuItem value="log10">log10</MenuItem>
                   </Select>
                 </FormControl>
-                <NumericField label="Default" />
-                <NumericField label="min" type="number" />
-                <NumericField label="max" type="number" />
+                <NumericField color="secondary" label="Default" />
+                <NumericField color="secondary" label="min" type="number" />
+                <NumericField color="secondary" label="max" type="number" />
               </FieldRow>
             ))}
             <ConfigSaveFormGroup row>
               <ConfigComboBox
+                color="secondary"
                 options={['config1', 'config2']}
                 renderInput={(params) => (
                   <TextField
                     {...params}
                     size="small"
                     variant="outlined"
+                    color="secondary"
                     placeholder="Config Name"
                   />
                 )}

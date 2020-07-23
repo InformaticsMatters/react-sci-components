@@ -10,7 +10,6 @@ import AccordionView from './components/AccordionView';
 import CardView from './components/cardView/CardView';
 import DataLoader from './components/dataLoader/DataLoader';
 import { NglView } from './components/nglViewer/NGLView';
-import NGLViewer from './components/nglViewer/NGLViewer';
 import ScatterPlot from './components/scatterplot/Scatterplot';
 import Settings from './components/settings/Settings';
 import Theme from './theme';
@@ -21,6 +20,7 @@ const App = () => {
       <Container>
         <AccordionView labels={['Settings / Scatter Plot', 'Card View', 'NGL Viewer']}>
           <Column>
+            <DataLoader />
             <Settings />
             <ScatterPlot />
           </Column>
