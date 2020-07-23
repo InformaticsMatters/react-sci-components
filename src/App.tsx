@@ -9,7 +9,7 @@ import { StylesProvider, useTheme } from '@material-ui/core/styles';
 
 import AccordionView from './components/AccordionView';
 import CardView from './components/cardView/CardView';
-import NGLViewer from './components/nglViewer/NGLViewer';
+import {NglView} from './components/nglViewer/NGLView';
 import ScatterPlot from './components/scatterplot/Scatterplot';
 import Settings from './components/settings/Settings';
 
@@ -26,7 +26,7 @@ const App = () => {
               <ScatterPlot />
             </Column>
             <CardView />
-            <NGLViewer />
+            <NglView div_id='ngl' height='1000px'/>
           </AccordionView>
         </Container>
       </ThemeProvider>

@@ -74,7 +74,7 @@ const parseSDF = (sdf: string) => {
   return [readMolecules, fieldNames] as const;
 };
 
-settingsStore.subscribe(({ proteinPath, moleculesPath }) => {
+settingsStore.subscribe(({moleculesPath}) => {
   setIsMoleculesLoading(true);
   const proxyurl = 'https://cors-anywhere.herokuapp.com/';
   fetch(proxyurl + moleculesPath, { mode: 'cors' })

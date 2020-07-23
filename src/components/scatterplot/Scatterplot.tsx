@@ -2,7 +2,6 @@ import React from 'react';
 
 import { Datum } from 'plotly.js';
 import Plot from 'react-plotly.js';
-
 import { Molecule, useMolecules } from '../../modules/molecules/molecules';
 import { isNumber, isUndefined } from '../../utils';
 import { useScatterplotConfiguration } from './plotConfiguration';

@@ -1,18 +1,32 @@
-import React from 'react';
-
-import styled from 'styled-components';
-
 import { Button, CircularProgress, TextField } from '@material-ui/core';
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
+import React from 'react';
 
 import { useMolecules } from '../../modules/molecules/molecules';
 import { useProtein } from '../../modules/protein/protein';
 import { setSettings } from '../../modules/settings/settings';
 
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    searchIndicator: {
+      position: 'absolute',
+    },
+    searchField: { width: '100%' },
+  }),
+);
+
 const Settings = () => {
   const { isMoleculesLoading } = useMolecules();
   const { isProteinLoading } = useProtein();
 
+<<<<<<< Updated upstream
+=======
+  console.log(isMoleculesLoading);
   console.log(isProteinLoading);
+
+
+>>>>>>> Stashed changes
+  const classes = useStyles();
   return (
     <form
       onSubmit={(e) => {
@@ -29,22 +43,17 @@ const Settings = () => {
         setSettings({proteinPath: target.proteinpath.value, moleculesPath: target.moleculespath.value})
       }}
     >
-      <SDFField label="Molecules" name="moleculespath" />
+<<<<<<< Updated upstream
+      <TextField className={classes.searchField} label="Molecules" name="moleculespath" />
+=======
+      <TextField label="Molecules" name="moleculespath" />
       <TextField label="Protein" name="proteinpath" />
+>>>>>>> Stashed changes
       <Button type="submit" variant="contained" color="primary">
         Load
-        {(isMoleculesLoading || isProteinLoading) && <LoadingIndicator size={24}/>}
+        {(isMoleculesLoading || isProteinLoading) && <CircularProgress size={24} className={classes.searchIndicator} />}
       </Button>
     </form>
   );
 };
 export default Settings;
-
-const LoadingIndicator = styled(CircularProgress)`
-  position: 'absolute';
-  color: currentColor;
-`;
-
-const SDFField = styled(TextField)`
-  width: 100%;
-`;
