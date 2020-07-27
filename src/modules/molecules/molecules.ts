@@ -3,7 +3,7 @@ import { SDFileParser } from 'openchemlib/minimal';
 import { ungzip } from 'pako';
 import { isNumeric } from 'utils';
 
-import { settingsStore } from '../settings/settings';
+import { sourcesStore } from '../../components/dataLoader/sources';
 
 export type Field = { name: 'oclSmiles' | string; value: number | string };
 
@@ -38,14 +38,14 @@ export const [
   setFieldNames: (state, fieldNames: string[]) => ({ ...state, fieldNames }),
 });
 
-const parseSDF = (sdf: string) => {
+const parseSDF = (sdf: string, maxRecords: number = Infinity) => {
   const readMolecules: Molecule[] = [];
   // Types for openchemlib are missing strict null checks so need 'null as any' here
   // TODO: can we specify the field we use with the second arg?
   const parser = new SDFileParser(sdf, null!);
   const fieldNames = parser.getFieldNames(1);
   let counter = 0;
-  while (parser.next()) {
+  while (parser.next() && counter <= maxRecords) {
     const sdfMolecule = parser.getMolecule();
     const currentMolFile = sdfMolecule.toMolfile();
     const smiles = sdfMolecule.toIsomericSmiles();
@@ -74,7 +74,8 @@ const parseSDF = (sdf: string) => {
   return [readMolecules, fieldNames] as const;
 };
 
-settingsStore.subscribe(({moleculesPath}) => {
+sourcesStore.subscribe(([currentSource]) => {
+  const { url: moleculesPath, maxRecords } = currentSource;
   setIsMoleculesLoading(true);
   const proxyurl = 'https://cors-anywhere.herokuapp.com/';
   fetch(proxyurl + moleculesPath, { mode: 'cors' })
@@ -82,7 +83,7 @@ settingsStore.subscribe(({moleculesPath}) => {
       if (moleculesPath.endsWith('.sdf')) {
         resp
           .text()
-          .then(parseSDF)
+          .then((txt) => parseSDF(txt, maxRecords))
           .then(([readMolecules, fieldNames]) => {
             setMolecules(readMolecules);
             setFieldNames(fieldNames);
@@ -98,7 +99,7 @@ settingsStore.subscribe(({moleculesPath}) => {
             }
             return str;
           })
-          .then(parseSDF)
+          .then((txt) => parseSDF(txt, maxRecords))
           .then(([readMolecules, fieldNames]) => {
             setMolecules(readMolecules);
             setFieldNames(fieldNames);

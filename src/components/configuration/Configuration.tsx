@@ -1,34 +1,51 @@
 import React, { useState } from 'react';
 
+import Draggable from 'react-draggable';
 import styled from 'styled-components';
 
-import { Dialog, DialogContent, DialogTitle, IconButton } from '@material-ui/core';
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  IconButton,
+  Paper,
+  PaperProps,
+} from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 import SettingsIcon from '@material-ui/icons/Settings';
 
 interface IProps {
   title: string;
   children: React.ReactNode;
+  ModalOpenIcon?: React.ReactNode;
+  draggable?: boolean;
 }
+
+const PaperComponent = (props: PaperProps) => {
+  return (
+    <Draggable handle="#modal-title" cancel={'[class*="MuiDialogContent-root"]'}>
+      <Paper {...props} />
+    </Draggable>
+  );
+};
 
 /**
  * Renders a settings cog button that open a modal with a close button.
  * @param title is rendered in the model title
  * @param children are rendered in the model content
  */
-const Configuration = ({ title, children }: IProps) => {
+const Configuration = ({ title, children, ModalOpenIcon, draggable }: IProps) => {
   const [open, setOpen] = useState(false);
   return (
     <>
-      <IconButton onClick={() => setOpen(true)}>
-        <SettingsIcon />
-      </IconButton>
+      <IconButton onClick={() => setOpen(true)}>{ModalOpenIcon ?? <SettingsIcon />}</IconButton>
       <Dialog
         aria-labelledby="modal-title"
         aria-describedby="modal-content"
         open={open}
         onClose={() => setOpen(false)}
         maxWidth="lg"
+        PaperComponent={draggable ? PaperComponent : undefined}
       >
         <Title id="modal-title">
           {title}

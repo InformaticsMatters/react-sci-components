@@ -2,166 +2,55 @@ import React from 'react';
 
 import styled from 'styled-components';
 
-import {
-  Button,
-  ExpansionPanel,
-  ExpansionPanelDetails,
-  ExpansionPanelSummary,
-  FormControl,
-  FormGroup,
-  InputLabel,
-  MenuItem,
-  Select,
-  TextField,
-  TextFieldProps,
-  Typography,
-} from '@material-ui/core';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import Autocomplete from '@material-ui/lab/Autocomplete';
+import { CircularProgress, Typography } from '@material-ui/core';
+import GetAppIcon from '@material-ui/icons/GetApp';
 
-import { Source } from './loadedData';
+import { useMolecules } from '../../modules/molecules/molecules';
+import Configuration from '../configuration/Configuration';
+import FieldConfigForm from './FieldConfigForm';
+import SourceForm from './SourceForm';
+import { useSources } from './sources';
 
 interface IProps {
-  sources: Source[];
+  sourceLabel?: string;
 }
 
-const DataLoader = () => {
-  const fields = ['Field 1', 'Field 2', 'Field 3', 'Field 4'];
+const defaultSource = {
+  url: '',
+  maxRecords: 500,
+  configName: 'default',
+  fields: [],
+};
+
+const DataLoader = ({ sourceLabel }: IProps) => {
+  const { fieldNames, isMoleculesLoading } = useMolecules();
+  const sources = useSources();
+  const [currentSource = { id: sources.length + 1, ...defaultSource }] = sources;
+
   return (
-    <>
-      <form>
-        <Autocomplete
-          options={['source1', 'source2']}
-          renderInput={(params) => (
-            <TextField
-              {...params}
-              required
-              fullWidth
-              autoFocus
-              helperText="Paste a url to a .sdf or .sdf.gz file"
-              placeholder="Source"
-              variant="outlined"
-              color="secondary"
+    <Configuration draggable title="SDF Sources" ModalOpenIcon={<GetAppIcon />}>
+      <SourceForm sources={sources} currentSource={currentSource} sourceLabel={sourceLabel} />
+      <Typography>Field Configuration</Typography>
+      {isMoleculesLoading ? (
+        <CircularProgress />
+      ) : (
+        !!currentSource.url && (
+          <FieldsWrapper>
+            <FieldConfigForm
+              fieldNames={fieldNames}
+              sources={sources}
+              currentSource={currentSource}
             />
-          )}
-        />
-        <SourceRowTwo row>
-          <TextField
-            inputProps={{ min: 0, step: 100 }}
-            type="number"
-            placeholder="Max. Records"
-            variant="outlined"
-            size="small"
-            color="secondary"
-          />
-          <Button variant="contained" color="primary">
-            Load
-          </Button>
-        </SourceRowTwo>
-      </form>
-      <ExpansionPanel>
-        <ExpansionPanelSummary
-          expandIcon={<ExpandMoreIcon />}
-          aria-label="Expand field configuration"
-          aria-controls="field-confi-content"
-          id="field-config-header"
-        >
-          <Typography>Field Configuration</Typography>
-        </ExpansionPanelSummary>
-        <ExpansionPanelDetails>
-          <form>
-            {fields.map((f, index) => (
-              <FieldRow row key={index}>
-                <Typography>{f}</Typography>
-                <NumericField width="8rem" size="small" variant="outlined" color="secondary" label="Rename Field" />
-                <FormControl size="small" variant="outlined">
-                  <InputLabel color="secondary" id={`rank-${index}`}>Rank</InputLabel>
-                  <Select color="secondary" labelId={`rank-${index}`} defaultValue="asc" label="Rank">
-                    <MenuItem value="asc">ASC</MenuItem>
-                    <MenuItem value="desc">DESC</MenuItem>
-                  </Select>
-                </FormControl>
-                <FormControl disabled size="small" variant="outlined" color="secondary">
-                  <InputLabel color="secondary" id={`rank-${index}`}>dtype</InputLabel>
-                  <Select labelId={`rank-${index}`} defaultValue="float" label="Rank">
-                    <MenuItem value="float">float</MenuItem>
-                    <MenuItem value="int">int</MenuItem>
-                    <MenuItem value="text">text</MenuItem>
-                  </Select>
-                </FormControl>
-                <FormControl disabled size="small" variant="outlined">
-                  <InputLabel id={`rank-${index}`}>Transform</InputLabel>
-                  <Select color="secondary" labelId={`rank-${index}`} defaultValue="log10" label="Rank">
-                    <MenuItem value="log10">log10</MenuItem>
-                  </Select>
-                </FormControl>
-                <NumericField color="secondary" label="Default" />
-                <NumericField color="secondary" label="min" type="number" />
-                <NumericField color="secondary" label="max" type="number" />
-              </FieldRow>
-            ))}
-            <ConfigSaveFormGroup row>
-              <ConfigComboBox
-                color="secondary"
-                options={['config1', 'config2']}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    size="small"
-                    variant="outlined"
-                    color="secondary"
-                    placeholder="Config Name"
-                  />
-                )}
-              />
-              <Button variant="outlined" color="primary">
-                Save
-              </Button>
-            </ConfigSaveFormGroup>
-          </form>
-        </ExpansionPanelDetails>
-      </ExpansionPanel>
-    </>
+          </FieldsWrapper>
+        )
+      )}
+    </Configuration>
   );
 };
 
-const NumberInput = (props: TextFieldProps) => (
-  <TextField {...props} size="small" variant="outlined" />
-);
-
-interface NumericFieldExtraProps {
-  width?: number | string;
-}
-
-const NumericField = styled(NumberInput)<NumericFieldExtraProps>`
-  width: ${({ width = '5rem' }) => width};
-`;
-
-const SourceRowTwo = styled(FormGroup)`
-  justify-content: space-between;
-  margin-top: ${({ theme }) => theme.spacing(1)}px;
-  margin-bottom: ${({ theme }) => theme.spacing(2)}px;
-`;
-
-const FieldRow = styled(FormGroup)`
-  margin-top: ${({ theme }) => theme.spacing(2)}px;
-  align-items: center;
-  flex-wrap: nowrap;
-  > div,
-  p {
-    margin-right: ${({ theme }) => theme.spacing(1)}px;
-  }
-`;
-
-const ConfigSaveFormGroup = styled(FormGroup)`
-  margin-top: ${({ theme }) => theme.spacing(2)}px;
-  > div:first-child {
-    margin-right: ${({ theme }) => theme.spacing(2)}px;
-  }
-`;
-
-const ConfigComboBox = styled(Autocomplete)`
-  width: 15rem;
-`;
-
 export default DataLoader;
+
+const FieldsWrapper = styled.div`
+  height: 50vh;
+  overflow-y: scroll;
+`;

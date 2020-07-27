@@ -29,6 +29,7 @@
     "plotly.js": "^1.54.6",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
+    "react-draggable": "^4.4.3",
     "react-plotly": "^1.0.0",
     "react-plotly.js": "^2.4.0",
     "react-scripts": "3.4.1",
