@@ -7,8 +7,8 @@ import GetAppIcon from '@material-ui/icons/GetApp';
 
 import { useMolecules } from '../../modules/molecules/molecules';
 import Configuration from '../configuration/Configuration';
-import FieldConfigForm from './FieldConfigForm';
-import SourceForm from './SourceForm';
+import FieldConfigForm from './FieldConfigInputs';
+import SourceForm from './SourceInputs';
 import { useSources } from './sources';
 
 interface IProps {
