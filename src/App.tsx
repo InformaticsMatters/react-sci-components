@@ -25,7 +25,7 @@ const App = () => {
             <ScatterPlot />
           </Column>
           <CardView />
-          <NglView div_id='ngl' height='1000px'/>
+          <NglView div_id="ngl" height="1000px" />
         </AccordionView>
       </Container>
     </Theme>
