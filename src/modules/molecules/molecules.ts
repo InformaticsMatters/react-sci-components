@@ -3,9 +3,13 @@ import { SDFileParser } from 'openchemlib/minimal';
 import { ungzip } from 'pako';
 import { isNumeric } from 'utils';
 
-import { sourcesStore } from '../../components/dataLoader/sources';
+import { Source, workingSourceStore } from '../../components/dataLoader/sources';
 
-export type Field = { name: 'oclSmiles' | string; value: number | string };
+export interface Field {
+  name: 'oclSmiles' | string;
+  nickname?: string;
+  value: number | string;
+}
 
 export interface Molecule {
   id: number;
@@ -17,17 +21,19 @@ export interface MoleculesState {
   isMoleculesLoading: boolean;
   molecules: Molecule[];
   fieldNames: string[];
+  fieldNickNames: string[];
 }
 
 const initialState: MoleculesState = {
   isMoleculesLoading: false,
   molecules: [],
   fieldNames: [],
+  fieldNickNames: [],
 };
 
 export const [
   useMolecules,
-  { setIsMoleculesLoading, setMolecules, setFieldNames },
+  { setIsMoleculesLoading, setMolecules, setFieldNames, setFieldNickNames },
   moleculesStore,
 ] = useRedux('molecules', initialState, {
   setIsMoleculesLoading: (state, isMoleculesLoading: boolean) => ({
@@ -36,14 +42,20 @@ export const [
   }),
   setMolecules: (state, molecules: Molecule[]) => ({ ...state, molecules }),
   setFieldNames: (state, fieldNames: string[]) => ({ ...state, fieldNames }),
+  setFieldNickNames: (state, fieldNickNames: string[]) => ({ ...state, fieldNickNames }),
 });
 
-const parseSDF = (sdf: string, maxRecords: number = Infinity) => {
+const parseSDF = (sdf: string, { maxRecords = Infinity, configs }: Omit<Source, 'url' | 'id'>) => {
   const readMolecules: Molecule[] = [];
   // Types for openchemlib are missing strict null checks so need 'null as any' here
   // TODO: can we specify the field we use with the second arg?
   const parser = new SDFileParser(sdf, null!);
   const fieldNames = parser.getFieldNames(1);
+
+  const configLookup = Object.fromEntries(
+    fieldNames.map((name) => [name, configs.find((config) => config.name === name)]),
+  );
+
   let counter = 0;
   while (parser.next() && counter <= maxRecords) {
     const sdfMolecule = parser.getMolecule();
@@ -51,77 +63,64 @@ const parseSDF = (sdf: string, maxRecords: number = Infinity) => {
     const smiles = sdfMolecule.toIsomericSmiles();
     const fields: Field[] = [{ name: 'oclSmiles', value: smiles }];
 
+    let valid = true;
     fieldNames.forEach((name) => {
       const fieldValue = parser.getField(name);
+      const config = configLookup[name];
       let value;
       if (isNumeric(fieldValue)) {
         value = parseFloat(fieldValue);
+        if (config?.min && config?.max && (value < config.min || value > config.max)) {
+          valid = false;
+        }
       } else {
         value = fieldValue;
       }
-      fields.push({ name, value });
+      fields.push({ name, nickname: config?.nickname || name, value });
     });
 
-    readMolecules.push({
-      id: counter,
-      molFile: currentMolFile,
-      fields: fields,
-    });
-    counter++;
+    if (valid) {
+      readMolecules.push({
+        id: counter,
+        molFile: currentMolFile,
+        fields: fields,
+      });
+      counter++;
+    }
   }
   fieldNames.unshift('oclSmiles');
+  const fieldNickNames = fieldNames.map(
+    (name) => configs.find((config) => config.name === name)?.nickname || name,
+  );
 
-  return [readMolecules, fieldNames] as const;
+  return [readMolecules, fieldNames, fieldNickNames] as const;
 };
 
-sourcesStore.subscribe(([currentSource]) => {
-  const { url: moleculesPath, maxRecords } = currentSource;
+workingSourceStore.subscribe(async ({ url: moleculesPath, ...restOfSource }) => {
   setIsMoleculesLoading(true);
   const proxyurl = 'https://cors-anywhere.herokuapp.com/';
-  fetch(proxyurl + moleculesPath, { mode: 'cors' })
-    .then((resp) => {
-      if (moleculesPath.endsWith('.sdf')) {
-        resp
-          .text()
-          .then((txt) => parseSDF(txt, maxRecords))
-          .then(([readMolecules, fieldNames]) => {
-            setMolecules(readMolecules);
-            setFieldNames(fieldNames);
-          });
-      } else if (moleculesPath.endsWith('gzip') || moleculesPath.endsWith('gz')) {
-        resp
-          .arrayBuffer()
-          .then((buffer) => ungzip(new Uint8Array(buffer)))
-          .then((unzipped) => {
-            let str = '';
-            for (let i of unzipped) {
-              str += String.fromCharCode(i);
-            }
-            return str;
-          })
-          .then((txt) => parseSDF(txt, maxRecords))
-          .then(([readMolecules, fieldNames]) => {
-            setMolecules(readMolecules);
-            setFieldNames(fieldNames);
-          });
-      }
-    })
-    .catch((reason) => {
-      console.log('Request failed due to');
-      console.log(reason);
 
-      if (process.env.NODE_ENV === 'development') {
-        // If CORS fails then use mock for now
-        console.log('Using mock data instead');
+  const resp = await fetch(proxyurl + moleculesPath, { mode: 'cors' });
 
-        fetch('./moleculesmock.sdf')
-          .then((resp) => resp.text())
-          .then(parseSDF)
-          .then(([readMolecules, fieldNames]) => {
-            setMolecules(readMolecules);
-            setFieldNames(fieldNames);
-          });
-      }
-    })
-    .finally(() => setIsMoleculesLoading(false));
+  if (moleculesPath.endsWith('.sdf')) {
+    const txt = await resp.text();
+    const [readMolecules, fieldNames, fieldNickNames] = parseSDF(txt, restOfSource);
+    setMolecules(readMolecules);
+    setFieldNames(fieldNames);
+    setFieldNickNames(fieldNickNames);
+  } else if (moleculesPath.endsWith('gzip') || moleculesPath.endsWith('gz')) {
+    const buffer = await resp.arrayBuffer();
+    const unzipped = ungzip(new Uint8Array(buffer));
+    let txt = '';
+    for (let i of unzipped) {
+      txt += String.fromCharCode(i);
+    }
+
+    const [readMolecules, fieldNames, fieldNickNames] = parseSDF(txt, restOfSource);
+    setMolecules(readMolecules);
+    setFieldNames(fieldNames);
+    setFieldNickNames(fieldNickNames);
+  }
+
+  setIsMoleculesLoading(false);
 });

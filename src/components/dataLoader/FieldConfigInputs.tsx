@@ -1,125 +1,97 @@
-import React from 'react';
+import React, { useState } from 'react';
 
-import styled from 'styled-components';
+import {
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  TextField,
+  Typography,
+} from '@material-ui/core';
 
-import { Button, FormGroup, TextField, TextFieldProps, Typography } from '@material-ui/core';
-import Autocomplete from '@material-ui/lab/Autocomplete';
-
-import { selectConfig, Source } from './sources';
+import { FieldConfig } from './sources';
 
 interface IProps {
-  sources: Source[];
-  currentSource: Source;
-  fieldNames: string[];
+  name: string;
+  config?: FieldConfig;
 }
 
-type ConfigOption = { id: number; configName: string };
+const FieldConfigInputs = ({ name, config }: IProps) => {
+  const [isNumeric, setIsNumeric] = useState(true);
 
-const FieldConfigForm = ({ sources, currentSource, fieldNames }: IProps) => {
-  const configOptions: ConfigOption[] = sources
-    .filter((source) => source.url === currentSource.url)
-    .map(({ id, configName }) => ({ id, configName }));
+  const handleDtypeChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+    if (event.target.value === 'text') {
+      setIsNumeric(false);
+    } else {
+      setIsNumeric(true);
+    }
+  };
 
   return (
-    <form>
-      {fieldNames.map((name, index) => (
-        <FieldRow row key={index}>
-          <Typography>{name}</Typography>
-          <NumericField
-            width="8rem"
-            size="small"
-            variant="outlined"
-            color="secondary"
-            label="Rename Field"
-          />
-          {/* <FormControl size="small" variant="outlined">
-            <InputLabel color="secondary" id={`rank-${index}`}>
-              Rank
-            </InputLabel>
-            <Select color="secondary" labelId={`rank-${index}`} defaultValue="asc" label="Rank">
-              <MenuItem value="asc">ASC</MenuItem>
-              <MenuItem value="desc">DESC</MenuItem>
-            </Select>
-          </FormControl>
-          <FormControl disabled size="small" variant="outlined" color="secondary">
-            <InputLabel color="secondary" id={`rank-${index}`}>
-              dtype
-            </InputLabel>
-            <Select labelId={`rank-${index}`} defaultValue="float" label="Rank">
-              <MenuItem value="float">float</MenuItem>
-              <MenuItem value="int">int</MenuItem>
-              <MenuItem value="text">text</MenuItem>
-            </Select>
-          </FormControl>
-          <FormControl disabled size="small" variant="outlined">
-            <InputLabel id={`rank-${index}`}>Transform</InputLabel>
-            <Select color="secondary" labelId={`rank-${index}`} defaultValue="log10" label="Rank">
-              <MenuItem value="log10">log10</MenuItem>
-            </Select>
-          </FormControl>
-          <NumericField color="secondary" label="Default" />
-          <NumericField color="secondary" label="min" type="number" />
-          <NumericField color="secondary" label="max" type="number" /> */}
-        </FieldRow>
-      ))}
-      <ConfigSaveFormGroup row>
-        <Autocomplete
-          style={{ width: '15rem' }}
-          onChange={(_, newValue) => {
-            newValue !== null && selectConfig(newValue.id);
-          }}
-          color="secondary"
-          options={configOptions}
-          getOptionLabel={(option) => option.configName} // ?
-          renderInput={(params) => (
-            <TextField
-              {...params}
-              size="small"
-              variant="outlined"
-              color="secondary"
-              placeholder="Config Name"
-            />
-          )}
-        />
-        <Button type="submit" variant="outlined" color="primary">
-          Save
-        </Button>
-      </ConfigSaveFormGroup>
-    </form>
+    <>
+      <Typography noWrap>{name}</Typography>
+      <TextField
+        name={`${name}-nickname`}
+        size="small"
+        variant="outlined"
+        color="secondary"
+        label="Rename Field"
+        defaultValue={config?.nickname}
+      />
+      {/* <FormControl size="small" variant="outlined">
+      <InputLabel color="secondary" id={`rank-${name}`}>
+        Rank
+      </InputLabel>
+      <Select color="secondary" labelId={`rank-${name}`} defaultValue="asc" label="Rank">
+        <MenuItem value="asc">ASC</MenuItem>
+        <MenuItem value="desc">DESC</MenuItem>
+      </Select>
+    </FormControl> */}
+      <FormControl size="small" variant="outlined" color="secondary">
+        <InputLabel color="secondary" id={`dtype-${name}`}>
+          dtype
+        </InputLabel>
+        <Select
+          onChange={handleDtypeChange}
+          name={`${name}-dtype`}
+          labelId={`dtype-${name}`}
+          defaultValue={config?.dtype ?? 'float'}
+          label="Rank"
+        >
+          <MenuItem value="float">float</MenuItem>
+          <MenuItem value="int">int</MenuItem>
+          <MenuItem value="text">text</MenuItem>
+        </Select>
+      </FormControl>
+      {/* <FormControl disabled size="small" variant="outlined">
+      <InputLabel id={`rank-${name}`}>Transform</InputLabel>
+      <Select color="secondary" labelId={`rank-${name}`} defaultValue="log10" label="Rank">
+        <MenuItem value="log10">log10</MenuItem>
+      </Select>
+    </FormControl> */}
+      {/* <NumericField color="secondary" label="Default" /> */}
+      <TextField
+        disabled={!isNumeric}
+        name={`${name}-min`}
+        size="small"
+        variant="outlined"
+        color="secondary"
+        label="min"
+        type="number"
+        defaultValue={config?.min}
+      />
+      <TextField
+        disabled={!isNumeric}
+        name={`${name}-max`}
+        size="small"
+        variant="outlined"
+        color="secondary"
+        label="max"
+        type="number"
+        defaultValue={config?.max}
+      />
+    </>
   );
 };
 
-export default FieldConfigForm;
-
-const NumberInput = (props: TextFieldProps) => (
-  <TextField {...props} size="small" variant="outlined" />
-);
-
-interface NumericFieldExtraProps {
-  width?: number | string;
-}
-
-const NumericField = styled(NumberInput)<NumericFieldExtraProps>`
-  width: ${({ width = '5rem' }) => width};
-`;
-
-const FieldRow = styled(FormGroup)`
-  margin-top: ${({ theme }) => theme.spacing(2)}px;
-  align-items: center;
-  flex-wrap: nowrap;
-  > div,
-  p {
-    margin-right: ${({ theme }) => theme.spacing(1)}px;
-  }
-`;
-
-const ConfigSaveFormGroup = styled(FormGroup)`
-  margin-top: ${({ theme }) => theme.spacing(2)}px;
-  > div:first-child {
-    margin-right: ${({ theme }) => theme.spacing(2)}px;
-  }
-`;
-
-// const ConfigComboBox = styled(Autocomplete)`
-//   width: 15rem;
-// `;
+export default FieldConfigInputs;

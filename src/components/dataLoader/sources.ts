@@ -4,9 +4,10 @@
 
 import { useRedux } from 'hooks-for-redux';
 
-export interface Field {
+export interface FieldConfig {
+  name: string;
   nickname?: string;
-  rank: 'asc' | 'desc';
+  rank?: 'asc' | 'desc';
   dtype?: string;
   transform?: string;
   defaultValue?: number | string;
@@ -19,22 +20,21 @@ export interface Source {
   url: string;
   configName: string;
   maxRecords?: number;
-  fields?: Field[];
+  configs: FieldConfig[];
 }
 
 type LoadedDataState = Source[];
 
-const initialState: LoadedDataState = [];
+const initialSourcesState: LoadedDataState = [];
 
-type AddSourcePayload = { url: string; maxRecords: number; configName: string | null };
+type AddSourcePayload = Omit<Source, 'id'>;
 
 export const [useSources, { addSource, selectSource, selectConfig }, sourcesStore] = useRedux(
   'sources',
-  initialState,
+  initialSourcesState,
   {
-    addSource: (state, { url, maxRecords, configName }: AddSourcePayload) => {
-      if (configName === null) configName = 'default';
-      return [{ id: state.length + 1, url, maxRecords, configName, configs: [] }, ...state];
+    addSource: (state, payload: AddSourcePayload) => {
+      return [{ id: state.length + 1, ...payload }, ...state];
     },
     selectSource: (state, url: string) => {
       // Currently get the first with correct url
@@ -52,5 +52,20 @@ export const [useSources, { addSource, selectSource, selectConfig }, sourcesStor
       }
       return state;
     },
+  },
+);
+
+const initialWorkingSourceState: Omit<Source, 'id'> = {
+  url: '',
+  maxRecords: 500,
+  configName: 'default',
+  configs: [],
+};
+
+export const [useWorkingSource, { setWorkingSource }, workingSourceStore] = useRedux(
+  'workingSource',
+  initialWorkingSourceState,
+  {
+    setWorkingSource: (_, newSource: Omit<Source, 'id'>) => newSource,
   },
 );

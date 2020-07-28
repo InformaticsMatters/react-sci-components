@@ -20,8 +20,8 @@ const App = () => {
       <Container>
         <AccordionView labels={['Settings / Scatter Plot', 'Card View', 'NGL Viewer']}>
           <Column>
-            <DataLoader />
             <Settings />
+            <DataLoader />
             <ScatterPlot />
           </Column>
           <CardView />

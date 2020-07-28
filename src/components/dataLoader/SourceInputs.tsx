@@ -5,47 +5,25 @@ import styled from 'styled-components';
 import { Button, FormGroup, TextField } from '@material-ui/core';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 
-import { addSource, selectSource, Source } from './sources';
+import { Source } from './sources';
 
 interface IProps {
   sources: Source[];
-  currentSource: Source;
+  currentSource: Omit<Source, 'id'>;
   sourceLabel?: string;
+  handleLoad: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
 }
 
-const SourceForm = ({ sources, currentSource, sourceLabel = '' }: IProps) => {
-  console.log(currentSource);
-
+const SourceInputs = ({ sources, currentSource, sourceLabel = '', handleLoad }: IProps) => {
+  const options = Array.from(new Set(sources.map(({ url }) => url))); // Remove duplicates
   return (
-    <form
-      // update defaultValue of fields when currentSource changes
-      key={`${currentSource.url}-${currentSource.configName}`}
-      onSubmit={(e) => {
-        e.preventDefault();
-
-        // ts doesn't know about the input elements so we need to make an assertion
-        // See: https://github.com/typescript-cheatsheets/react-typescript-cheatsheet#forms-and-events
-
-        const target = e.target as typeof e.target & {
-          sourcePath: { value: string };
-          maxRecords: { value: string };
-        };
-
-        addSource({
-          url: target.sourcePath.value,
-          maxRecords: Number(target.maxRecords.value),
-          configName: null,
-        });
-      }}
-    >
+    <>
       <Autocomplete
         freeSolo
-        onChange={(_, newValue) => {
-          newValue !== null && selectSource(newValue);
-        }}
-        forcePopupIcon
+        defaultValue={currentSource.url}
+        forcePopupIcon={!!options.length}
         selectOnFocus
-        options={Array.from(new Set(sources.map(({ url }) => url)))} // Remove duplicates
+        options={options}
         filterOptions={(options) => options}
         renderInput={(params) => (
           <TextField
@@ -72,15 +50,15 @@ const SourceForm = ({ sources, currentSource, sourceLabel = '' }: IProps) => {
           color="secondary"
           defaultValue={currentSource.maxRecords}
         />
-        <Button variant="contained" color="primary" type="submit">
+        <Button variant="contained" color="primary" onClick={handleLoad}>
           Load
         </Button>
       </SourceRowTwo>
-    </form>
+    </>
   );
 };
 
-export default SourceForm;
+export default SourceInputs;
 
 const SourceRowTwo = styled(FormGroup)`
   justify-content: space-between;
