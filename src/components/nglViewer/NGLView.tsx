@@ -6,8 +6,32 @@ import {useNGLLocalState, setNglViewList, setStage, initialState as NGL_INITIAL}
 import { throttle } from 'lodash';
 import { NGL_PARAMS, VIEWS } from './Constants';
 import {setOrientation, removeNglComponents} from './DispatchActions';
-import {showProtein} from './RenderingObjects';
+import {showProtein, showLigands} from './RenderingObjects';
+import { Molecule, useMolecules } from 'modules/molecules/molecules';
+import {Colour} from '../cardView/cardActions';
+import {useCardActions} from '../cardView/cardActions';
 
+export interface NGLMolecule {
+  id: number;
+  mol: Molecule;
+  color: string;
+}
+
+const getMoleculeObjects = (molIds: number[], colors: Colour[], molecules: Molecule[]) => {
+  let i;
+  const selectedMols: NGLMolecule[] = [];
+  for (i = 0; i < molIds.length; i++) {
+      const currentId = molIds[i];
+      const currentColor = colors.filter(col => col.id === currentId);
+      const currentMol = molecules.filter(mol => mol.id === currentId);
+      if (currentMol) {
+          const nglMol: NGLMolecule = {id: currentId, color: (currentColor && currentColor.length === 1) ? currentColor[0].colour : '#FFFF00', mol: currentMol[0]};
+          selectedMols.push(nglMol);
+      };
+  };
+
+  return selectedMols;
+}
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
   paper: {
@@ -27,7 +51,9 @@ export const NglView: React.FC<{div_id: string, height: string}> =
     memo(({ div_id, height }) => {
   // connect to NGL Stage object
 
-  const { viewList, stage, protein, nglOrientations }  = useNGLLocalState();
+  const { viewList, stage, protein, nglOrientations, molsInView }  = useNGLLocalState();
+  const {molecules} = useMolecules();
+  const {colours} = useCardActions();
   const classes = useStyles();
   const theme = useTheme();
 
@@ -137,13 +163,22 @@ export const NglView: React.FC<{div_id: string, height: string}> =
       registerNglView(div_id, newStage);
       registerStageEvents(newStage, getNglView);
       setStage(newStage);
+      removeNglComponents(newStage);
       showProtein(newStage, protein);
+      const molsToDisplay = getMoleculeObjects(molsInView, colours, molecules);
+      showLigands(newStage, molsToDisplay);
     } else if (stage === undefined && nglViewFromContext && nglViewFromContext.stage) {
       registerStageEvents(nglViewFromContext.stage, getNglView);
       setStage(nglViewFromContext.stage);
+      removeNglComponents(nglViewFromContext.stage);
       showProtein(nglViewFromContext.stage, protein);
+      const molsToDisplay = getMoleculeObjects(molsInView, colours, molecules);
+      showLigands(nglViewFromContext.stage, molsToDisplay);
     } else if (stage) {
+      removeNglComponents(stage);
       showProtein(stage, protein);
+      const molsToDisplay = getMoleculeObjects(molsInView, colours, molecules);
+      showLigands(stage, molsToDisplay);
       registerStageEvents(stage, getNglView);
     }
 
@@ -159,12 +194,14 @@ export const NglView: React.FC<{div_id: string, height: string}> =
     registerNglView,
     unregisterNglView,
     handleOrientationChanged,
-    removeNglComponents,
     registerStageEvents,
     unregisterStageEvents,
     stage,
     getNglView,
-    protein
+    protein,
+    colours,
+    molecules,
+    molsInView
   ]);
   // End of Initialization NGL View component
 
