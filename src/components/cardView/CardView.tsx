@@ -150,7 +150,7 @@ const LoadMoreButton = styled(Button)`
 
 const Grid = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(8rem, 1fr));
   grid-auto-rows: max-content;
   grid-gap: ${({ gap }: { gap: number }) => gap}px;
 `;
