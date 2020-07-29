@@ -25,9 +25,9 @@ const FieldConfiguration = ({ currentSource, fieldNames }: IProps) => {
 
 export default FieldConfiguration;
 
-const FieldSet = styled.fieldset`
+const FieldSet = styled.div`
   display: grid;
+  padding: ${({ theme }) => theme.spacing(1)}px;
   grid-template-columns: 12rem repeat(4, 8rem);
   grid-gap: ${({ theme }) => theme.spacing(1)}px;
-  border: none;
 `;
