@@ -5,7 +5,11 @@ import {NGLMolecule} from './NGLView';
 export const showProtein = (stage: any, protein: string) => {
     const stringBlob = new Blob([protein], {type: 'text/plain'});
     stage.loadFile(stringBlob, {ext: "pdb"}).then((comp: any) => {
-        const reprArray = createRepresentationsArray([createRepresentationStructure('cartoon', {})]);
+        const reprArray = createRepresentationsArray(
+        [
+          createRepresentationStructure(MOL_REPRESENTATION.cartoon, {})
+          //createRepresentationStructure(MOL_REPRESENTATION.licorice, {colorScheme: 'element', undefined})
+        ]);
         comp.autoView();
 
         return Promise.resolve(assignRepresentationArrayToComp(reprArray, comp));
@@ -18,16 +22,17 @@ const showLigand = ( stage: any, molecule: NGLMolecule ) => {
       const reprArray =
         createRepresentationsArray([
           createRepresentationStructure(
-            MOL_REPRESENTATION.ballPlusStick,
+            MOL_REPRESENTATION.licorice,
             {
               colorScheme: 'element',
               colorValue: molecule.color,
               multipleBond: true,
+              opacity: 1.0,
               undefined
             }
           )
         ]);
-  
+
       comp.autoView('ligand');
       return assignRepresentationArrayToComp(reprArray, comp);
     });
