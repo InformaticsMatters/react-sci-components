@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 
 import styled from 'styled-components';
 
@@ -25,14 +25,14 @@ interface IProps {
 
 const getFieldsFromForm = (form: HTMLFormElement, fieldNames: string[]): FieldConfig[] => {
   return fieldNames.map((name) => {
-    const min = form?.[`${name}-min`].value;
-    const max = form?.[`${name}-max`].value;
-    const dtype = form?.[`${name}-dtype`].value;
+    const min = form?.[`${name}-min`]?.value;
+    const max = form?.[`${name}-max`]?.value;
+    const dtype = form?.[`${name}-dtype`]?.value;
     const isNumeric = dtype === 'int' || dtype === 'float';
 
     return {
       name: name,
-      nickname: form?.[`${name}-nickname`].value,
+      nickname: form?.[`${name}-nickname`]?.value,
       dtype,
       min: isNumeric && min !== '' ? Number(min) : undefined,
       max: isNumeric && max !== '' ? Number(max) : undefined,
@@ -52,19 +52,26 @@ const getDataFromForm = (form: HTMLFormElement, fieldNames: string[]): Omit<Sour
 };
 
 const DataLoader = ({ sourceLabel }: IProps) => {
-  const { fieldNames, isMoleculesLoading } = useMolecules();
+  const { fieldNames, isMoleculesLoading, moleculesErrorMessage } = useMolecules();
   const sources = useSources();
   const currentSource = useWorkingSource();
 
   const formRef = useRef<HTMLFormElement>(null!);
+  const [currentUrl, setCurrentUrl] = useState(''); // Monitor state of source field to conditionally display field configs
 
   const handleLoad = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     const source = getDataFromForm(formRef.current, fieldNames);
+    if (currentUrl !== currentSource.url) {
+      source.configs = [];
+    }
     setWorkingSource(source);
   };
 
   const handleSave = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     const source = getDataFromForm(formRef.current, fieldNames);
+    if (currentUrl !== currentSource.url) {
+      source.configs = [];
+    }
     addSource(source);
   };
 
@@ -76,16 +83,19 @@ const DataLoader = ({ sourceLabel }: IProps) => {
         key={`${currentSource.url}-${currentSource.configName}`}
       >
         <SourceInputs
+          setCurrentUrl={setCurrentUrl}
           handleLoad={handleLoad}
           sources={sources}
           currentSource={currentSource}
           sourceLabel={sourceLabel}
+          moleculesErrorMessage={moleculesErrorMessage}
         />
         <Typography variant="h6">Field Configuration</Typography>
         {isMoleculesLoading ? (
           <CircularProgress />
         ) : (
-          !!currentSource.url && (
+          !!currentSource.url &&
+          currentUrl === currentSource.url && (
             <FieldsWrapper>
               <FieldConfiguration fieldNames={fieldNames} currentSource={currentSource} />
             </FieldsWrapper>

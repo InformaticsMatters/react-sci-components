@@ -19,6 +19,7 @@ export interface Molecule {
 
 export interface MoleculesState {
   isMoleculesLoading: boolean;
+  moleculesErrorMessage?: string;
   molecules: Molecule[];
   fieldNames: string[];
   fieldNickNames: string[];
@@ -33,7 +34,13 @@ const initialState: MoleculesState = {
 
 export const [
   useMolecules,
-  { setIsMoleculesLoading, setMolecules, setFieldNames, setFieldNickNames },
+  {
+    setIsMoleculesLoading,
+    setMolecules,
+    setFieldNames,
+    setFieldNickNames,
+    setMoleculesErrorMessage,
+  },
   moleculesStore,
 ] = useRedux('molecules', initialState, {
   setIsMoleculesLoading: (state, isMoleculesLoading: boolean) => ({
@@ -43,6 +50,10 @@ export const [
   setMolecules: (state, molecules: Molecule[]) => ({ ...state, molecules }),
   setFieldNames: (state, fieldNames: string[]) => ({ ...state, fieldNames }),
   setFieldNickNames: (state, fieldNickNames: string[]) => ({ ...state, fieldNickNames }),
+  setMoleculesErrorMessage: (state, moleculesErrorMessage: string) => ({
+    ...state,
+    moleculesErrorMessage,
+  }),
 });
 
 const parseSDF = (sdf: string, { maxRecords = Infinity, configs }: Omit<Source, 'url' | 'id'>) => {
@@ -70,7 +81,10 @@ const parseSDF = (sdf: string, { maxRecords = Infinity, configs }: Omit<Source, 
       let value;
       if (isNumeric(fieldValue)) {
         value = parseFloat(fieldValue);
-        if (config?.min && config?.max && (value < config.min || value > config.max)) {
+        if (config?.min && value < config.min) {
+          valid = false;
+        }
+        if (config?.max && value > config.max) {
           valid = false;
         }
       } else {
@@ -100,27 +114,38 @@ workingSourceStore.subscribe(async ({ url: moleculesPath, ...restOfSource }) => 
   setIsMoleculesLoading(true);
   const proxyurl = 'https://cors-anywhere.herokuapp.com/';
 
-  const resp = await fetch(proxyurl + moleculesPath, { mode: 'cors' });
+  try {
+    const resp = await fetch(proxyurl + moleculesPath, { mode: 'cors' });
 
-  if (moleculesPath.endsWith('.sdf')) {
-    const txt = await resp.text();
-    const [readMolecules, fieldNames, fieldNickNames] = parseSDF(txt, restOfSource);
-    setMolecules(readMolecules);
-    setFieldNames(fieldNames);
-    setFieldNickNames(fieldNickNames);
-  } else if (moleculesPath.endsWith('gzip') || moleculesPath.endsWith('gz')) {
-    const buffer = await resp.arrayBuffer();
-    const unzipped = ungzip(new Uint8Array(buffer));
-    let txt = '';
-    for (let i of unzipped) {
-      txt += String.fromCharCode(i);
+    // Fetch API doesn't throw an error when there is one
+    if (!resp.ok) {
+      throw new Error();
     }
 
-    const [readMolecules, fieldNames, fieldNickNames] = parseSDF(txt, restOfSource);
-    setMolecules(readMolecules);
-    setFieldNames(fieldNames);
-    setFieldNickNames(fieldNickNames);
-  }
+    if (moleculesPath.endsWith('.sdf')) {
+      const txt = await resp.text();
+      const [readMolecules, fieldNames, fieldNickNames] = parseSDF(txt, restOfSource);
+      setMolecules(readMolecules);
+      setFieldNames(fieldNames);
+      setFieldNickNames(fieldNickNames);
+    } else if (moleculesPath.endsWith('gzip') || moleculesPath.endsWith('gz')) {
+      const buffer = await resp.arrayBuffer();
+      const unzipped = ungzip(new Uint8Array(buffer));
+      let txt = '';
+      for (let i of unzipped) {
+        txt += String.fromCharCode(i);
+      }
 
-  setIsMoleculesLoading(false);
+      const [readMolecules, fieldNames, fieldNickNames] = parseSDF(txt, restOfSource);
+      setMolecules(readMolecules);
+      setFieldNames(fieldNames);
+      setFieldNickNames(fieldNickNames);
+    }
+  } catch (error) {
+    console.info({ error });
+    const err = error as Error;
+    setMoleculesErrorMessage(err.message || 'An unknown error occurred');
+  } finally {
+    setIsMoleculesLoading(false);
+  }
 });

@@ -11,14 +11,24 @@ interface IProps {
   sources: Source[];
   currentSource: Omit<Source, 'id'>;
   sourceLabel?: string;
+  moleculesErrorMessage?: string;
   handleLoad: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
+  setCurrentUrl: (_: string) => void;
 }
 
-const SourceInputs = ({ sources, currentSource, sourceLabel = '', handleLoad }: IProps) => {
+const SourceInputs = ({
+  sources,
+  currentSource,
+  sourceLabel = '',
+  moleculesErrorMessage,
+  handleLoad,
+  setCurrentUrl,
+}: IProps) => {
   const options = Array.from(new Set(sources.map(({ url }) => url))); // Remove duplicates
   return (
     <>
       <Autocomplete
+        onInputChange={(_, value) => setCurrentUrl(value)}
         freeSolo
         defaultValue={currentSource.url}
         forcePopupIcon={!!options.length}
@@ -28,11 +38,12 @@ const SourceInputs = ({ sources, currentSource, sourceLabel = '', handleLoad }: 
         renderInput={(params) => (
           <TextField
             {...params}
+            error={!!moleculesErrorMessage}
             name="sourcePath"
             required
             fullWidth
             autoFocus
-            helperText={sourceLabel}
+            helperText={moleculesErrorMessage || sourceLabel}
             placeholder="Source"
             variant="outlined"
             color="secondary"
@@ -57,7 +68,6 @@ const SourceInputs = ({ sources, currentSource, sourceLabel = '', handleLoad }: 
     </>
   );
 };
-
 export default SourceInputs;
 
 const SourceRowTwo = styled(FormGroup)`

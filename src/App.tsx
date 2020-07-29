@@ -2,9 +2,10 @@ import React from 'react';
 
 import './App.css';
 
+import { useWorkingSource } from 'components/dataLoader/sources';
 import styled from 'styled-components';
 
-import { Container as MuiContainer, ContainerProps } from '@material-ui/core';
+import { Container as MuiContainer, ContainerProps, Typography } from '@material-ui/core';
 
 import AccordionView from './components/AccordionView';
 import CardView from './components/cardView/CardView';
@@ -15,12 +16,16 @@ import Settings from './components/settings/Settings';
 import Theme from './theme';
 
 const App = () => {
+  const { url } = useWorkingSource();
   return (
     <Theme>
       <Container>
         <AccordionView labels={['Settings / Scatter Plot', 'Card View', 'NGL Viewer']}>
           <Column>
             <Settings />
+            <Typography style={{ width: '25rem' }} variant="body2">
+              {url}
+            </Typography>
             <DataLoader />
             <ScatterPlot />
           </Column>

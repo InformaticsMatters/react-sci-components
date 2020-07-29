@@ -17,7 +17,7 @@ interface IProps {
 }
 
 const FieldConfigInputs = ({ name, config }: IProps) => {
-  const [isNumeric, setIsNumeric] = useState(true);
+  const [isNumeric, setIsNumeric] = useState(false); // Initial value depends on the defaultValue given to select field
 
   const handleDtypeChange = (event: React.ChangeEvent<{ value: unknown }>) => {
     if (event.target.value === 'text') {
@@ -55,7 +55,7 @@ const FieldConfigInputs = ({ name, config }: IProps) => {
           onChange={handleDtypeChange}
           name={`${name}-dtype`}
           labelId={`dtype-${name}`}
-          defaultValue={config?.dtype ?? 'float'}
+          defaultValue={config?.dtype ?? 'text'}
           label="Rank"
         >
           <MenuItem value="float">float</MenuItem>
