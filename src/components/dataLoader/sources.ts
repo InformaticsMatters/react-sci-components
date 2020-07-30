@@ -7,8 +7,8 @@ import { useRedux } from 'hooks-for-redux';
 export interface FieldConfig {
   name: string;
   nickname?: string;
-  rank?: 'asc' | 'desc';
-  dtype?: string;
+  rank?: 'asc' | 'desc'; // TODO: make ENUM
+  dtype?: string; // TODO: make ENUM
   transform?: string;
   defaultValue?: number | string;
   min?: number;

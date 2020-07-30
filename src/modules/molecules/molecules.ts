@@ -36,23 +36,14 @@ const initialState: MoleculesState = {
 
 export const [
   useMolecules,
-  {
-    setIsMoleculesLoading,
-    setMolecules,
-    setFieldNames,
-    setFieldNickNames,
-    setMoleculesErrorMessage,
-    setTotalParsed,
-  },
+  { mergeNewState, setIsMoleculesLoading, setMoleculesErrorMessage, setTotalParsed },
   moleculesStore,
 ] = useRedux('molecules', initialState, {
+  mergeNewState: (state, newState: Partial<MoleculesState>) => ({ ...state, ...newState }),
   setIsMoleculesLoading: (state, isMoleculesLoading: boolean) => ({
     ...state,
     isMoleculesLoading,
   }),
-  setMolecules: (state, molecules: Molecule[]) => ({ ...state, molecules }),
-  setFieldNames: (state, fieldNames: string[]) => ({ ...state, fieldNames }),
-  setFieldNickNames: (state, fieldNickNames: string[]) => ({ ...state, fieldNickNames }),
   setMoleculesErrorMessage: (state, moleculesErrorMessage: string | null) => ({
     ...state,
     moleculesErrorMessage,
@@ -131,11 +122,13 @@ workingSourceStore.subscribe(async ({ url: moleculesPath, ...restOfSource }) => 
     if (moleculesPath.endsWith('.sdf')) {
       const txt = await resp.text();
       const [readMolecules, totalCounter, fieldNames, fieldNickNames] = parseSDF(txt, restOfSource);
-      setMolecules(readMolecules);
-      setTotalParsed(totalCounter);
-      setFieldNames(fieldNames);
-      setFieldNickNames(fieldNickNames);
-      setMoleculesErrorMessage(null);
+      mergeNewState({
+        molecules: readMolecules,
+        totalParsed: totalCounter,
+        fieldNames,
+        fieldNickNames,
+        moleculesErrorMessage: null,
+      });
     } else if (moleculesPath.endsWith('gzip') || moleculesPath.endsWith('gz')) {
       const buffer = await resp.arrayBuffer();
       const unzipped = ungzip(new Uint8Array(buffer));
@@ -145,11 +138,13 @@ workingSourceStore.subscribe(async ({ url: moleculesPath, ...restOfSource }) => 
       }
 
       const [readMolecules, totalCounter, fieldNames, fieldNickNames] = parseSDF(txt, restOfSource);
-      setMolecules(readMolecules);
-      setTotalParsed(totalCounter);
-      setFieldNames(fieldNames);
-      setFieldNickNames(fieldNickNames);
-      setMoleculesErrorMessage(null);
+      mergeNewState({
+        molecules: readMolecules,
+        totalParsed: totalCounter,
+        fieldNames,
+        fieldNickNames,
+        moleculesErrorMessage: null,
+      });
     }
   } catch (error) {
     console.info({ error });
