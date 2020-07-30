@@ -4,6 +4,7 @@ import styled from 'styled-components';
 
 import { Button, CircularProgress } from '@material-ui/core';
 
+import DataLoader from '../../components/dataLoader/DataLoader';
 import SourceCombobox from '../../components/dataLoader/SourceCombobox';
 import { useSources, useWorkingSource } from '../../components/dataLoader/sources';
 import { useProtein } from '../../modules/protein/protein';
@@ -17,7 +18,7 @@ const Settings = () => {
 
   return (
     <>
-      <form
+      <Form
         onSubmit={(e) => {
           e.preventDefault();
 
@@ -33,36 +34,63 @@ const Settings = () => {
           });
         }}
       >
-        <SourceCombobox
-          key={proteinPath}
-          urls={[]}
-          url={proteinPath}
-          placeholder="PDB url"
-          label="PDB"
-          name="proteinpath"
-          error={null}
-          size="small"
-        />
+        <SdfWrapper>
+          <SourceCombobox
+            key={proteinPath}
+            urls={[]}
+            url={proteinPath}
+            placeholder="Current PDB"
+            label="PDB"
+            name="proteinpath"
+            error={null}
+            size="small"
+            fullWidth
+          />
+        </SdfWrapper>
         <Button type="submit" variant="contained" color="primary">
           Load PDB
           {isProteinLoading && <LoadingIndicator size={24} />}
         </Button>
-      </form>
-      <SourceCombobox
-        // onChange
-        disabled
-        key={currentSource.url} // Reset defaultValue when it changes
-        urls={sources.map((source) => source.url)}
-        url={currentSource.url}
-        placeholder="Current SDF"
-        label="SDF"
-        error={null}
-        size="small"
-      />
+      </Form>
+      <Form>
+        <PdbWrapper>
+          <SourceCombobox
+            // onChange
+            disabled
+            key={currentSource.url} // Reset defaultValue when it changes
+            urls={sources.map((source) => source.url)}
+            url={currentSource.url}
+            placeholder="Current SDF"
+            label="SDF"
+            error={null}
+            size="small"
+          />
+        </PdbWrapper>
+        <DataLoaderWrapper>
+          <DataLoader />
+        </DataLoaderWrapper>
+      </Form>
     </>
   );
 };
 export default Settings;
+
+const Form = styled.form`
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+`;
+
+const SdfWrapper = styled.div`
+  width: calc(100% - ${({ theme }) => 101 + theme.spacing(2)}px);
+`;
+const PdbWrapper = styled.div`
+  width: calc(100% - ${({ theme }) => 30 + theme.spacing(2)}px);
+`;
+
+const DataLoaderWrapper = styled.div`
+  margin-top: -4px;
+`;
 
 const LoadingIndicator = styled(CircularProgress)`
   position: 'absolute';

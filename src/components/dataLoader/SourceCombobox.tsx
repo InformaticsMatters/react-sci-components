@@ -14,6 +14,7 @@ interface IProps {
   label: string;
   setValue?: (_: string) => void;
   size?: 'small' | 'medium';
+  fullWidth?: boolean;
   // onChange:
 }
 
@@ -28,6 +29,7 @@ const SourceCombobox = ({
   error,
   label,
   size,
+  fullWidth = true,
 }: IProps) => {
   const options = Array.from(new Set(urls)); // Remove duplicates
   return (
@@ -46,7 +48,7 @@ const SourceCombobox = ({
           name={name}
           required={required}
           disabled={disabled}
-          fullWidth
+          fullWidth={fullWidth}
           autoFocus
           helperText={error || label}
           placeholder={placeholder}

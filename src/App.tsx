@@ -8,7 +8,6 @@ import { Container as MuiContainer, ContainerProps } from '@material-ui/core';
 
 import AccordionView from './components/AccordionView';
 import CardView from './components/cardView/CardView';
-import DataLoader from './components/dataLoader/DataLoader';
 import { NglView } from './components/nglViewer/NGLView';
 import ScatterPlot from './components/scatterplot/Scatterplot';
 import Settings from './components/settings/Settings';
@@ -21,7 +20,6 @@ const App = () => {
         <AccordionView labels={['Settings / Scatter Plot', 'Card View', 'NGL Viewer']}>
           <Column>
             <Settings />
-            <DataLoader />
             <ScatterPlot />
           </Column>
           <CardView />
