@@ -37,12 +37,7 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
   paper: {
     backgroundColor: theme.palette.background.paper,
     borderRadius: theme.spacing(1) / 2,
-    //@ts-ignore
-    boxShadow: [
-      '0px 2px 1px -1px rgba(0,0,0,0.2)',
-      '0px 1px 1px 0px rgba(0,0,0,0.14)',
-      '0px 1px 3px 0px rgba(0,0,0,0.12)'
-    ],
+    boxShadow: "none",
     marginBottom: theme.spacing(1)
   }
 }));
@@ -110,6 +105,12 @@ export const NglView: React.FC<{div_id: string, height: string}> =
     const newStage = getNglView(div_id);
     if (newStage) {
       newStage.stage.handleResize();
+      newStage.stage.handleResize();
+      newStage.stage.handleResize();
+      newStage.stage.handleResize();
+      newStage.stage.handleResize();
+      newStage.stage.handleResize();
+      //newStage.stage.setSize('100%', '100%');
     }
   }, [div_id, getNglView]);
 
@@ -182,6 +183,8 @@ export const NglView: React.FC<{div_id: string, height: string}> =
       registerStageEvents(stage, getNglView);
     }
 
+    handleResize();
+
     return () => {
       if (stage) {
         unregisterStageEvents(stage, getNglView);
@@ -208,9 +211,10 @@ export const NglView: React.FC<{div_id: string, height: string}> =
   return (
     <div
       id={div_id}
-      className={/*div_id === VIEWS.MAJOR_VIEW ? classes.paper : */undefined}
+      className={div_id === VIEWS.MAJOR_VIEW ? classes.paper : undefined}
       style={{
-        height: `calc(${height || '600px'} - ${theme.spacing(1)}px)`
+        //height: `calc(${height || '600px'} - ${theme.spacing(1)}px)`
+        width: '100%', height: '100%',
       }}
     />
   );

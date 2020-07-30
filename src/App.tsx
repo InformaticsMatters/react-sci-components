@@ -9,7 +9,6 @@ import { Container as MuiContainer, ContainerProps } from '@material-ui/core';
 import AccordionView from './components/AccordionView';
 import CardView from './components/cardView/CardView';
 import { NglView } from './components/nglViewer/NGLView';
-import NGLViewer from './components/nglViewer/NGLViewer';
 import ScatterPlot from './components/scatterplot/Scatterplot';
 import Settings from './components/settings/Settings';
 import Theme from './theme';
