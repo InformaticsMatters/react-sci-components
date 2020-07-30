@@ -185,12 +185,12 @@ export const NglView: React.FC<{div_id: string, height: string}> =
 
     handleResize();
 
-    return () => {
+    /*return () => {
       if (stage) {
         unregisterStageEvents(stage, getNglView);
         unregisterNglView(div_id);
       }
-    };
+    };*/
   }, [
     div_id,
     handleResize,
