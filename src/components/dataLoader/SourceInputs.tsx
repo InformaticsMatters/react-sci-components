@@ -3,8 +3,8 @@ import React from 'react';
 import styled from 'styled-components';
 
 import { Button, FormGroup, TextField, Typography } from '@material-ui/core';
-import Autocomplete from '@material-ui/lab/Autocomplete';
 
+import SourceCombobox from './SourceCombobox';
 import { Source } from './sources';
 
 interface IProps {
@@ -28,31 +28,17 @@ const SourceInputs = ({
   handleLoad,
   setCurrentUrl,
 }: IProps) => {
-  const options = Array.from(new Set(sources.map(({ url }) => url))); // Remove duplicates
   return (
     <>
-      <Autocomplete
-        onInputChange={(_, value) => setCurrentUrl(value)}
-        freeSolo
-        defaultValue={currentSource.url}
-        forcePopupIcon={!!options.length}
-        selectOnFocus
-        options={options}
-        filterOptions={(options) => options}
-        renderInput={(params) => (
-          <TextField
-            {...params}
-            error={!!moleculesErrorMessage}
-            name="sourcePath"
-            required
-            fullWidth
-            autoFocus
-            helperText={moleculesErrorMessage || sourceLabel}
-            placeholder="Source"
-            variant="outlined"
-            color="secondary"
-          />
-        )}
+      <SourceCombobox
+        urls={sources.map((source) => source.url)}
+        url={currentSource.url}
+        name="sourcePath"
+        placeholder={'Source'}
+        required
+        label={sourceLabel}
+        error={moleculesErrorMessage}
+        setValue={setCurrentUrl}
       />
       <SourceRowTwo row>
         <TextField
