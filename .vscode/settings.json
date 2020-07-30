@@ -36,8 +36,10 @@
     "sizeaxis",
     "ungzip",
     "xaxis",
+    "xlabel",
     "xprop",
     "yaxis",
+    "ylabel",
     "yprop"
   ],
   "importSorter.generalConfiguration.sortOnBeforeSave": true,
