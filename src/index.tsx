@@ -25,6 +25,8 @@ render();
 // Learn more about service workers: https://bit.ly/CRA-PWA
 serviceWorker.unregister();
 
-// if (process.env.NODE_ENV === 'development' && module.hot) {
-//   module.hot.accept('./App', render);
-// }
+// Hot reloading for testing of css/display changes
+// May cause weirdness
+if (process.env.NODE_ENV === 'development' && module.hot) {
+  module.hot.accept('./App', render);
+}
