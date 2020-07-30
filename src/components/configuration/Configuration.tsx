@@ -8,7 +8,7 @@ import {
   DialogContent,
   DialogTitle,
   IconButton,
-  Paper,
+  Paper as MuiPaper,
   PaperProps,
 } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
@@ -19,11 +19,12 @@ interface IProps {
   children: React.ReactNode;
   ModalOpenIcon?: React.ReactNode;
   draggable?: boolean;
+  width?: number | string;
 }
 
 const PaperComponent = (props: PaperProps) => {
   return (
-    <Draggable handle="#modal-title" cancel={'[class*="MuiDialogContent-root"]'}>
+    <Draggable bounds={'parent'} handle="#modal-title" cancel={'[class*="MuiDialogContent-root"]'}>
       <Paper {...props} />
     </Draggable>
   );
@@ -34,7 +35,7 @@ const PaperComponent = (props: PaperProps) => {
  * @param title is rendered in the model title
  * @param children are rendered in the model content
  */
-const Configuration = ({ title, children, ModalOpenIcon, draggable }: IProps) => {
+const Configuration = ({ width, title, children, ModalOpenIcon, draggable = true }: IProps) => {
   const [open, setOpen] = useState(false);
   return (
     <>
@@ -46,6 +47,7 @@ const Configuration = ({ title, children, ModalOpenIcon, draggable }: IProps) =>
         onClose={() => setOpen(false)}
         maxWidth="lg"
         PaperComponent={draggable ? PaperComponent : undefined}
+        PaperProps={{ style: { width } }}
       >
         <Title id="modal-title">
           {title}
@@ -60,6 +62,10 @@ const Configuration = ({ title, children, ModalOpenIcon, draggable }: IProps) =>
 };
 
 export default Configuration;
+
+const Paper = styled(MuiPaper)`
+  margin: 0;
+`;
 
 const Title = styled(DialogTitle)`
   margin: 0;

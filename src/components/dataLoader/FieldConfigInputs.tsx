@@ -17,7 +17,7 @@ interface IProps {
 }
 
 const FieldConfigInputs = ({ name, config }: IProps) => {
-  const [isNumeric, setIsNumeric] = useState(false); // Initial value depends on the defaultValue given to select field
+  const [isNumeric, setIsNumeric] = useState(config?.dtype === 'int' || config?.dtype === 'float'); // Initial value depends on the defaultValue given to select field
 
   const handleDtypeChange = (event: React.ChangeEvent<{ value: unknown }>) => {
     if (event.target.value === 'text') {

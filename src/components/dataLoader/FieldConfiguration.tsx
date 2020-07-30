@@ -11,13 +11,18 @@ interface IProps {
 }
 
 const FieldConfiguration = ({ currentSource, fieldNames }: IProps) => {
-  const { configs } = currentSource;
-
+  const { configs, url, configName, maxRecords } = currentSource;
   return (
     <FieldSet>
       {fieldNames.map((name, index) => {
         const config = configs.find((field) => field.name === name);
-        return <FieldConfigInputs key={index} name={name} config={config} />;
+        return (
+          <FieldConfigInputs
+            key={`${url}-${configName}-${maxRecords}-${index}`}
+            name={name}
+            config={config}
+          />
+        );
       })}
     </FieldSet>
   );

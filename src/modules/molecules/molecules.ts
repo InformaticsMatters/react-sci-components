@@ -19,14 +19,16 @@ export interface Molecule {
 
 export interface MoleculesState {
   isMoleculesLoading: boolean;
-  moleculesErrorMessage?: string;
+  moleculesErrorMessage: string | null;
   molecules: Molecule[];
+  totalParsed?: number;
   fieldNames: string[];
   fieldNickNames: string[];
 }
 
 const initialState: MoleculesState = {
   isMoleculesLoading: false,
+  moleculesErrorMessage: null,
   molecules: [],
   fieldNames: [],
   fieldNickNames: [],
@@ -40,6 +42,7 @@ export const [
     setFieldNames,
     setFieldNickNames,
     setMoleculesErrorMessage,
+    setTotalParsed,
   },
   moleculesStore,
 ] = useRedux('molecules', initialState, {
@@ -50,10 +53,11 @@ export const [
   setMolecules: (state, molecules: Molecule[]) => ({ ...state, molecules }),
   setFieldNames: (state, fieldNames: string[]) => ({ ...state, fieldNames }),
   setFieldNickNames: (state, fieldNickNames: string[]) => ({ ...state, fieldNickNames }),
-  setMoleculesErrorMessage: (state, moleculesErrorMessage: string) => ({
+  setMoleculesErrorMessage: (state, moleculesErrorMessage: string | null) => ({
     ...state,
     moleculesErrorMessage,
   }),
+  setTotalParsed: (state, totalParsed: number) => ({ ...state, totalParsed }),
 });
 
 const parseSDF = (sdf: string, { maxRecords = Infinity, configs }: Omit<Source, 'url' | 'id'>) => {
@@ -68,7 +72,8 @@ const parseSDF = (sdf: string, { maxRecords = Infinity, configs }: Omit<Source, 
   );
 
   let counter = 0;
-  while (parser.next() && counter <= maxRecords) {
+  let totalCounter = 0;
+  while (parser.next() && counter < maxRecords) {
     const sdfMolecule = parser.getMolecule();
     const currentMolFile = sdfMolecule.toMolfile();
     const smiles = sdfMolecule.toIsomericSmiles();
@@ -101,13 +106,14 @@ const parseSDF = (sdf: string, { maxRecords = Infinity, configs }: Omit<Source, 
       });
       counter++;
     }
+    totalCounter++;
   }
   fieldNames.unshift('oclSmiles');
   const fieldNickNames = fieldNames.map(
     (name) => configs.find((config) => config.name === name)?.nickname || name,
   );
 
-  return [readMolecules, fieldNames, fieldNickNames] as const;
+  return [readMolecules, totalCounter, fieldNames, fieldNickNames] as const;
 };
 
 workingSourceStore.subscribe(async ({ url: moleculesPath, ...restOfSource }) => {
@@ -124,10 +130,12 @@ workingSourceStore.subscribe(async ({ url: moleculesPath, ...restOfSource }) => 
 
     if (moleculesPath.endsWith('.sdf')) {
       const txt = await resp.text();
-      const [readMolecules, fieldNames, fieldNickNames] = parseSDF(txt, restOfSource);
+      const [readMolecules, totalCounter, fieldNames, fieldNickNames] = parseSDF(txt, restOfSource);
       setMolecules(readMolecules);
+      setTotalParsed(totalCounter);
       setFieldNames(fieldNames);
       setFieldNickNames(fieldNickNames);
+      setMoleculesErrorMessage(null);
     } else if (moleculesPath.endsWith('gzip') || moleculesPath.endsWith('gz')) {
       const buffer = await resp.arrayBuffer();
       const unzipped = ungzip(new Uint8Array(buffer));
@@ -136,15 +144,18 @@ workingSourceStore.subscribe(async ({ url: moleculesPath, ...restOfSource }) => 
         txt += String.fromCharCode(i);
       }
 
-      const [readMolecules, fieldNames, fieldNickNames] = parseSDF(txt, restOfSource);
+      const [readMolecules, totalCounter, fieldNames, fieldNickNames] = parseSDF(txt, restOfSource);
       setMolecules(readMolecules);
+      setTotalParsed(totalCounter);
       setFieldNames(fieldNames);
       setFieldNickNames(fieldNickNames);
+      setMoleculesErrorMessage(null);
     }
   } catch (error) {
     console.info({ error });
     const err = error as Error;
     setMoleculesErrorMessage(err.message || 'An unknown error occurred');
+    setTotalParsed(0);
   } finally {
     setIsMoleculesLoading(false);
   }

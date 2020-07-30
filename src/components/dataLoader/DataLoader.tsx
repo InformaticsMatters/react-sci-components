@@ -52,7 +52,13 @@ const getDataFromForm = (form: HTMLFormElement, fieldNames: string[]): Omit<Sour
 };
 
 const DataLoader = ({ sourceLabel }: IProps) => {
-  const { fieldNames, isMoleculesLoading, moleculesErrorMessage } = useMolecules();
+  const {
+    molecules,
+    totalParsed,
+    fieldNames,
+    isMoleculesLoading,
+    moleculesErrorMessage,
+  } = useMolecules();
   const sources = useSources();
   const currentSource = useWorkingSource();
 
@@ -76,13 +82,15 @@ const DataLoader = ({ sourceLabel }: IProps) => {
   };
 
   return (
-    <Configuration draggable title="SDF Sources" ModalOpenIcon={<GetAppIcon />}>
+    <Configuration draggable width={'50rem'} title="SDF Sources" ModalOpenIcon={<GetAppIcon />}>
       <form
         ref={formRef}
         // update defaultValue of fields when currentSource changes
         key={`${currentSource.url}-${currentSource.configName}`}
       >
         <SourceInputs
+          numOfMolsKept={molecules.length}
+          numOfMolsParsed={totalParsed}
           setCurrentUrl={setCurrentUrl}
           handleLoad={handleLoad}
           sources={sources}
@@ -90,17 +98,16 @@ const DataLoader = ({ sourceLabel }: IProps) => {
           sourceLabel={sourceLabel}
           moleculesErrorMessage={moleculesErrorMessage}
         />
-        <Typography variant="h6">Field Configuration</Typography>
-        {isMoleculesLoading ? (
-          <CircularProgress />
-        ) : (
-          !!currentSource.url &&
-          currentUrl === currentSource.url && (
-            <FieldsWrapper>
-              <FieldConfiguration fieldNames={fieldNames} currentSource={currentSource} />
-            </FieldsWrapper>
-          )
-        )}
+        <FieldsWrapper>
+          <Typography variant="h6">Field Configuration</Typography>
+          {isMoleculesLoading ? (
+            <Progress />
+          ) : !!currentSource.url && currentUrl === currentSource.url ? (
+            <FieldConfiguration fieldNames={fieldNames} currentSource={currentSource} />
+          ) : (
+            <Typography>Load a data source to apply filters/transforms</Typography>
+          )}
+        </FieldsWrapper>
         <Divider />
         <ConfigManager handleSave={handleSave} sources={sources} currentSource={currentSource} />
       </form>
@@ -113,10 +120,14 @@ export default DataLoader;
 const FieldsWrapper = styled.div`
   height: 40vh;
   overflow-y: scroll;
-  width: 60vw;
+  text-align: center;
 `;
 
 const Divider = styled(MuiDivider)`
   margin-top: ${({ theme }) => theme.spacing(1)}px;
   margin-bottom: ${({ theme }) => theme.spacing(1)}px;
+`;
+
+const Progress = styled(CircularProgress)`
+  margin-top: ${({ theme }) => theme.spacing(4)}px;
 `;
