@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import styled from 'styled-components';
 
-import { Button, Typography } from '@material-ui/core';
+import { Button, Container as MuiContainer, ContainerProps, Typography } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
+import useComponentSize from '@rehooks/component-size';
 
 interface IProps {
   children: React.ReactNode;
@@ -11,6 +12,12 @@ interface IProps {
 }
 
 const AccordionView = ({ children, labels }: IProps) => {
+  // Container size
+  const ref = useRef(null);
+  const { width } = useComponentSize<HTMLDivElement>(ref);
+  useEffect(() => console.debug(width), [width]);
+
+  // Open panels
   const [open, setIsOpen] = useState([true, true, true]);
 
   const createHandleChange = (index: number) => () => {
@@ -24,33 +31,49 @@ const AccordionView = ({ children, labels }: IProps) => {
   const grows = [0, 1, 1];
   const basis = [500, 400, undefined];
 
+  // NGL Resize
+
   useEffect(() => {
     window.dispatchEvent(new Event('resize'));
   });
 
+  // Need to find ref to
   return (
-    <>
-      {React.Children.map(children, (child, index) => (
+    <div ref={ref}>
+      <Container>
         <>
-          <VerticalButton onClick={createHandleChange(index)} fullWidth>
-            <Typography noWrap variant="body2">
-              {labels[index]}
-            </Typography>
-          </VerticalButton>
-          <AccordionColumn
-            visible={open[index]}
-            grow={open[index] ? grows[index] : 0}
-            basis={open[index] ? basis[index] : undefined}
-          >
-            {child}
-          </AccordionColumn>
+          {React.Children.map(children, (child, index) => (
+            <>
+              <VerticalButton onClick={createHandleChange(index)} fullWidth>
+                <Typography noWrap variant="body2">
+                  {labels[index]}
+                </Typography>
+              </VerticalButton>
+              <AccordionColumn
+                visible={open[index]}
+                grow={open[index] ? grows[index] : 0}
+                basis={open[index] ? basis[index] : undefined}
+              >
+                {child}
+              </AccordionColumn>
+            </>
+          ))}
         </>
-      ))}
-    </>
+      </Container>
+    </div>
   );
 };
 
 export default AccordionView;
+
+const Container = styled(({ children, ...props }: ContainerProps) => (
+  <MuiContainer maxWidth="xl" {...props}>
+    {children}
+  </MuiContainer>
+))`
+  display: flex;
+  overflow-x: hidden;
+`;
 
 const VerticalButton = withStyles((theme) => ({
   root: {

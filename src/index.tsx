@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 
 import './index.css';
 import './store'; // Must be imported before hooks4redux implicitly creates a store
+import 'resize-observer-polyfill';
 
 import { Provider } from 'hooks-for-redux';
 
