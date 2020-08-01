@@ -35,7 +35,6 @@
     "react-plotly.js": "^2.4.0",
     "react-scripts": "3.4.1",
     "react-smooth-dnd": "^0.11.1",
-    "react-stonecutter": "^0.3.10",
     "redux-devtools-extension": "^2.13.8",
     "remotedev-server": "^0.3.1",
     "reselect": "^4.0.0",
