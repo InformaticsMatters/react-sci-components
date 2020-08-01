@@ -1,11 +1,14 @@
 import { useRedux } from 'hooks-for-redux';
+import { zip } from 'lodash';
 
 import { moleculesStore } from '../../modules/molecules/molecules';
 
 import type { DropResult } from 'react-smooth-dnd';
 
+export type CField = { name: string; title: string };
+
 interface Config {
-  fields: string[];
+  fields: CField[];
   enabledFields: string[];
   fieldForDepiction: string;
 }
@@ -21,14 +24,14 @@ export const [
   { setFields, setEnabledFields, toggleFieldIsEnabled, moveFieldPosition, setDepictionField },
   scatterplotConfigurationStore,
 ] = useRedux('cardViewConfiguration', initialState, {
-  setFields: (configuration, fields: string[]) => ({ ...configuration, fields }),
+  setFields: (configuration, fields: CField[]) => ({ ...configuration, fields }),
   setEnabledFields: (configuration, enabledFields) => ({ ...configuration, enabledFields }),
-  toggleFieldIsEnabled: ({ enabledFields, ...rest }, field: string) => {
-    const index = enabledFields.findIndex((f) => f === field);
+  toggleFieldIsEnabled: ({ enabledFields, ...rest }, fieldName: string) => {
+    const index = enabledFields.findIndex((f) => f === fieldName);
     if (index !== -1) {
-      return { ...rest, enabledFields: enabledFields.filter((f) => f !== field) };
+      return { ...rest, enabledFields: enabledFields.filter((f) => f !== fieldName) };
     }
-    return { ...rest, enabledFields: [...enabledFields, field] };
+    return { ...rest, enabledFields: [...enabledFields, fieldName] };
   },
   moveFieldPosition: ({ fields, ...rest }, { removedIndex, addedIndex }: DropResult) => {
     if (removedIndex === null || addedIndex === null) {
@@ -43,7 +46,11 @@ export const [
   }),
 });
 
-moleculesStore.subscribe(({ fieldNames }) => {
-  setFields(fieldNames);
-  setEnabledFields(fieldNames.slice(0, 5));
+moleculesStore.subscribe(({ fieldNames, fieldNickNames }) => {
+  // This check is probably unnecessary
+  if (fieldNames.length === fieldNickNames.length) {
+    const zipped = zip(fieldNames, fieldNickNames) as [string, string][];
+    setFields(zipped.map(([name, title]) => ({ name, title })));
+    setEnabledFields(fieldNames.slice(0, 5));
+  }
 });

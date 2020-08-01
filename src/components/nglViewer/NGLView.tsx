@@ -1,15 +1,22 @@
-import { Stage } from 'ngl';
-import React, { memo, useEffect, useCallback } from 'react';
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import {useTheme} from '@material-ui/core';
-import {useNGLLocalState, setNglViewList, setStage, initialState as NGL_INITIAL} from './NGLLocalState'
+import React, { memo, useCallback, useEffect } from 'react';
+
 import { throttle } from 'lodash';
-import { NGL_PARAMS, VIEWS } from './Constants';
-import {setOrientation, removeNglComponents} from './DispatchActions';
-import {showProtein, showLigands} from './RenderingObjects';
 import { Molecule, useMolecules } from 'modules/molecules/molecules';
-import {Colour} from '../cardView/cardActions';
-import {useCardActions} from '../cardView/cardActions';
+import { Stage } from 'ngl';
+
+import { useTheme } from '@material-ui/core';
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
+
+import { Colour, useCardActions } from '../cardView/cardActions';
+import { NGL_PARAMS, VIEWS } from './Constants';
+import { removeNglComponents, setOrientation } from './DispatchActions';
+import {
+  initialState as NGL_INITIAL,
+  setNglViewList,
+  setStage,
+  useNGLLocalState,
+} from './NGLLocalState';
+import { showLigands, showProtein } from './RenderingObjects';
 
 export interface NGLMolecule {
   id: number;
@@ -21,14 +28,18 @@ const getMoleculeObjects = (molIds: number[], colors: Colour[], molecules: Molec
   let i;
   const selectedMols: NGLMolecule[] = [];
   for (i = 0; i < molIds.length; i++) {
-      const currentId = molIds[i];
-      const currentColor = colors.filter(col => col.id === currentId);
-      const currentMol = molecules.filter(mol => mol.id === currentId);
-      if (currentMol) {
-          const nglMol: NGLMolecule = {id: currentId, color: (currentColor && currentColor.length === 1) ? currentColor[0].colour : '#FFFF00', mol: currentMol[0]};
-          selectedMols.push(nglMol);
+    const currentId = molIds[i];
+    const currentColor = colors.filter((col) => col.id === currentId);
+    const currentMol = molecules.filter((mol) => mol.id === currentId);
+    if (currentMol) {
+      const nglMol: NGLMolecule = {
+        id: currentId,
+        color: currentColor && currentColor.length === 1 ? currentColor[0].colour : '#FFFF00',
+        mol: currentMol[0],
       };
-  };
+      selectedMols.push(nglMol);
+    }
+  }
 
   return selectedMols;
 }
@@ -42,52 +53,63 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
   }
 }));
 
-export const NglView: React.FC<{div_id: string, height: string}> = 
-    memo(({ div_id, height }) => {
+export const NglView: React.FC<{ div_id: string; height: string }> = memo(({ div_id, height }) => {
   // connect to NGL Stage object
 
-  const { viewList, stage, protein, nglOrientations, molsInView }  = useNGLLocalState();
-  const {molecules} = useMolecules();
-  const {colours} = useCardActions();
+  const { viewList, stage, protein, nglOrientations, molsInView } = useNGLLocalState();
+  const { molecules } = useMolecules();
+  const { colours } = useCardActions();
   const classes = useStyles();
   const theme = useTheme();
 
-  const registerNglView = useCallback((id: string, stage: any) => {
-    if (viewList.filter(ngl => ngl.id === id).length > 0) {
-      console.log(new Error(`Cannot register NGL View with used ID! ${id}`));
-    } else {
-      let extendedList = viewList;
-      extendedList.push({ id, stage });
-      setNglViewList(extendedList);
-    }
-  }, [viewList]);
+  stage?.handleResize();
 
-  const unregisterNglView = useCallback((id: string) => {
-    if (viewList.filter(ngl => ngl.id === id).length === 0) {
-      console.log(new Error(`Cannot remove NGL View with given ID! ${id}`));
-    } else {
-      for (let i = 0; i < viewList.length; i++) {
-        if (viewList[i].id === id) {
-          viewList.splice(i, 1);
-          setNglViewList(viewList);
-          break;
+  const registerNglView = useCallback(
+    (id: string, stage: any) => {
+      if (viewList.filter((ngl) => ngl.id === id).length > 0) {
+        console.log(new Error(`Cannot register NGL View with used ID! ${id}`));
+      } else {
+        let extendedList = viewList;
+        extendedList.push({ id, stage });
+        setNglViewList(extendedList);
+      }
+    },
+    [viewList],
+  );
+
+  const unregisterNglView = useCallback(
+    (id: string) => {
+      if (viewList.filter((ngl) => ngl.id === id).length === 0) {
+        console.log(new Error(`Cannot remove NGL View with given ID! ${id}`));
+      } else {
+        for (let i = 0; i < viewList.length; i++) {
+          if (viewList[i].id === id) {
+            viewList.splice(i, 1);
+            setNglViewList(viewList);
+            break;
+          }
         }
       }
-    }
-  }, [viewList]);
+    },
+    [viewList],
+  );
 
-  const getNglView = useCallback((id: string) => {
-    const filteredList = viewList && viewList.length > 0 ? viewList.filter(ngl => ngl.id === id) : [];
-    switch (filteredList.length) {
-      case 0:
-        return undefined;
-      case 1:
-        return filteredList[0];
-      default:
-        console.log(new Error('Cannot found NGL View with given ID!'));
-        break;
-    }
-  }, [viewList]); 
+  const getNglView = useCallback(
+    (id: string) => {
+      const filteredList =
+        viewList && viewList.length > 0 ? viewList.filter((ngl) => ngl.id === id) : [];
+      switch (filteredList.length) {
+        case 0:
+          return undefined;
+        case 1:
+          return filteredList[0];
+        default:
+          console.log(new Error('Cannot found NGL View with given ID!'));
+          break;
+      }
+    },
+    [viewList],
+  );
 
   const handleOrientationChanged = useCallback(
     throttle(() => {
@@ -97,7 +119,7 @@ export const NglView: React.FC<{div_id: string, height: string}> =
         setOrientation(div_id, currentOrientation, nglOrientations);
       }
     }, 250),
-    [div_id, getNglView, setOrientation]
+    [div_id, getNglView, setOrientation],
   );
 
   // Initialization of NGL View component
@@ -127,7 +149,7 @@ export const NglView: React.FC<{div_id: string, height: string}> =
         newStage.mouseObserver.signals.dragged.add(handleOrientationChanged);
       }
     },
-    [handleResize, handleOrientationChanged/*, handleNglViewPick*/]
+    [handleResize, handleOrientationChanged /*, handleNglViewPick*/],
   );
 
   const unregisterStageEvents = useCallback(
@@ -143,11 +165,10 @@ export const NglView: React.FC<{div_id: string, height: string}> =
         newStage.mouseObserver.signals.dragged.remove(handleOrientationChanged);
       }
     },
-    [handleResize, handleOrientationChanged/*, handleNglViewPick*/]
+    [handleResize, handleOrientationChanged /*, handleNglViewPick*/],
   );
 
   useEffect(() => {
- 
     const nglViewFromContext = getNglView(div_id);
     if (stage === undefined && !nglViewFromContext) {
       const newStage = new Stage(div_id);
@@ -159,7 +180,9 @@ export const NglView: React.FC<{div_id: string, height: string}> =
         }
       } else {
         // set only background color for preview view
-        newStage.setParameters({ [NGL_PARAMS.backgroundColor]: NGL_INITIAL.viewParams[NGL_PARAMS.backgroundColor] });
+        newStage.setParameters({
+          [NGL_PARAMS.backgroundColor]: NGL_INITIAL.viewParams[NGL_PARAMS.backgroundColor],
+        });
       }
       registerNglView(div_id, newStage);
       registerStageEvents(newStage, getNglView);
@@ -204,7 +227,7 @@ export const NglView: React.FC<{div_id: string, height: string}> =
     protein,
     colours,
     molecules,
-    molsInView
+    molsInView,
   ]);
   // End of Initialization NGL View component
 
@@ -221,4 +244,3 @@ export const NglView: React.FC<{div_id: string, height: string}> =
 });
 
 NglView.displayName = 'NglView';
-

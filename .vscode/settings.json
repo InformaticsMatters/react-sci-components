@@ -20,6 +20,7 @@
     "depictmcs",
     "devtools",
     "dragmode",
+    "dtype",
     "fragnet",
     "hovermode",
     "minmax",
@@ -35,8 +36,10 @@
     "sizeaxis",
     "ungzip",
     "xaxis",
+    "xlabel",
     "xprop",
     "yaxis",
+    "ylabel",
     "yprop"
   ],
   "importSorter.generalConfiguration.sortOnBeforeSave": true,

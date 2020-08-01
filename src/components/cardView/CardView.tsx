@@ -66,7 +66,7 @@ const CardView = () => {
 
   const [loadMoreCount, setLoadMoreCount] = useState(1);
 
-  const { molecules } = useMolecules();
+  const { molecules, fieldNames, fieldNickNames } = useMolecules();
   const selectedMoleculesIds = usePlotSelection();
   const actions = useCardActions();
   const { isInNGLViewerIds, colours } = actions;
@@ -97,7 +97,11 @@ const CardView = () => {
               if (typeof smiles !== 'string') {
                 smiles = '';
               }
-              fieldValues.sort((a, b) => fields.indexOf(a.name) - fields.indexOf(b.name));
+              fieldValues.sort(
+                (a, b) =>
+                  fields.findIndex((f) => f.name === a.name) -
+                  fields.findIndex((f) => f.name === b.name),
+              );
               const selected = isInNGLViewerIds.includes(id);
               return (
                 <span key={index}>
@@ -121,7 +125,12 @@ const CardView = () => {
                     }}
                   >
                     <CalculationsTable
-                      properties={fieldValues.filter(({ name }) => enabledFields.includes(name))}
+                      properties={fieldValues
+                        .filter(({ name }) => enabledFields.includes(name))
+                        .map(({ name, ...rest }) => ({
+                          ...rest,
+                          name: fieldNickNames[fieldNames.indexOf(name)],
+                        }))}
                       fontSize={'0.6rem'}
                     />
                   </MolCard>
@@ -150,7 +159,7 @@ const LoadMoreButton = styled(Button)`
 
 const Grid = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(8rem, 1fr));
   grid-auto-rows: max-content;
   grid-gap: ${({ gap }: { gap: number }) => gap}px;
 `;

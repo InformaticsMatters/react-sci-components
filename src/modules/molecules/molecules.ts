@@ -3,9 +3,13 @@ import { SDFileParser } from 'openchemlib/minimal';
 import { ungzip } from 'pako';
 import { isNumeric } from 'utils';
 
-import { settingsStore } from '../settings/settings';
+import { Source, workingSourceStore } from '../../components/dataLoader/sources';
 
-export type Field = { name: 'oclSmiles' | string; value: number | string };
+export interface Field {
+  name: 'oclSmiles' | string;
+  nickname?: string;
+  value: number | string;
+}
 
 export interface Molecule {
   id: number;
@@ -15,112 +19,139 @@ export interface Molecule {
 
 export interface MoleculesState {
   isMoleculesLoading: boolean;
+  moleculesErrorMessage: string | null;
   molecules: Molecule[];
+  totalParsed?: number;
   fieldNames: string[];
+  fieldNickNames: string[];
 }
 
 const initialState: MoleculesState = {
   isMoleculesLoading: false,
+  moleculesErrorMessage: null,
   molecules: [],
   fieldNames: [],
+  fieldNickNames: [],
 };
 
 export const [
   useMolecules,
-  { setIsMoleculesLoading, setMolecules, setFieldNames },
+  { mergeNewState, setIsMoleculesLoading, setMoleculesErrorMessage, setTotalParsed },
   moleculesStore,
 ] = useRedux('molecules', initialState, {
+  mergeNewState: (state, newState: Partial<MoleculesState>) => ({ ...state, ...newState }),
   setIsMoleculesLoading: (state, isMoleculesLoading: boolean) => ({
     ...state,
     isMoleculesLoading,
   }),
-  setMolecules: (state, molecules: Molecule[]) => ({ ...state, molecules }),
-  setFieldNames: (state, fieldNames: string[]) => ({ ...state, fieldNames }),
+  setMoleculesErrorMessage: (state, moleculesErrorMessage: string | null) => ({
+    ...state,
+    moleculesErrorMessage,
+  }),
+  setTotalParsed: (state, totalParsed: number) => ({ ...state, totalParsed }),
 });
 
-const parseSDF = (sdf: string) => {
+const parseSDF = (sdf: string, { maxRecords = Infinity, configs }: Omit<Source, 'url' | 'id'>) => {
   const readMolecules: Molecule[] = [];
   // Types for openchemlib are missing strict null checks so need 'null as any' here
   // TODO: can we specify the field we use with the second arg?
   const parser = new SDFileParser(sdf, null!);
   const fieldNames = parser.getFieldNames(1);
+
+  const configLookup = Object.fromEntries(
+    fieldNames.map((name) => [name, configs.find((config) => config.name === name)]),
+  );
+
   let counter = 0;
-  while (parser.next()) {
+  let totalCounter = 0;
+  while (parser.next() && counter < maxRecords) {
     const sdfMolecule = parser.getMolecule();
     const currentMolFile = sdfMolecule.toMolfile();
     const smiles = sdfMolecule.toIsomericSmiles();
     const fields: Field[] = [{ name: 'oclSmiles', value: smiles }];
 
+    let valid = true;
     fieldNames.forEach((name) => {
       const fieldValue = parser.getField(name);
+      const config = configLookup[name];
       let value;
       if (isNumeric(fieldValue)) {
         value = parseFloat(fieldValue);
+        if (config?.min && value < config.min) {
+          valid = false;
+        }
+        if (config?.max && value > config.max) {
+          valid = false;
+        }
       } else {
         value = fieldValue;
       }
-      fields.push({ name, value });
+      fields.push({ name, nickname: config?.nickname || name, value });
     });
 
-    readMolecules.push({
-      id: counter,
-      molFile: currentMolFile,
-      fields: fields,
-    });
-    counter++;
+    if (valid) {
+      readMolecules.push({
+        id: counter,
+        molFile: currentMolFile,
+        fields: fields,
+      });
+      counter++;
+    }
+    totalCounter++;
   }
   fieldNames.unshift('oclSmiles');
+  const fieldNickNames = fieldNames.map(
+    (name) => configs.find((config) => config.name === name)?.nickname || name,
+  );
 
-  return [readMolecules, fieldNames] as const;
+  return [readMolecules, totalCounter, fieldNames, fieldNickNames] as const;
 };
 
-settingsStore.subscribe(({moleculesPath}) => {
+workingSourceStore.subscribe(async ({ url: moleculesPath, ...restOfSource }) => {
   setIsMoleculesLoading(true);
   const proxyurl = 'https://cors-anywhere.herokuapp.com/';
-  fetch(proxyurl + moleculesPath, { mode: 'cors' })
-    .then((resp) => {
-      if (moleculesPath.endsWith('.sdf')) {
-        resp
-          .text()
-          .then(parseSDF)
-          .then(([readMolecules, fieldNames]) => {
-            setMolecules(readMolecules);
-            setFieldNames(fieldNames);
-          });
-      } else if (moleculesPath.endsWith('gzip') || moleculesPath.endsWith('gz')) {
-        resp
-          .arrayBuffer()
-          .then((buffer) => ungzip(new Uint8Array(buffer)))
-          .then((unzipped) => {
-            let str = '';
-            for (let i of unzipped) {
-              str += String.fromCharCode(i);
-            }
-            return str;
-          })
-          .then(parseSDF)
-          .then(([readMolecules, fieldNames]) => {
-            setMolecules(readMolecules);
-            setFieldNames(fieldNames);
-          });
-      }
-    })
-    .catch((reason) => {
-      console.log('Request failed due to');
-      console.log(reason);
 
-      if (process.env.NODE_ENV === 'development') {
-        // If CORS fails then use mock for now
-        console.log('Using mock data instead');
+  try {
+    const resp = await fetch(proxyurl + moleculesPath, { mode: 'cors' });
 
-        fetch('./moleculesmock.sdf')
-          .then((resp) => resp.text())
-          .then(parseSDF)
-          .then(([readMolecules, fieldNames]) => {
-            setMolecules(readMolecules);
-            setFieldNames(fieldNames);
-          });
+    // Fetch API doesn't throw an error when there is one
+    if (!resp.ok) {
+      throw new Error();
+    }
+
+    if (moleculesPath.endsWith('.sdf')) {
+      const txt = await resp.text();
+      const [readMolecules, totalCounter, fieldNames, fieldNickNames] = parseSDF(txt, restOfSource);
+      mergeNewState({
+        molecules: readMolecules,
+        totalParsed: totalCounter,
+        fieldNames,
+        fieldNickNames,
+        moleculesErrorMessage: null,
+      });
+    } else if (moleculesPath.endsWith('gzip') || moleculesPath.endsWith('gz')) {
+      const buffer = await resp.arrayBuffer();
+      const unzipped = ungzip(new Uint8Array(buffer));
+      let txt = '';
+      for (let i of unzipped) {
+        txt += String.fromCharCode(i);
       }
-    })
-    .finally(() => setIsMoleculesLoading(false));
+
+      const [readMolecules, totalCounter, fieldNames, fieldNickNames] = parseSDF(txt, restOfSource);
+      mergeNewState({
+        molecules: readMolecules,
+        totalParsed: totalCounter,
+        fieldNames,
+        fieldNickNames,
+        moleculesErrorMessage: null,
+      });
+    }
+  } catch (error) {
+    console.info({ error });
+    const err = error as Error;
+    setMoleculesErrorMessage(err.message || 'An unknown error occurred');
+    setTotalParsed(0);
+  } finally {
+    setIsMoleculesLoading(false);
+  }
 });

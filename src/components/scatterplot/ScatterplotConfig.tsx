@@ -1,5 +1,6 @@
 import React from 'react';
 
+import { zip } from 'lodash';
 import styled from 'styled-components';
 
 import { FormControl, InputLabel, MenuItem, Select } from '@material-ui/core';
@@ -8,7 +9,7 @@ import Configuration from '../configuration/Configuration';
 import { setConfigurationItem, useScatterplotConfiguration } from './plotConfiguration';
 
 interface IProps {
-  properties: string[];
+  properties: [string[], string[]];
 }
 
 const ScatterplotConfiguration = ({ properties }: IProps) => {
@@ -33,9 +34,9 @@ const ScatterplotConfiguration = ({ properties }: IProps) => {
                   }
                 >
                   <MenuItem value={'id'}>id</MenuItem>
-                  {properties.map((prop, j) => (
+                  {zip(...properties).map(([prop, title], j) => (
                     <MenuItem key={j} value={prop}>
-                      {prop}
+                      {title}
                     </MenuItem>
                   ))}
                 </Select>

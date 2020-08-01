@@ -2,11 +2,12 @@ import React from 'react';
 
 import { Datum } from 'plotly.js';
 import Plot from 'react-plotly.js';
+
 import { Molecule, useMolecules } from '../../modules/molecules/molecules';
 import { isNumber, isUndefined } from '../../utils';
 import { useScatterplotConfiguration } from './plotConfiguration';
 import { selectPoints } from './plotSelection';
-import ScatterplotConfiguration from './ScatterplotConfig';
+import ScatterplotConfig from './ScatterplotConfig';
 
 const getPropArrayFromMolecules = (molecules: Molecule[], prop: string | null) => {
   if (prop === 'id') {
@@ -16,10 +17,24 @@ const getPropArrayFromMolecules = (molecules: Molecule[], prop: string | null) =
   }
 };
 
+/* Gets the axis display text of the curried prop name */
+const getPropDisplayName = (names: string[], nicknames: string[]) => (prop: string | null) => {
+  if (prop !== null) {
+    const idx = names.indexOf(prop);
+    if (idx !== -1) {
+      return nicknames[idx];
+    } else {
+      return prop;
+    }
+  } else {
+    return 'Select a property to display';
+  }
+};
+
 type AxisSeries = ReturnType<typeof getPropArrayFromMolecules> | number;
 
 const ScatterPlot = () => {
-  const { molecules, fieldNames } = useMolecules();
+  const { molecules, fieldNames, fieldNickNames } = useMolecules();
 
   let { xprop, yprop, size, colour } = useScatterplotConfiguration();
 
@@ -46,10 +61,14 @@ const ScatterPlot = () => {
     sizeaxis = 10;
   }
 
+  const labelGetter = getPropDisplayName(fieldNames, fieldNickNames);
+  const xlabel = labelGetter(xprop);
+  const ylabel = labelGetter(yprop);
+
   return (
     <>
       <div>
-        <ScatterplotConfiguration properties={fieldNames} />
+        <ScatterplotConfig properties={[fieldNames, fieldNickNames]} />
       </div>
       <Plot
         data={[
@@ -72,8 +91,8 @@ const ScatterPlot = () => {
           margin: { t: 10, r: 10, b: 50, l: 50 },
           dragmode: 'select',
           hovermode: 'closest',
-          xaxis: { title: xprop ?? 'Select a property to display' },
-          yaxis: { title: yprop ?? 'Select a property to display' },
+          xaxis: { title: xlabel },
+          yaxis: { title: ylabel },
         }}
         config={{
           modeBarButtonsToRemove: [
