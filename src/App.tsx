@@ -15,18 +15,28 @@ const App = () => {
   return (
     <Theme>
       <AccordionView labels={['Settings / Scatter Plot', 'Card View', 'NGL Viewer']}>
-        <Column>
-          <Settings />
-          <ScatterPlot />
-        </Column>
-        <CardView />
-        <NglView div_id="ngl" height="1000px" />
+        {(width) => {
+          return [
+            <FirstPanel width={width} />,
+            <CardView width={width} />,
+            <NglView width={width} div_id="ngl" height="1000px" />,
+          ];
+        }}
       </AccordionView>
     </Theme>
   );
 };
 
 export default App;
+
+const FirstPanel = ({ width }: { width: number }) => {
+  return (
+    <Column>
+      <Settings />
+      <ScatterPlot width={width} />
+    </Column>
+  );
+};
 
 const Column = styled.div`
   ${({ theme }) => `padding: ${theme.spacing(2)}px`}

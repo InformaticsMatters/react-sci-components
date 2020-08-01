@@ -7,15 +7,17 @@ import { withStyles } from '@material-ui/core/styles';
 import useComponentSize from '@rehooks/component-size';
 
 interface IProps {
-  children: React.ReactNode;
+  children: (width: number) => JSX.Element[];
   labels: string[];
 }
+
+const NUMBER_OF_PANELS = 3;
+const BUTTON_WIDTH = 48; //px === 3rem
 
 const AccordionView = ({ children, labels }: IProps) => {
   // Container size
   const ref = useRef(null);
   const { width } = useComponentSize<HTMLDivElement>(ref);
-  useEffect(() => console.debug(width), [width]);
 
   // Open panels
   const [open, setIsOpen] = useState([true, true, true]);
@@ -28,37 +30,41 @@ const AccordionView = ({ children, labels }: IProps) => {
     }
   };
 
-  const grows = [0, 1, 1];
-  const basis = [500, 400, undefined];
+  const numPanelsOpen = open.filter((o) => o).length;
+  console.debug(numPanelsOpen);
 
+  const columnWidth = (width - NUMBER_OF_PANELS * BUTTON_WIDTH) / numPanelsOpen;
+  console.debug(columnWidth)
   // NGL Resize
 
   useEffect(() => {
     window.dispatchEvent(new Event('resize'));
   });
 
-  // Need to find ref to
+  const panels = children(columnWidth);
+
+  // Need to bind ref to div since container doesn't properly forwardRef to its root
   return (
     <div ref={ref}>
-      <Container>
-        <>
-          {React.Children.map(children, (child, index) => (
+      <Container disableGutters>
+        {
+          React.Children.map(panels, (child, index) => (
             <>
-              <VerticalButton onClick={createHandleChange(index)} fullWidth>
+              <VerticalButton
+                disabled={numPanelsOpen === 1 && open[index]}
+                onClick={createHandleChange(index)}
+                fullWidth
+              >
                 <Typography noWrap variant="body2">
                   {labels[index]}
                 </Typography>
               </VerticalButton>
-              <AccordionColumn
-                visible={open[index]}
-                grow={open[index] ? grows[index] : 0}
-                basis={open[index] ? basis[index] : undefined}
-              >
+              <AccordionColumn columnWidth={columnWidth} visible={open[index]}>
                 {child}
               </AccordionColumn>
             </>
-          ))}
-        </>
+          ))!
+        }
       </Container>
     </div>
   );
@@ -81,10 +87,9 @@ const VerticalButton = withStyles((theme) => ({
     textTransform: 'none',
     position: 'sticky',
     top: 0,
-    right: 0,
     boxShadow: theme.shadows[10],
     height: '100vh',
-    minWidth: '3rem',
+    minWidth: BUTTON_WIDTH,
     width: 0,
     borderRadius: 0,
   },
@@ -94,17 +99,9 @@ const VerticalButton = withStyles((theme) => ({
   },
 }))(Button);
 
-type ColumnExtraProps = {
-  visible: boolean;
-  grow: number;
-  basis: number | undefined;
-};
-
-const AccordionColumn = styled.div<ColumnExtraProps>`
+const AccordionColumn = styled.section<{ visible: boolean; columnWidth: number }>`
   height: 100vh;
-  min-width: 0;
-  flex-grow: ${({ grow }) => grow};
-  flex-basis: ${({ basis }) => basis};
   visibility: ${({ visible }) => (visible ? 'visible' : 'hidden')};
-  width: ${({ visible }) => (visible ? 'auto' : 0)};
+  width: ${({ visible, columnWidth }) => (visible ? columnWidth : 0)}px;
+  transition: width 200ms ease;
 `;

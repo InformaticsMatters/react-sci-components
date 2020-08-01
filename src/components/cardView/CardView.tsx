@@ -58,9 +58,11 @@ const useStyles = makeStyles((theme: Theme) =>
     },
   }),
 );
-interface IProps {}
+interface IProps {
+  width: number;
+}
 
-const CardView = () => {
+const CardView = ({ width }: IProps) => {
   const classes = useStyles();
   const theme = useTheme();
 
@@ -162,6 +164,7 @@ const Grid = styled.div`
   grid-template-columns: repeat(auto-fill, minmax(8rem, 1fr));
   grid-auto-rows: max-content;
   grid-gap: ${({ gap }: { gap: number }) => gap}px;
+  animation: resize 200ms ease infinite both;
 `;
 
 // Scrolling and height of grid region
