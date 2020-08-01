@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import styled from 'styled-components';
 
@@ -23,6 +23,10 @@ const AccordionView = ({ children, labels }: IProps) => {
 
   const grows = [0, 1, 1];
   const basis = [500, 400, undefined];
+
+  useEffect(() => {
+    window.dispatchEvent(new Event('resize'));
+  });
 
   return (
     <>
