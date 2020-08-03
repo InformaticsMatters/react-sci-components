@@ -53,6 +53,12 @@ declare module 'react-stonecutter' {
     backInOut: Easing;
   }
 
+  export type Transforms = (
+    itemProps: unknown[],
+    gridProps: unknown[],
+    gridState: unknown,
+  ) => unknown;
+
   interface CommonGridProps {
     /**
      * Number of columns. Required.
@@ -64,6 +70,11 @@ declare module 'react-stonecutter' {
      * Width of a single column, by default in px units. Required.
      */
     columnWidth: number;
+
+    /**
+     * Height of items
+     */
+    itemHeight?: number;
 
     /**
      * Width of space between columns. Default: 0.
@@ -90,9 +101,9 @@ declare module 'react-stonecutter' {
      * Supply functions that return objects with the opacity and transform values for an item's start and end states.
      * By default the item's scale and opacity go from 0 to 1 and back to 0 on exit
      */
-    enter?(itemProps: unknown[], gridProps: unknown[], gridState: unknown): unknown;
-    entered?(itemProps: unknown[], gridProps: unknown[], gridState: unknown): unknown;
-    exit?(itemProps: unknown[], gridProps: unknown[], gridState: unknown): unknown;
+    enter?: Transforms;
+    entered?: Transforms;
+    exit?: Transforms;
 
     /**
      * The perspective distance used for 3D transforms.
@@ -185,15 +196,21 @@ declare module 'react-stonecutter' {
     simple: LayoutFunction;
   };
 
+  export interface Style {
+    enter: Transforms;
+    entered: Transforms;
+    exit: Transforms;
+  }
+
   export const enterExitStyle: {
-    foldUp: unknown;
-    fromCenter: unknown;
-    fromLeftToRight: unknown;
-    fromTop: unknown;
-    fromBottom: unknown;
-    newspaper: unknown;
-    simple: unknown;
-    skew: unknown;
+    foldUp: Style;
+    fromCenter: Style;
+    fromLeftToRight: Style;
+    fromTop: Style;
+    fromBottom: Style;
+    newspaper: Style;
+    simple: Style;
+    skew: Style;
   };
 
   export const easings: Easings;
