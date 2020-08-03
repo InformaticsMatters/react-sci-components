@@ -34,7 +34,7 @@ const getMoleculeObjects = (molIds: number[], colors: Colour[], molecules: Molec
     if (currentMol) {
       const nglMol: NGLMolecule = {
         id: currentId,
-        color: currentColor && currentColor.length === 1 ? currentColor[0].colour : '#FFFF00',
+        color: currentColor && currentColor.length === 1 ? currentColor[0].colour : '#909090',
         mol: currentMol[0],
       };
       selectedMols.push(nglMol);

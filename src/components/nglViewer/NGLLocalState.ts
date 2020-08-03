@@ -22,7 +22,7 @@ export const initialState: NGLLocalState = {
     stage: undefined,
     nglOrientations: {},
     viewParams: {
-        [NGL_PARAMS.backgroundColor]: BACKGROUND_COLOR.black,
+        [NGL_PARAMS.backgroundColor]: BACKGROUND_COLOR.white,
         [NGL_PARAMS.clipNear]: 42,
         [NGL_PARAMS.clipFar]: 100,
         [NGL_PARAMS.clipDist]: 10,
