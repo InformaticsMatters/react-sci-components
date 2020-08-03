@@ -1,16 +1,25 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import styled from 'styled-components';
 
-import { Button, Typography } from '@material-ui/core';
+import { Button, Container as MuiContainer, ContainerProps, Typography } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
+import useComponentSize from '@rehooks/component-size';
 
 interface IProps {
-  children: React.ReactNode;
+  children: (width: number) => JSX.Element[];
   labels: string[];
 }
 
+const NUMBER_OF_PANELS = 3;
+const BUTTON_WIDTH = 48; //px === 3rem
+
 const AccordionView = ({ children, labels }: IProps) => {
+  // Container size
+  const ref = useRef(null);
+  const { width } = useComponentSize<HTMLDivElement>(ref);
+
+  // Open panels
   const [open, setIsOpen] = useState([true, true, true]);
 
   const createHandleChange = (index: number) => () => {
@@ -21,36 +30,53 @@ const AccordionView = ({ children, labels }: IProps) => {
     }
   };
 
-  const grows = [0, 1, 1];
-  const basis = [500, 400, undefined];
+  const numPanelsOpen = open.filter((o) => o).length;
+  const columnWidth = (width - NUMBER_OF_PANELS * BUTTON_WIDTH) / numPanelsOpen;
+  // NGL Resize
 
   useEffect(() => {
     window.dispatchEvent(new Event('resize'));
   });
 
+  const panels = children(columnWidth);
+
+  // Need to bind ref to div since container doesn't properly forwardRef to its root
   return (
-    <>
-      {React.Children.map(children, (child, index) => (
-        <>
-          <VerticalButton onClick={createHandleChange(index)} fullWidth>
-            <Typography noWrap variant="body2">
-              {labels[index]}
-            </Typography>
-          </VerticalButton>
-          <AccordionColumn
-            visible={open[index]}
-            grow={open[index] ? grows[index] : 0}
-            basis={open[index] ? basis[index] : undefined}
-          >
-            {child}
-          </AccordionColumn>
-        </>
-      ))}
-    </>
+    <div ref={ref}>
+      <Container disableGutters>
+        {
+          React.Children.map(panels, (child, index) => (
+            <>
+              <VerticalButton
+                disabled={numPanelsOpen === 1 && open[index]}
+                onClick={createHandleChange(index)}
+                fullWidth
+              >
+                <Typography noWrap variant="body2">
+                  {labels[index]}
+                </Typography>
+              </VerticalButton>
+              <AccordionColumn columnWidth={columnWidth} visible={open[index]}>
+                {child}
+              </AccordionColumn>
+            </>
+          ))!
+        }
+      </Container>
+    </div>
   );
 };
 
 export default AccordionView;
+
+const Container = styled(({ children, ...props }: ContainerProps) => (
+  <MuiContainer maxWidth="xl" {...props}>
+    {children}
+  </MuiContainer>
+))`
+  display: flex;
+  overflow-x: hidden;
+`;
 
 const VerticalButton = withStyles((theme) => ({
   root: {
@@ -58,10 +84,9 @@ const VerticalButton = withStyles((theme) => ({
     textTransform: 'none',
     position: 'sticky',
     top: 0,
-    right: 0,
     boxShadow: theme.shadows[10],
     height: '100vh',
-    minWidth: '3rem',
+    minWidth: BUTTON_WIDTH,
     width: 0,
     borderRadius: 0,
   },
@@ -71,17 +96,9 @@ const VerticalButton = withStyles((theme) => ({
   },
 }))(Button);
 
-type ColumnExtraProps = {
-  visible: boolean;
-  grow: number;
-  basis: number | undefined;
-};
-
-const AccordionColumn = styled.div<ColumnExtraProps>`
+const AccordionColumn = styled.section<{ visible: boolean; columnWidth: number }>`
   height: 100vh;
-  min-width: 0;
-  flex-grow: ${({ grow }) => grow};
-  flex-basis: ${({ basis }) => basis};
   visibility: ${({ visible }) => (visible ? 'visible' : 'hidden')};
-  width: ${({ visible }) => (visible ? 'auto' : 0)};
+  width: ${({ visible, columnWidth }) => (visible ? columnWidth : 0)}px;
+  transition: width 200ms ease;
 `;

@@ -3,6 +3,8 @@ import React from 'react';
 import { Datum } from 'plotly.js';
 import Plot from 'react-plotly.js';
 
+import { useTheme } from '@material-ui/core';
+
 import { Molecule, useMolecules } from '../../modules/molecules/molecules';
 import { isNumber, isUndefined } from '../../utils';
 import { useScatterplotConfiguration } from './plotConfiguration';
@@ -31,9 +33,16 @@ const getPropDisplayName = (names: string[], nicknames: string[]) => (prop: stri
   }
 };
 
+// Types
+
 type AxisSeries = ReturnType<typeof getPropArrayFromMolecules> | number;
 
-const ScatterPlot = () => {
+interface IProps {
+  width: number;
+}
+
+const ScatterPlot = ({ width }: IProps) => {
+  const theme = useTheme();
   const { molecules, fieldNames, fieldNickNames } = useMolecules();
 
   let { xprop, yprop, size, colour } = useScatterplotConfiguration();
@@ -65,6 +74,7 @@ const ScatterPlot = () => {
   const xlabel = labelGetter(xprop);
   const ylabel = labelGetter(yprop);
 
+  const displayWidth = width - 2*theme.spacing(2);
   return (
     <>
       <div>
@@ -86,8 +96,8 @@ const ScatterPlot = () => {
           },
         ]}
         layout={{
-          width: 450,
-          height: 450,
+          width: displayWidth,
+          // height: displayWidth,
           margin: { t: 10, r: 10, b: 50, l: 50 },
           dragmode: 'select',
           hovermode: 'closest',

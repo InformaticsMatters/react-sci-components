@@ -35,7 +35,13 @@ const ColourPicker = ({ enabled, colours, iconColour, setColour, clearColour }: 
       <IconButton aria-describedby={id} aria-label="pick-colour" onClick={handleClick}>
         <PaletteIcon htmlColor={iconColour} />
       </IconButton>
-      <Popper id={id} open={!!anchorEl && enabled} anchorEl={anchorEl} transition>
+      <Popper
+        id={id}
+        open={!!anchorEl && enabled}
+        anchorEl={anchorEl}
+        transition
+        style={{ zIndex: 3 }}
+      >
         {({ TransitionProps }) => (
           <Fade {...TransitionProps} timeout={350}>
             <PickerPaper>

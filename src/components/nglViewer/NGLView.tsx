@@ -4,7 +4,6 @@ import { throttle } from 'lodash';
 import { Molecule, useMolecules } from 'modules/molecules/molecules';
 import { Stage } from 'ngl';
 
-import { useTheme } from '@material-ui/core';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 
 import { Colour, useCardActions } from '../cardView/cardActions';
@@ -42,27 +41,32 @@ const getMoleculeObjects = (molIds: number[], colors: Colour[], molecules: Molec
   }
 
   return selectedMols;
+};
+
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    paper: {
+      backgroundColor: theme.palette.background.paper,
+      borderRadius: theme.spacing(1) / 2,
+      boxShadow: 'none',
+      marginBottom: theme.spacing(1),
+    },
+  }),
+);
+
+interface IProps {
+  div_id: string;
+  height: string;
+  width: number;
 }
 
-const useStyles = makeStyles((theme: Theme) => createStyles({
-  paper: {
-    backgroundColor: theme.palette.background.paper,
-    borderRadius: theme.spacing(1) / 2,
-    boxShadow: "none",
-    marginBottom: theme.spacing(1)
-  }
-}));
-
-export const NglView: React.FC<{ div_id: string; height: string }> = memo(({ div_id, height }) => {
+export const NglView: React.FC<IProps> = memo(({ div_id, width }) => {
   // connect to NGL Stage object
 
   const { viewList, stage, protein, nglOrientations, molsInView } = useNGLLocalState();
   const { molecules } = useMolecules();
   const { colours } = useCardActions();
   const classes = useStyles();
-  const theme = useTheme();
-
-  stage?.handleResize();
 
   const registerNglView = useCallback(
     (id: string, stage: any) => {
@@ -127,14 +131,11 @@ export const NglView: React.FC<{ div_id: string; height: string }> = memo(({ div
     const newStage = getNglView(div_id);
     if (newStage) {
       newStage.stage.handleResize();
-      newStage.stage.handleResize();
-      newStage.stage.handleResize();
-      newStage.stage.handleResize();
-      newStage.stage.handleResize();
-      newStage.stage.handleResize();
-      //newStage.stage.setSize('100%', '100%');
     }
   }, [div_id, getNglView]);
+
+  // Resize the stage whenever the container width changes
+  useEffect(() => handleResize(), [width, handleResize]);
 
   const registerStageEvents = useCallback(
     (newStage, getNglView) => {
@@ -206,8 +207,6 @@ export const NglView: React.FC<{ div_id: string; height: string }> = memo(({ div
       registerStageEvents(stage, getNglView);
     }
 
-    handleResize();
-
     /*return () => {
       if (stage) {
         unregisterStageEvents(stage, getNglView);
@@ -237,7 +236,8 @@ export const NglView: React.FC<{ div_id: string; height: string }> = memo(({ div
       className={div_id === VIEWS.MAJOR_VIEW ? classes.paper : undefined}
       style={{
         //height: `calc(${height || '600px'} - ${theme.spacing(1)}px)`
-        width: '100%', height: '100%',
+        width: '100%',
+        height: '100%',
       }}
     />
   );
