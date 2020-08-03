@@ -1,8 +1,6 @@
 import React from 'react';
 
-import styled from 'styled-components';
-
-interface Props {
+interface IProps {
   smiles: string;
   width?: number;
   height?: number;
@@ -22,7 +20,7 @@ interface Props {
   depict_route?: string;
 }
 
-const DepictMolecule = (props: Readonly<Props>) => {
+const DepictMolecule = (props: Readonly<IProps>) => {
   const {
     smiles,
     width,
@@ -38,8 +36,6 @@ const DepictMolecule = (props: Readonly<Props>) => {
 
   const params = {
     mol: smiles,
-    ...(width && { w: String(width) }),
-    ...(height && { h: String(height) }),
     m: String(margin),
     expand: String(expand),
     mcs: String(mcs),
@@ -51,7 +47,7 @@ const DepictMolecule = (props: Readonly<Props>) => {
   );
 
   return (
-    <Image
+    <img
       width={width}
       height={height}
       src={smiles && `${fragnet_server}${depict_route}?${searchParams.join('&')}`}
@@ -61,13 +57,3 @@ const DepictMolecule = (props: Readonly<Props>) => {
 };
 
 export default DepictMolecule;
-
-interface ImageExtraProps {
-  height?: number;
-  width?: number;
-}
-
-const Image = styled.img<ImageExtraProps>`
-  width: ${({ width }) => (width ? `${width}px` : '100%')};
-  max-height: ${({ height }) => (height ? `${height}px` : '100%')};
-`;

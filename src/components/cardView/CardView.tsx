@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 
+import { CSSGrid, enterExitStyle } from 'react-stonecutter';
 import styled from 'styled-components';
 
 import { Button } from '@material-ui/core';
@@ -20,7 +21,11 @@ import { useCardViewConfiguration } from './cardViewConfiguration';
 import ColourPicker from './ColourPicker';
 import MolCard from './MolCard';
 
-const CARDS_PER_PAGE = 50;
+const { enter, entered, exit } = enterExitStyle.fromLeftToRight;
+const CARDS_PER_PAGE = 25;
+const GRID_PADDING = 2; // theme spacing units
+const MIN_CARD_WIDTH = 144; //px === 9rem
+const GUTTER_SIZE = 16; // px === 1rem
 
 const moleculeSorter = ({ colours }: CardActionsState) => (ma: Molecule, mb: Molecule) => {
   const ca = colours.find((c) => c.id === ma.id);
@@ -80,6 +85,22 @@ const CardView = ({ width }: IProps) => {
     return isSelected || isColoured;
   });
 
+  // Calculate dimensions of card for stonecutter grid
+  const gridWidth = width - 2 * theme.spacing(GRID_PADDING); // padding removed
+  const numColumns = Math.floor(gridWidth / MIN_CARD_WIDTH);
+
+  let cardWidth;
+  if (numColumns > 1) {
+    cardWidth = (gridWidth - (numColumns - 1) * GUTTER_SIZE) / numColumns;
+    console.debug(cardWidth);
+  } else {
+    cardWidth = gridWidth;
+  }
+
+  const imageSize = cardWidth - 2 * theme.spacing(2);
+  const cardHeight =
+    imageSize + enabledFields.length * 22.9 + 2 * theme.spacing(2) + theme.spacing(1);
+
   return (
     <>
       {!!displayMolecules.length && (
@@ -90,11 +111,21 @@ const CardView = ({ width }: IProps) => {
         />
       )}
       <GridWrapper>
-        <Grid gap={theme.spacing(2)}>
+        <Grid
+          duration={200}
+          columns={numColumns}
+          itemHeight={cardHeight}
+          columnWidth={cardWidth}
+          gutterWidth={GUTTER_SIZE}
+          gutterHeight={GUTTER_SIZE}
+          enter={enter}
+          entered={entered}
+          exit={exit}
+        >
           {displayMolecules
             .sort(moleculeSorter(actions))
             .splice(0, CARDS_PER_PAGE * loadMoreCount)
-            .map(({ id, fields: fieldValues }, index) => {
+            .map(({ id, fields: fieldValues }) => {
               let smiles = fieldValues.find((field) => field.name === fieldForDepiction)?.value;
               if (typeof smiles !== 'string') {
                 smiles = '';
@@ -106,11 +137,13 @@ const CardView = ({ width }: IProps) => {
               );
               const selected = isInNGLViewerIds.includes(id);
               return (
-                <span key={index}>
+                <span key={id}>
                   <MolCard
+                    smiles={smiles}
                     elevation={selected ? 10 : undefined}
                     bgColor={selected ? theme.palette.grey[100] : undefined}
-                    smiles={smiles}
+                    depictWidth={imageSize}
+                    depictHeight={imageSize}
                     onClick={() => toggleIsInNGLViewer(id)}
                     actionsProps={{ className: classes.actionsRoot }}
                     actions={(hover) => {
@@ -141,30 +174,21 @@ const CardView = ({ width }: IProps) => {
             })}
         </Grid>
         {!!(CARDS_PER_PAGE * loadMoreCount < selectedMoleculesIds.length) && (
-          <LoadMoreButton
+          <Button
             variant="text"
             color="default"
             onClick={() => setLoadMoreCount(loadMoreCount + 1)}
           >
             Load More
-          </LoadMoreButton>
+          </Button>
         )}
       </GridWrapper>
     </>
   );
 };
 
-const LoadMoreButton = styled(Button)`
-  margin-top: ${({ theme }) => theme.spacing(2)};
-  margin-bottom: ${({ theme }) => theme.spacing(2)};
-`;
-
-const Grid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(8rem, 1fr));
-  grid-auto-rows: max-content;
-  grid-gap: ${({ gap }: { gap: number }) => gap}px;
-  animation: resize 200ms ease infinite both;
+const Grid = styled(CSSGrid)`
+  margin-bottom: 1rem;
 `;
 
 // Scrolling and height of grid region

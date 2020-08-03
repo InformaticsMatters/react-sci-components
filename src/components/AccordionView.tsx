@@ -31,10 +31,7 @@ const AccordionView = ({ children, labels }: IProps) => {
   };
 
   const numPanelsOpen = open.filter((o) => o).length;
-  console.debug(numPanelsOpen);
-
   const columnWidth = (width - NUMBER_OF_PANELS * BUTTON_WIDTH) / numPanelsOpen;
-  console.debug(columnWidth)
   // NGL Resize
 
   useEffect(() => {
