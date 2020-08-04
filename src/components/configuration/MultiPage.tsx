@@ -32,14 +32,19 @@ const TabPanel = ({ children, value, index, ...other }: TabPanelProps) => {
       aria-labelledby={`configuration-tab-${index}`}
       {...other}
     >
-      {children}
-      {/* {value === index && children} Might need to unmount for performance*/}
+      {value === index && children}
     </div>
   );
 };
 
-// Tabbed modal content
-const MultiPage = ({ titles, close, children }: IProps) => {
+/**
+ *  Tabbed modal content for ./Configuration
+ * @param titles the the text displayed in tabs
+ * @param close the function to be called when the close X is clicked
+ *
+ * @param children the content of each panel. This is mapped over with React.Children.map
+ */
+const MultiPage: React.FC<IProps> = ({ titles, close, children }) => {
   const [value, setValue] = React.useState(0);
 
   return (
@@ -47,6 +52,8 @@ const MultiPage = ({ titles, close, children }: IProps) => {
       <Title id="configuration-title">
         <AppBar color="default">
           <Tabs
+            value={value}
+            indicatorColor="primary"
             onChange={(_, index) => setValue(index)}
             variant="scrollable"
             scrollButtons="auto"

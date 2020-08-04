@@ -13,7 +13,6 @@ import {
 } from '@material-ui/core';
 
 import DraggableList from '../../components/DraggableList';
-import Configuration from '../configuration/Configuration';
 import {
   CField,
   moveFieldPosition,
@@ -23,13 +22,20 @@ import {
 
 import type { DropResult } from 'react-smooth-dnd';
 interface IProps {
+  title: string;
   fields?: CField[];
   enabledFields?: string[];
-  depictionField: string;
+  fieldForDepiction: string;
 }
 
-const CardViewConfiguration = ({ fields = [], enabledFields = [], depictionField }: IProps) => {
-  const title = 'Card View';
+/**
+ * Configuration options for the card view component in the pose-viewer
+ * @param title used for setting ids for this card view and avoid id conflicts (a11y)
+ * @param fields the fields available to cards
+ * @param enabledFields the fieldNames of the `CField`s that are visible in cards
+ * @param fieldsForDepiction the field that should be used in the depict smiles field
+ */
+const CardViewConfig = ({ title, fields = [], enabledFields = [], fieldForDepiction }: IProps) => {
   const depictionSelectionId = `${title}-depiction-field-selection`;
 
   const [showHidden, setShowHidden] = useState(true);
@@ -52,9 +58,8 @@ const CardViewConfiguration = ({ fields = [], enabledFields = [], depictionField
     }
   };
 
-  // TODO: draggable set to false to fix drag and drop inside
   return (
-    <Configuration draggable={false} titles={title}>
+    <>
       <DepictionFieldWrapper>
         <Typography variant="h6" display="inline">
           Depiction Field
@@ -63,7 +68,7 @@ const CardViewConfiguration = ({ fields = [], enabledFields = [], depictionField
           <InputLabel id={depictionSelectionId}>Depiction Field Selection</InputLabel>
           <Select
             labelId={depictionSelectionId}
-            value={depictionField}
+            value={fieldForDepiction}
             onChange={({ target: { value } }) => setDepictionField(value as string)}
           >
             {fields.map((field, index) => (
@@ -93,11 +98,11 @@ const CardViewConfiguration = ({ fields = [], enabledFields = [], depictionField
           }
         }}
       />
-    </Configuration>
+    </>
   );
 };
 
-export default CardViewConfiguration;
+export default CardViewConfig;
 
 const DepictionFieldWrapper = styled.div`
   display: flex;

@@ -9,7 +9,6 @@ import AccordionView from './components/AccordionView';
 import CardView from './components/cardView/CardView';
 import { NglView } from './components/nglViewer/NGLView';
 import ScatterPlot from './components/scatterplot/Scatterplot';
-import Settings from './components/settings/Settings';
 import Theme from './theme';
 
 const App = () => {
@@ -34,7 +33,6 @@ const FirstPanel = ({ width }: { width: number }) => {
   return (
     <Column>
       <PoseViewerConfig />
-      <Settings />
       <ScatterPlot width={width} />
     </Column>
   );

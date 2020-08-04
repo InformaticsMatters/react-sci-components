@@ -9,6 +9,9 @@ interface IProps {
   close: () => void;
 }
 
+/**
+ * Dialog content for when a single title/component is passed into ./Configuration
+ */
 const SinglePage: React.FC<IProps> = ({ title, close, children }) => {
   return (
     <>

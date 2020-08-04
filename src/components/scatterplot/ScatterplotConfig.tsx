@@ -5,20 +5,18 @@ import styled from 'styled-components';
 
 import { FormControl, InputLabel, MenuItem, Select } from '@material-ui/core';
 
-import Configuration from '../configuration/Configuration';
 import { setConfigurationItem, useScatterplotConfiguration } from './plotConfiguration';
 
 interface IProps {
+  title: string;
   properties: [string[], string[]];
 }
 
-const ScatterplotConfiguration = ({ properties }: IProps) => {
+const ScatterplotConfig = ({ title, properties }: IProps) => {
   const config = useScatterplotConfiguration();
 
-  const title = 'Scatterplot';
-
   return (
-    <Configuration titles={title}>
+    <>
       <h3>Displayed Scores</h3>
       <SelectsWrapper>
         {properties.length ? (
@@ -47,11 +45,11 @@ const ScatterplotConfiguration = ({ properties }: IProps) => {
           <p>Please load some molecules to set the axis props</p>
         )}
       </SelectsWrapper>
-    </Configuration>
+    </>
   );
 };
 
-export default ScatterplotConfiguration;
+export default ScatterplotConfig;
 
 const SelectsWrapper = styled.div`
   display: flex;

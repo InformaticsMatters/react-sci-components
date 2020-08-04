@@ -3,34 +3,49 @@ import React, { useState } from 'react';
 import Draggable from 'react-draggable';
 import styled from 'styled-components';
 
-import { Dialog, IconButton, Paper as MuiPaper, PaperProps } from '@material-ui/core';
+import { Button, Dialog, Paper as MuiPaper, PaperProps } from '@material-ui/core';
 import SettingsIcon from '@material-ui/icons/Settings';
 
 import MultiPage from './MultiPage';
 import SinglePage from './SinglePage';
 
-interface IProps {
-  titles: string | string[];
-  children: React.ReactNode;
-  ModalOpenIcon?: React.ReactNode;
-  draggable?: boolean;
-  width?: number | string;
-}
-
-const PaperComponent = (props: PaperProps) => {
+const createPaperComponent = (id: string) => (props: PaperProps) => {
   return (
-    <Draggable bounds={'parent'} handle="#modal-title" cancel={'[class*="MuiDialogContent-root"]'}>
+    <Draggable bounds={'parent'} handle={`#${id}`} cancel={'[class*="MuiDialogContent-root"]'}>
       <Paper {...props} />
     </Draggable>
   );
 };
 
+interface IProps {
+  titles: string | string[];
+  ModalOpenIcon?: React.ReactNode;
+  draggable?: boolean;
+  width?: number | string;
+  height?: number | string;
+}
+
 /**
  * Renders a settings cog button that open a modal with a close button.
- * @param title is rendered in the model title
+ * @param titles
+ * * if string: the text rendered in the title of the dialog
+ * * if string[]: each item is rendered in a tab
+ * @param ModalOpenIcon the icon button that opens the dialog
+ * @param draggable whether the component can be dragged around the screen
+ * @param draggable whether the component can be dragged around the screen
+ * @param width the width of the paper component (number inferred as px, or string)
+ * @param height the height of the paper component (number inferred as px, or string)
+ *
  * @param children are rendered in the model content
  */
-const Configuration = ({ width, titles, children, ModalOpenIcon, draggable = true }: IProps) => {
+const Configuration: React.FC<IProps> = ({
+  width,
+  height,
+  titles,
+  children,
+  ModalOpenIcon,
+  draggable = true,
+}) => {
   const [open, setOpen] = useState(false);
 
   let content;
@@ -53,15 +68,22 @@ const Configuration = ({ width, titles, children, ModalOpenIcon, draggable = tru
 
   return (
     <>
-      <IconButton onClick={() => setOpen(true)}>{ModalOpenIcon ?? <SettingsIcon />}</IconButton>
+      <Button
+        onClick={() => setOpen(true)}
+        variant="contained"
+        color="secondary"
+        startIcon={ModalOpenIcon ?? <SettingsIcon />}
+      >
+        Configuration
+      </Button>
       <Dialog
         aria-labelledby="configuration-title"
         aria-describedby="configuration-content"
         open={open}
         onClose={() => setOpen(false)}
         maxWidth="lg"
-        PaperComponent={draggable ? PaperComponent : undefined}
-        PaperProps={{ style: { width } }}
+        PaperComponent={draggable ? createPaperComponent('configuration-title') : undefined}
+        PaperProps={{ style: { width, height } }}
       >
         {content}
       </Dialog>
