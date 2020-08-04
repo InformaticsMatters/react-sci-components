@@ -2,6 +2,7 @@ import React from 'react';
 
 import './App.css';
 
+import PoseViewerConfig from 'PoseViewerConfig';
 import styled from 'styled-components';
 
 import AccordionView from './components/AccordionView';
@@ -32,6 +33,7 @@ export default App;
 const FirstPanel = ({ width }: { width: number }) => {
   return (
     <Column>
+      <PoseViewerConfig />
       <Settings />
       <ScatterPlot width={width} />
     </Column>

@@ -82,7 +82,7 @@ const DataLoader = ({ sourceLabel }: IProps) => {
   };
 
   return (
-    <Configuration draggable width={'50rem'} title="SDF Sources" ModalOpenIcon={<GetAppIcon />}>
+    <Configuration draggable width={'50rem'} titles="SDF Sources" ModalOpenIcon={<GetAppIcon />}>
       <form
         ref={formRef}
         // update defaultValue of fields when currentSource changes

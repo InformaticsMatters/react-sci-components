@@ -3,19 +3,14 @@ import React, { useState } from 'react';
 import Draggable from 'react-draggable';
 import styled from 'styled-components';
 
-import {
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  IconButton,
-  Paper as MuiPaper,
-  PaperProps,
-} from '@material-ui/core';
-import CloseIcon from '@material-ui/icons/Close';
+import { Dialog, IconButton, Paper as MuiPaper, PaperProps } from '@material-ui/core';
 import SettingsIcon from '@material-ui/icons/Settings';
 
+import MultiPage from './MultiPage';
+import SinglePage from './SinglePage';
+
 interface IProps {
-  title: string;
+  titles: string | string[];
   children: React.ReactNode;
   ModalOpenIcon?: React.ReactNode;
   draggable?: boolean;
@@ -35,27 +30,40 @@ const PaperComponent = (props: PaperProps) => {
  * @param title is rendered in the model title
  * @param children are rendered in the model content
  */
-const Configuration = ({ width, title, children, ModalOpenIcon, draggable = true }: IProps) => {
+const Configuration = ({ width, titles, children, ModalOpenIcon, draggable = true }: IProps) => {
   const [open, setOpen] = useState(false);
+
+  let content;
+
+  if (typeof titles === 'string') {
+    content = (
+      <SinglePage title={titles} close={() => setOpen(false)}>
+        {children}
+      </SinglePage>
+    );
+  } else if (titles.length !== React.Children.count(children)) {
+    throw new Error('You must pass an equal number of titles and children');
+  } else {
+    content = (
+      <MultiPage titles={titles} close={() => setOpen(false)}>
+        {children}
+      </MultiPage>
+    );
+  }
+
   return (
     <>
       <IconButton onClick={() => setOpen(true)}>{ModalOpenIcon ?? <SettingsIcon />}</IconButton>
       <Dialog
-        aria-labelledby="modal-title"
-        aria-describedby="modal-content"
+        aria-labelledby="configuration-title"
+        aria-describedby="configuration-content"
         open={open}
         onClose={() => setOpen(false)}
         maxWidth="lg"
         PaperComponent={draggable ? PaperComponent : undefined}
         PaperProps={{ style: { width } }}
       >
-        <Title id="modal-title">
-          {title}
-          <CloseButton aria-label="close" onClick={() => setOpen(false)}>
-            <CloseIcon />
-          </CloseButton>
-        </Title>
-        <Content dividers>{children}</Content>
+        {content}
       </Dialog>
     </>
   );
@@ -65,21 +73,4 @@ export default Configuration;
 
 const Paper = styled(MuiPaper)`
   margin: 0;
-`;
-
-const Title = styled(DialogTitle)`
-  margin: 0;
-  padding: ${({ theme }) => theme.spacing(2)}px;
-  min-width: 300;
-`;
-
-const Content = styled(DialogContent)`
-  padding: ${({ theme }) => theme.spacing(2, 2)};
-`;
-
-const CloseButton = styled(IconButton)`
-  position: absolute;
-  right: ${({ theme }) => theme.spacing(1)}px;
-  top: ${({ theme }) => theme.spacing(1)}px;
-  color: ${({ theme }) => theme.palette.grey[500]};
 `;

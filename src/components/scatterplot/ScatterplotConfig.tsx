@@ -18,7 +18,7 @@ const ScatterplotConfiguration = ({ properties }: IProps) => {
   const title = 'Scatterplot';
 
   return (
-    <Configuration title={title}>
+    <Configuration titles={title}>
       <h3>Displayed Scores</h3>
       <SelectsWrapper>
         {properties.length ? (

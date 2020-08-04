@@ -54,7 +54,7 @@ const CardViewConfiguration = ({ fields = [], enabledFields = [], depictionField
 
   // TODO: draggable set to false to fix drag and drop inside
   return (
-    <Configuration draggable={false} title={title}>
+    <Configuration draggable={false} titles={title}>
       <DepictionFieldWrapper>
         <Typography variant="h6" display="inline">
           Depiction Field
