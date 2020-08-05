@@ -7,8 +7,8 @@ export const showProtein = (stage: any, protein: string, centerOn: boolean) => {
     stage.loadFile(stringBlob, {ext: "pdb"}).then((comp: any) => {
         const reprArray = createRepresentationsArray(
         [
-          createRepresentationStructure(MOL_REPRESENTATION.cartoon, {})
-          //createRepresentationStructure(MOL_REPRESENTATION.licorice, {colorScheme: 'element', undefined})
+          // createRepresentationStructure(MOL_REPRESENTATION.cartoon, {})
+          createRepresentationStructure(MOL_REPRESENTATION.licorice, {colorScheme: 'geoquality', undefined})
           // createRepresentationStructure(MOL_REPRESENTATION.licorice, {})
         ]);
         if (centerOn) {

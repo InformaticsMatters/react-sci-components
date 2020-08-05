@@ -233,6 +233,7 @@ export const NglView: React.FC<IProps> = memo(({ div_id, width }) => {
     colours,
     molecules,
     molsInView,
+    firstTimeShowLigand,
   ]);
   // End of Initialization NGL View component
 
