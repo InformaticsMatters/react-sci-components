@@ -66,7 +66,7 @@ const DataLoader = ({ sourceLabel }: IProps) => {
   const formRef = useRef<HTMLFormElement>(null!);
   const [currentUrl, setCurrentUrl] = useState(''); // Monitor state of source field to conditionally display field configs
 
-  const handleLoad = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+  const handleLoad = (_: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     const source = getDataFromForm(formRef.current, fieldNames);
     if (currentUrl !== currentSource.url) {
       source.configs = [];
@@ -74,7 +74,7 @@ const DataLoader = ({ sourceLabel }: IProps) => {
     setWorkingSource(source);
   };
 
-  const handleSave = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+  const handleSave = (_: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     const source = getDataFromForm(formRef.current, fieldNames);
     if (currentUrl !== currentSource.url) {
       source.configs = [];

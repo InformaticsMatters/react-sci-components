@@ -91,7 +91,6 @@ const CardView = ({ width }: IProps) => {
   let cardWidth;
   if (numColumns > 1) {
     cardWidth = (gridWidth - (numColumns - 1) * GUTTER_SIZE) / numColumns;
-    console.debug(cardWidth);
   } else {
     cardWidth = gridWidth;
   }

@@ -17,8 +17,33 @@ const createPaperComponent = (id: string) => (props: PaperProps) => {
   );
 };
 
+type Titles = string | string[];
+
+interface IContentProps {
+  titles: Titles;
+  handleClose: () => void;
+}
+
+const Content: React.FC<IContentProps> = ({ titles, handleClose, children }) => {
+  if (typeof titles === 'string') {
+    return (
+      <SinglePage title={titles} close={handleClose}>
+        {children}
+      </SinglePage>
+    );
+  } else if (titles.length !== React.Children.count(children)) {
+    throw new Error('You must pass an equal number of titles and children');
+  } else {
+    return (
+      <MultiPage titles={titles} close={handleClose}>
+        {children}
+      </MultiPage>
+    );
+  }
+};
+
 interface IProps {
-  titles: string | string[];
+  titles: Titles;
   ModalOpenIcon?: React.ReactNode;
   draggable?: boolean;
   width?: number | string;
@@ -48,23 +73,7 @@ const Configuration: React.FC<IProps> = ({
 }) => {
   const [open, setOpen] = useState(false);
 
-  let content;
-
-  if (typeof titles === 'string') {
-    content = (
-      <SinglePage title={titles} close={() => setOpen(false)}>
-        {children}
-      </SinglePage>
-    );
-  } else if (titles.length !== React.Children.count(children)) {
-    throw new Error('You must pass an equal number of titles and children');
-  } else {
-    content = (
-      <MultiPage titles={titles} close={() => setOpen(false)}>
-        {children}
-      </MultiPage>
-    );
-  }
+  const handleClose = () => setOpen(false);
 
   return (
     <>
@@ -80,12 +89,12 @@ const Configuration: React.FC<IProps> = ({
         aria-labelledby="configuration-title"
         aria-describedby="configuration-content"
         open={open}
-        onClose={() => setOpen(false)}
+        onClose={handleClose}
         maxWidth="lg"
         PaperComponent={draggable ? createPaperComponent('configuration-title') : undefined}
         PaperProps={{ style: { width, height } }}
       >
-        {content}
+        <Content titles={titles} handleClose={handleClose} children={children} />
       </Dialog>
     </>
   );

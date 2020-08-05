@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import SwipeableViews from 'react-swipeable-views';
 
@@ -45,7 +45,7 @@ const TabPanel = ({ children, value, index, ...other }: TabPanelProps) => {
  * @param children the content of each panel. This is mapped over with React.Children.map
  */
 const MultiPage: React.FC<IProps> = ({ titles, close, children }) => {
-  const [value, setValue] = React.useState(0);
+  const [value, setValue] = useState(0);
 
   return (
     <>

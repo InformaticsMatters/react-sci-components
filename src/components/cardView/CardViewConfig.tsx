@@ -14,28 +14,24 @@ import {
 
 import DraggableList from '../../components/DraggableList';
 import {
-  CField,
   moveFieldPosition,
   setDepictionField,
   toggleFieldIsEnabled,
+  useCardViewConfiguration,
 } from './cardViewConfiguration';
 
 import type { DropResult } from 'react-smooth-dnd';
 interface IProps {
   title: string;
-  fields?: CField[];
-  enabledFields?: string[];
-  fieldForDepiction: string;
 }
 
 /**
  * Configuration options for the card view component in the pose-viewer
  * @param title used for setting ids for this card view and avoid id conflicts (a11y)
- * @param fields the fields available to cards
- * @param enabledFields the fieldNames of the `CField`s that are visible in cards
- * @param fieldsForDepiction the field that should be used in the depict smiles field
  */
-const CardViewConfig = ({ title, fields = [], enabledFields = [], fieldForDepiction }: IProps) => {
+const CardViewConfig = ({ title }: IProps) => {
+  const { fields, enabledFields, fieldForDepiction } = useCardViewConfiguration();
+
   const depictionSelectionId = `${title}-depiction-field-selection`;
 
   const [showHidden, setShowHidden] = useState(true);

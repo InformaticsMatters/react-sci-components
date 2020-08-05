@@ -3,7 +3,6 @@ import React from 'react';
 import { Typography } from '@material-ui/core';
 
 import CardViewConfig from './components/cardView/CardViewConfig';
-import { useCardViewConfiguration } from './components/cardView/cardViewConfiguration';
 import Configuration from './components/configuration/Configuration';
 import DataLoader from './components/dataLoader/DataLoader';
 import ScatterplotConfig from './components/scatterplot/ScatterplotConfig';
@@ -18,11 +17,10 @@ interface IProps {}
  */
 const PoseViewerConfig: React.FC<IProps> = () => {
   // Card View
-  const { fields, enabledFields, fieldForDepiction } = useCardViewConfiguration();
-  const { molecules } = useMolecules();
+  const { molecules, fieldNames, fieldNickNames } = useMolecules();
 
   // Scatterplot
-  const { fieldNames, fieldNickNames } = useMolecules();
+  // const { } = useMolecules();
 
   return (
     <Configuration
@@ -38,12 +36,7 @@ const PoseViewerConfig: React.FC<IProps> = () => {
       <ScatterplotConfig title="Scatterplot" properties={[fieldNames, fieldNickNames]} />
       {/* Card View */}
       {!!molecules.length ? (
-        <CardViewConfig
-          title="Card View"
-          fields={fields}
-          enabledFields={enabledFields}
-          fieldForDepiction={fieldForDepiction}
-        />
+        <CardViewConfig title="Card View" />
       ) : (
         <Typography>No molecules are loaded yet</Typography>
       )}
