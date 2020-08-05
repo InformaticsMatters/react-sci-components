@@ -15,6 +15,7 @@ export interface NGLLocalState {
     viewParams: any;
     protein: string;
     molsInView: number[];
+    firstTimeShowLigand: boolean;
 }
 
 export const initialState: NGLLocalState = {
@@ -30,12 +31,13 @@ export const initialState: NGLLocalState = {
         [NGL_PARAMS.fogFar]: 62        
     },
     protein: "",
-    molsInView: []
+    molsInView: [],
+    firstTimeShowLigand: true,
 };
 
 export const [
     useNGLLocalState,
-    {setNglViewList, setStage, removeAllNglComponents, setNglOrientation, setProtein, setMoleculesToView},
+    {setNglViewList, setStage, removeAllNglComponents, setNglOrientation, setProtein, setMoleculesToView, setfirstTimeShowLigand},
     nglLoacalStateSTore
 ] = useRedux('nglLocalState', initialState, {
     setNglViewList: (state, viewList: ViewListItem[]) => ({...state, viewList: viewList}),
@@ -56,6 +58,9 @@ export const [
     },
     setMoleculesToView: (state, molecules: number[]) => {
         return {...state, molsInView: molecules ? molecules : []};
+    },
+    setfirstTimeShowLigand: (state, firstTime: boolean) => {
+        return {...state, firstTimeShowLigand: firstTime};
     }
 });
 
