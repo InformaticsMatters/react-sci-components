@@ -4,17 +4,16 @@ import styled from 'styled-components';
 
 import { Button, CircularProgress } from '@material-ui/core';
 
-import DataLoader from '../../components/dataLoader/DataLoader';
 import SourceCombobox from '../../components/dataLoader/SourceCombobox';
-import { useSources, useWorkingSource } from '../../components/dataLoader/sources';
 import { useProtein } from '../../modules/protein/protein';
 import { setSettings, useSettings } from '../../modules/settings/settings';
 
+/**
+ * Form for specifying the pdb url
+ */
 const Settings = () => {
   const { isProteinLoading } = useProtein();
   const { proteinPath } = useSettings();
-  const sources = useSources();
-  const currentSource = useWorkingSource();
 
   return (
     <>
@@ -34,7 +33,7 @@ const Settings = () => {
           });
         }}
       >
-        <SdfWrapper>
+        <PdbWrapper>
           <SourceCombobox
             key={proteinPath}
             urls={[]}
@@ -46,29 +45,11 @@ const Settings = () => {
             size="small"
             fullWidth
           />
-        </SdfWrapper>
+        </PdbWrapper>
         <Button type="submit" variant="contained" color="primary">
           Load PDB
           {isProteinLoading && <LoadingIndicator size={24} />}
         </Button>
-      </Form>
-      <Form>
-        <PdbWrapper>
-          <SourceCombobox
-            // onChange
-            disabled
-            key={currentSource.url} // Reset defaultValue when it changes
-            urls={sources.map((source) => source.url)}
-            url={currentSource.url}
-            placeholder="Current SDF"
-            label="SDF"
-            error={null}
-            size="small"
-          />
-        </PdbWrapper>
-        <DataLoaderWrapper>
-          <DataLoader />
-        </DataLoaderWrapper>
       </Form>
     </>
   );
@@ -81,15 +62,8 @@ const Form = styled.form`
   justify-content: space-between;
 `;
 
-const SdfWrapper = styled.div`
-  width: calc(100% - ${({ theme }) => 101 + theme.spacing(2)}px);
-`;
 const PdbWrapper = styled.div`
-  width: calc(100% - ${({ theme }) => 30 + theme.spacing(2)}px);
-`;
-
-const DataLoaderWrapper = styled.div`
-  margin-top: -4px;
+  width: calc(100% - ${({ theme }) => 101 + theme.spacing(2)}px);
 `;
 
 const LoadingIndicator = styled(CircularProgress)`

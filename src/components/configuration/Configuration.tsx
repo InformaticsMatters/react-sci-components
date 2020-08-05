@@ -3,59 +3,98 @@ import React, { useState } from 'react';
 import Draggable from 'react-draggable';
 import styled from 'styled-components';
 
-import {
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  IconButton,
-  Paper as MuiPaper,
-  PaperProps,
-} from '@material-ui/core';
-import CloseIcon from '@material-ui/icons/Close';
+import { Button, Dialog, Paper as MuiPaper, PaperProps } from '@material-ui/core';
 import SettingsIcon from '@material-ui/icons/Settings';
 
-interface IProps {
-  title: string;
-  children: React.ReactNode;
-  ModalOpenIcon?: React.ReactNode;
-  draggable?: boolean;
-  width?: number | string;
-}
+import MultiPage from './MultiPage';
+import SinglePage from './SinglePage';
 
-const PaperComponent = (props: PaperProps) => {
+const createPaperComponent = (id: string) => (props: PaperProps) => {
   return (
-    <Draggable bounds={'parent'} handle="#modal-title" cancel={'[class*="MuiDialogContent-root"]'}>
+    <Draggable bounds={'parent'} handle={`#${id}`} cancel={'[class*="MuiDialogContent-root"]'}>
       <Paper {...props} />
     </Draggable>
   );
 };
 
+type Titles = string | string[];
+
+interface IContentProps {
+  titles: Titles;
+  handleClose: () => void;
+}
+
+const Content: React.FC<IContentProps> = ({ titles, handleClose, children }) => {
+  if (typeof titles === 'string') {
+    return (
+      <SinglePage title={titles} close={handleClose}>
+        {children}
+      </SinglePage>
+    );
+  } else if (titles.length !== React.Children.count(children)) {
+    throw new Error('You must pass an equal number of titles and children');
+  } else {
+    return (
+      <MultiPage titles={titles} close={handleClose}>
+        {children}
+      </MultiPage>
+    );
+  }
+};
+
+interface IProps {
+  titles: Titles;
+  ModalOpenIcon?: React.ReactNode;
+  draggable?: boolean;
+  width?: number | string;
+  height?: number | string;
+}
+
 /**
  * Renders a settings cog button that open a modal with a close button.
- * @param title is rendered in the model title
+ * @param titles
+ * * if string: the text rendered in the title of the dialog
+ * * if string[]: each item is rendered in a tab
+ * @param ModalOpenIcon the icon button that opens the dialog
+ * @param draggable whether the component can be dragged around the screen
+ * @param draggable whether the component can be dragged around the screen
+ * @param width the width of the paper component (number inferred as px, or string)
+ * @param height the height of the paper component (number inferred as px, or string)
+ *
  * @param children are rendered in the model content
  */
-const Configuration = ({ width, title, children, ModalOpenIcon, draggable = true }: IProps) => {
+const Configuration: React.FC<IProps> = ({
+  width,
+  height,
+  titles,
+  children,
+  ModalOpenIcon,
+  draggable = true,
+}) => {
   const [open, setOpen] = useState(false);
+
+  const handleClose = () => setOpen(false);
+
   return (
     <>
-      <IconButton onClick={() => setOpen(true)}>{ModalOpenIcon ?? <SettingsIcon />}</IconButton>
-      <Dialog
-        aria-labelledby="modal-title"
-        aria-describedby="modal-content"
-        open={open}
-        onClose={() => setOpen(false)}
-        maxWidth="lg"
-        PaperComponent={draggable ? PaperComponent : undefined}
-        PaperProps={{ style: { width } }}
+      <Button
+        onClick={() => setOpen(true)}
+        variant="contained"
+        color="secondary"
+        startIcon={ModalOpenIcon ?? <SettingsIcon />}
       >
-        <Title id="modal-title">
-          {title}
-          <CloseButton aria-label="close" onClick={() => setOpen(false)}>
-            <CloseIcon />
-          </CloseButton>
-        </Title>
-        <Content dividers>{children}</Content>
+        Configuration
+      </Button>
+      <Dialog
+        aria-labelledby="configuration-title"
+        aria-describedby="configuration-content"
+        open={open}
+        onClose={handleClose}
+        maxWidth="lg"
+        PaperComponent={draggable ? createPaperComponent('configuration-title') : undefined}
+        PaperProps={{ style: { width, height } }}
+      >
+        <Content titles={titles} handleClose={handleClose} children={children} />
       </Dialog>
     </>
   );
@@ -65,21 +104,4 @@ export default Configuration;
 
 const Paper = styled(MuiPaper)`
   margin: 0;
-`;
-
-const Title = styled(DialogTitle)`
-  margin: 0;
-  padding: ${({ theme }) => theme.spacing(2)}px;
-  min-width: 300;
-`;
-
-const Content = styled(DialogContent)`
-  padding: ${({ theme }) => theme.spacing(2, 2)};
-`;
-
-const CloseButton = styled(IconButton)`
-  position: absolute;
-  right: ${({ theme }) => theme.spacing(1)}px;
-  top: ${({ theme }) => theme.spacing(1)}px;
-  color: ${({ theme }) => theme.palette.grey[500]};
 `;

@@ -16,7 +16,6 @@ import {
   toggleIsInNGLViewer,
   useCardActions,
 } from './cardActions';
-import CardViewConfig from './CardViewConfig';
 import { useCardViewConfiguration } from './cardViewConfiguration';
 import ColourPicker from './ColourPicker';
 import MolCard from './MolCard';
@@ -92,7 +91,6 @@ const CardView = ({ width }: IProps) => {
   let cardWidth;
   if (numColumns > 1) {
     cardWidth = (gridWidth - (numColumns - 1) * GUTTER_SIZE) / numColumns;
-    console.debug(cardWidth);
   } else {
     cardWidth = gridWidth;
   }
@@ -102,88 +100,75 @@ const CardView = ({ width }: IProps) => {
     imageSize + enabledFields.length * 22.9 + 2 * theme.spacing(2) + theme.spacing(1);
 
   return (
-    <>
-      {!!displayMolecules.length && (
-        <CardViewConfig
-          fields={fields}
-          enabledFields={enabledFields}
-          depictionField={fieldForDepiction}
-        />
+    <GridWrapper>
+      <Grid
+        duration={200}
+        columns={numColumns}
+        itemHeight={cardHeight}
+        columnWidth={cardWidth}
+        gutterWidth={GUTTER_SIZE}
+        gutterHeight={GUTTER_SIZE}
+        enter={enter}
+        entered={entered}
+        exit={exit}
+      >
+        {displayMolecules
+          .sort(moleculeSorter(actions))
+          .splice(0, CARDS_PER_PAGE * loadMoreCount)
+          .map(({ id, fields: fieldValues }) => {
+            let smiles = fieldValues.find((field) => field.name === fieldForDepiction)?.value;
+            if (typeof smiles !== 'string') {
+              smiles = '';
+            }
+            fieldValues.sort(
+              (a, b) =>
+                fields.findIndex((f) => f.name === a.name) -
+                fields.findIndex((f) => f.name === b.name),
+            );
+            const selected = isInNGLViewerIds.includes(id);
+            return (
+              <span key={id}>
+                <MolCard
+                  smiles={smiles}
+                  elevation={selected ? 10 : undefined}
+                  bgColor={selected ? theme.palette.grey[100] : undefined}
+                  depictWidth={imageSize}
+                  depictHeight={imageSize}
+                  onClick={() => toggleIsInNGLViewer(id)}
+                  actionsProps={{ className: classes.actionsRoot }}
+                  actions={(hover) => {
+                    const colour = colours.find((c) => c.id === id);
+                    return (
+                      <ColourPicker
+                        iconColour={colour?.colour}
+                        enabled={!!hover}
+                        colours={palette}
+                        setColour={(colour) => setColour({ id, colour })}
+                        clearColour={() => clearColour(id)}
+                      />
+                    );
+                  }}
+                >
+                  <CalculationsTable
+                    properties={fieldValues
+                      .filter(({ name }) => enabledFields.includes(name))
+                      .map(({ name, ...rest }) => ({
+                        ...rest,
+                        name: fieldNickNames[fieldNames.indexOf(name)],
+                      }))}
+                    fontSize={'0.6rem'}
+                  />
+                </MolCard>
+              </span>
+            );
+          })}
+      </Grid>
+      {!!(CARDS_PER_PAGE * loadMoreCount < selectedMoleculesIds.length) && (
+        <Button variant="text" color="default" onClick={() => setLoadMoreCount(loadMoreCount + 1)}>
+          Load More
+        </Button>
       )}
-      <GridWrapper>
-        <Grid
-          duration={200}
-          columns={numColumns}
-          itemHeight={cardHeight}
-          columnWidth={cardWidth}
-          gutterWidth={GUTTER_SIZE}
-          gutterHeight={GUTTER_SIZE}
-          enter={enter}
-          entered={entered}
-          exit={exit}
-        >
-          {displayMolecules
-            .sort(moleculeSorter(actions))
-            .splice(0, CARDS_PER_PAGE * loadMoreCount)
-            .map(({ id, fields: fieldValues }) => {
-              let smiles = fieldValues.find((field) => field.name === fieldForDepiction)?.value;
-              if (typeof smiles !== 'string') {
-                smiles = '';
-              }
-              fieldValues.sort(
-                (a, b) =>
-                  fields.findIndex((f) => f.name === a.name) -
-                  fields.findIndex((f) => f.name === b.name),
-              );
-              const selected = isInNGLViewerIds.includes(id);
-              return (
-                <span key={id}>
-                  <MolCard
-                    smiles={smiles}
-                    elevation={selected ? 10 : undefined}
-                    bgColor={selected ? theme.palette.grey[100] : undefined}
-                    depictWidth={imageSize}
-                    depictHeight={imageSize}
-                    onClick={() => toggleIsInNGLViewer(id)}
-                    actionsProps={{ className: classes.actionsRoot }}
-                    actions={(hover) => {
-                      const colour = colours.find((c) => c.id === id);
-                      return (
-                        <ColourPicker
-                          iconColour={colour?.colour}
-                          enabled={!!hover}
-                          colours={palette}
-                          setColour={(colour) => setColour({ id, colour })}
-                          clearColour={() => clearColour(id)}
-                        />
-                      );
-                    }}
-                  >
-                    <CalculationsTable
-                      properties={fieldValues
-                        .filter(({ name }) => enabledFields.includes(name))
-                        .map(({ name, ...rest }) => ({
-                          ...rest,
-                          name: fieldNickNames[fieldNames.indexOf(name)],
-                        }))}
-                      fontSize={'0.6rem'}
-                    />
-                  </MolCard>
-                </span>
-              );
-            })}
-        </Grid>
-        {!!(CARDS_PER_PAGE * loadMoreCount < selectedMoleculesIds.length) && (
-          <Button
-            variant="text"
-            color="default"
-            onClick={() => setLoadMoreCount(loadMoreCount + 1)}
-          >
-            Load More
-          </Button>
-        )}
-      </GridWrapper>
-    </>
+    </GridWrapper>
   );
 };
 
@@ -194,7 +179,7 @@ const Grid = styled(CSSGrid)`
 // Scrolling and height of grid region
 const GridWrapper = styled.div`
   /* Height of elements above the grid */
-  height: calc(100vh - ${({ theme }) => 48 + 2 * theme.spacing(2)}px);
+  height: calc(100vh - ${({ theme }) => 2 * theme.spacing(2)}px);
   padding: ${({ theme }) => theme.spacing(2)}px;
   overflow-y: scroll;
   text-align: center;
