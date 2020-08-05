@@ -7,8 +7,14 @@ export const showProtein = (stage: any, protein: string, centerOn: boolean) => {
     stage.loadFile(stringBlob, {ext: "pdb"}).then((comp: any) => {
         const reprArray = createRepresentationsArray(
         [
-          createRepresentationStructure(MOL_REPRESENTATION.cartoon, {opacity: 0.3, undefined}),
-          createRepresentationStructure(MOL_REPRESENTATION.licorice, {colorScheme: 'geoquality', opacity: 0.3, radiusScale: 0.4, undefined})
+          createRepresentationStructure(MOL_REPRESENTATION.cartoon, {
+            colorScheme: 'uniform',
+            opacity: 0.3}),
+          createRepresentationStructure(MOL_REPRESENTATION.licorice, {
+            colorScheme: 'uniform',
+            opacity: 0.3,
+            radiusType: 'size',
+            scale: 0.4})
         ]);
         if (centerOn) {
           comp.autoView();
