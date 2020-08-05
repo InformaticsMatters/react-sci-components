@@ -65,7 +65,7 @@ This allows a SDF file with docking poses and scores to be effectively analysed.
 explore 10's of thousands of poses selecting those to examine in detail using a combination of scores in the SDF file.
 The selected poses can be compared in 3D in the context of the receptor binding site that is specified as a PDB format file.
 
-![Pose viewer](/images/pose-viewer.png | width=500)
+![Pose viewer](/images/pose-viewer.png)
 
 There are 4 main re-usable components:
 
