@@ -32,7 +32,8 @@ export default FieldConfiguration;
 
 const FieldSet = styled.div`
   display: grid;
+  align-items: center;
   padding: ${({ theme }) => theme.spacing(1)}px;
-  grid-template-columns: 12rem repeat(4, 8rem);
+  grid-template-columns: auto 10rem repeat(4, 8rem);
   grid-gap: ${({ theme }) => theme.spacing(1)}px;
 `;

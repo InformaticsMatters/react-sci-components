@@ -21,6 +21,7 @@ import {
 } from './cardViewConfiguration';
 
 import type { DropResult } from 'react-smooth-dnd';
+
 interface IProps {
   title: string;
 }

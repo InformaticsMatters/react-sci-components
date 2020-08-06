@@ -1,5 +1,7 @@
 import React from 'react';
 
+import { unzip, zip } from 'lodash';
+
 import { Typography } from '@material-ui/core';
 
 import CardViewConfig from './components/cardView/CardViewConfig';
@@ -17,10 +19,15 @@ interface IProps {}
  */
 const PoseViewerConfig: React.FC<IProps> = () => {
   // Card View
-  const { molecules, fieldNames, fieldNickNames } = useMolecules();
+  let { molecules, fieldNames, fieldNickNames, enabledFieldNames } = useMolecules();
 
   // Scatterplot
-  // const { } = useMolecules();
+  [fieldNames = [], fieldNickNames = []] = unzip(
+    zip(fieldNames, fieldNickNames).filter(([name]) => enabledFieldNames?.includes(name!)) as [
+      string,
+      string,
+    ][],
+  );
 
   return (
     <Configuration

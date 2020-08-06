@@ -42,7 +42,7 @@ interface IProps {
 
 const ScatterPlot = ({ width }: IProps) => {
   const theme = useTheme();
-  const { molecules, fieldNames, fieldNickNames } = useMolecules();
+  let { molecules, fieldNames, fieldNickNames } = useMolecules();
 
   let { xprop, yprop, size, colour } = useScatterplotConfiguration();
 

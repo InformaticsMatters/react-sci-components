@@ -25,6 +25,7 @@ const getFieldsFromForm = (form: HTMLFormElement, fieldNames: string[]): FieldCo
     const isNumeric = dtype === 'int' || dtype === 'float';
 
     return {
+      enabled: form?.[`${name}-enabled`]?.checked,
       name: name,
       nickname: form?.[`${name}-nickname`]?.value,
       dtype,

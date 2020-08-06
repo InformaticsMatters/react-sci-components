@@ -46,11 +46,13 @@ export const [
   }),
 });
 
-moleculesStore.subscribe(({ fieldNames, fieldNickNames }) => {
+moleculesStore.subscribe(({ fieldNames, fieldNickNames, enabledFieldNames }) => {
   // This check is probably unnecessary
   if (fieldNames.length === fieldNickNames.length) {
-    const zipped = zip(fieldNames, fieldNickNames) as [string, string][];
+    let zipped = zip(fieldNames, fieldNickNames) as [string, string][];
+    zipped = zipped.filter(([name]) => enabledFieldNames?.includes(name));
     setFields(zipped.map(([name, title]) => ({ name, title })));
-    setEnabledFields(fieldNames.slice(0, 5));
+
+    setEnabledFields(fieldNames.filter((name) => enabledFieldNames?.includes(name)).slice(0, 5));
   }
 });

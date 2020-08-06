@@ -28,6 +28,7 @@
     "moleculespath",
     "mols",
     "openchemlib",
+    "pako",
     "plotly",
     "proxyurl",
     "remotedev",
