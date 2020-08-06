@@ -3,7 +3,7 @@ import React from 'react';
 import { Datum } from 'plotly.js';
 import Plot from 'react-plotly.js';
 
-import { useTheme } from '@material-ui/core';
+import { Typography, useTheme } from '@material-ui/core';
 
 import { Molecule, useMolecules } from '../../modules/molecules/molecules';
 import { isNumber, isUndefined } from '../../utils';
@@ -75,51 +75,64 @@ const ScatterPlot = ({ width }: IProps) => {
 
   const displayWidth = width - 2 * theme.spacing(2);
   return (
-    <Plot
-      data={[
-        {
-          x: xaxis as number[],
-          y: yaxis as number[],
-          customdata: molecules.map((m) => m.id), // Add custom data for use in selection
-          type: 'scatter',
-          mode: 'markers',
-          marker: {
-            color: colouraxis as number[],
-            size: sizeaxis as number[],
-            colorscale: 'Bluered',
+    <>
+      <Plot
+        data={[
+          {
+            x: xaxis as number[],
+            y: yaxis as number[],
+            customdata: molecules.map((m) => m.id), // Add custom data for use in selection
+            type: 'scatter',
+            mode: 'markers',
+            marker: {
+              color: colouraxis as number[],
+              size: sizeaxis as number[],
+              colorscale: 'Bluered',
+              colorbar: {},
+            },
           },
-        },
-      ]}
-      layout={{
-        width: displayWidth,
-        // height: displayWidth,
-        margin: { t: 10, r: 10, b: 50, l: 50 },
-        dragmode: 'select',
-        hovermode: 'closest',
-        xaxis: { title: xlabel },
-        yaxis: { title: ylabel },
-      }}
-      config={{
-        modeBarButtonsToRemove: [
-          'resetScale2d',
-          'hoverClosestCartesian',
-          'hoverCompareCartesian',
-          'toImage',
-          'toggleSpikelines',
-        ],
-      }}
-      onSelected={(event) => {
-        // @types is wrong here, we need `?.` as points can be undefined (double click event)
-        const points = event?.points;
+        ]}
+        layout={{
+          width: displayWidth,
+          // height: displayWidth,
+          margin: { t: 10, r: 10, b: 50, l: 50 },
+          dragmode: 'select',
+          hovermode: 'closest',
+          xaxis: { title: xlabel },
+          yaxis: { title: ylabel },
+        }}
+        config={{
+          modeBarButtonsToRemove: [
+            'resetScale2d',
+            'hoverClosestCartesian',
+            'hoverCompareCartesian',
+            'toImage',
+            'toggleSpikelines',
+          ],
+        }}
+        onSelected={(event) => {
+          // @types is wrong here, we need `?.` as points can be undefined (double click event)
+          const points = event?.points;
 
-        // Waiting for @types fix for plotly here to remove the assertion
-        points &&
-          selectPoints(
-            points.map((p) => (p as typeof p & { customdata: Datum }).customdata) as number[],
-          );
-      }}
-      onDeselect={() => selectPoints([])}
-    />
+          // Waiting for @types fix for plotly here to remove the assertion
+          points &&
+            selectPoints(
+              points.map((p) => (p as typeof p & { customdata: Datum }).customdata) as number[],
+            );
+        }}
+        onDeselect={() => selectPoints([])}
+      />
+      {!!colour && (
+        <Typography variant="body2" align="center">
+          <b>Colour</b>: {labelGetter(colour)}
+        </Typography>
+      )}
+      {!!size && (
+        <Typography variant="body2" align="center">
+          <b>Size</b>: {labelGetter(size)}
+        </Typography>
+      )}
+    </>
   );
 };
 
