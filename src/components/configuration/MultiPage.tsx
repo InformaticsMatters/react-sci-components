@@ -32,7 +32,7 @@ const TabPanel = ({ children, value, index, ...other }: TabPanelProps) => {
       aria-labelledby={`configuration-tab-${index}`}
       {...other}
     >
-      {value === index && children}
+      {children}
     </div>
   );
 };
