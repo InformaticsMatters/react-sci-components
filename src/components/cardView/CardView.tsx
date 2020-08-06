@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { CSSGrid, enterExitStyle } from 'react-stonecutter';
 import styled from 'styled-components';
 
-import { Button } from '@material-ui/core';
+import { Button, Grow } from '@material-ui/core';
 import { createStyles, makeStyles, Theme, useTheme } from '@material-ui/core/styles';
 
 import { Molecule, useMolecules } from '../../modules/molecules/molecules';
@@ -139,13 +139,17 @@ const CardView = ({ width }: IProps) => {
                   actions={(hover) => {
                     const colour = colours.find((c) => c.id === id);
                     return (
-                      <ColourPicker
-                        iconColour={colour?.colour}
-                        enabled={!!hover}
-                        colours={palette}
-                        setColour={(colour) => setColour({ id, colour })}
-                        clearColour={() => clearColour(id)}
-                      />
+                      <Grow in={hover || colour !== undefined}>
+                        <span>
+                          <ColourPicker
+                            iconColour={colour?.colour}
+                            enabled={!!hover}
+                            colours={palette}
+                            setColour={(colour) => setColour({ id, colour })}
+                            clearColour={() => clearColour(id)}
+                          />
+                        </span>
+                      </Grow>
                     );
                   }}
                 >

@@ -50,6 +50,7 @@ const ColourPicker = ({ enabled, colours, iconColour, setColour, clearColour }: 
                   key={index}
                   onClick={(e) => {
                     e.stopPropagation();
+                    setAnchorEl(null);
                     setColour(colour);
                   }}
                 >
@@ -60,6 +61,7 @@ const ColourPicker = ({ enabled, colours, iconColour, setColour, clearColour }: 
                 <span
                   onClick={(e) => {
                     clearColour();
+                    setAnchorEl(null);
                     e.stopPropagation();
                   }}
                 >
