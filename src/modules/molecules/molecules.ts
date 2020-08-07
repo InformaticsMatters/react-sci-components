@@ -24,6 +24,7 @@ export interface MoleculesState {
   totalParsed?: number;
   fieldNames: string[];
   fieldNickNames: string[];
+  enabledFieldNames?: string[];
 }
 
 const initialState: MoleculesState = {
@@ -58,6 +59,10 @@ const parseSDF = (sdf: string, { maxRecords = Infinity, configs }: Omit<Source, 
   const parser = new SDFileParser(sdf, null!);
   const fieldNames = parser.getFieldNames(1);
 
+  const enabledFieldNames = fieldNames.filter(
+    (name) => configs.find((config) => config.name === name)?.enabled !== false, // ?
+  );
+
   const configLookup = Object.fromEntries(
     fieldNames.map((name) => [name, configs.find((config) => config.name === name)]),
   );
@@ -71,7 +76,7 @@ const parseSDF = (sdf: string, { maxRecords = Infinity, configs }: Omit<Source, 
     const fields: Field[] = [{ name: 'oclSmiles', value: smiles }];
 
     let valid = true;
-    fieldNames.forEach((name) => {
+    enabledFieldNames.forEach((name) => {
       const fieldValue = parser.getField(name);
       const config = configLookup[name];
       let value;
@@ -100,11 +105,12 @@ const parseSDF = (sdf: string, { maxRecords = Infinity, configs }: Omit<Source, 
     totalCounter++;
   }
   fieldNames.unshift('oclSmiles');
+  enabledFieldNames.unshift('oclSmiles');
   const fieldNickNames = fieldNames.map(
     (name) => configs.find((config) => config.name === name)?.nickname || name,
   );
 
-  return [readMolecules, totalCounter, fieldNames, fieldNickNames] as const;
+  return [readMolecules, totalCounter, fieldNames, fieldNickNames, enabledFieldNames] as const;
 };
 
 workingSourceStore.subscribe(async ({ url: moleculesPath, ...restOfSource }) => {
@@ -121,12 +127,16 @@ workingSourceStore.subscribe(async ({ url: moleculesPath, ...restOfSource }) => 
 
     if (moleculesPath.endsWith('.sdf')) {
       const txt = await resp.text();
-      const [readMolecules, totalCounter, fieldNames, fieldNickNames] = parseSDF(txt, restOfSource);
+      const [readMolecules, totalCounter, fieldNames, fieldNickNames, enabledFieldNames] = parseSDF(
+        txt,
+        restOfSource,
+      );
       mergeNewState({
         molecules: readMolecules,
         totalParsed: totalCounter,
         fieldNames,
         fieldNickNames,
+        enabledFieldNames,
         moleculesErrorMessage: null,
       });
     } else if (moleculesPath.endsWith('gzip') || moleculesPath.endsWith('gz')) {
@@ -137,12 +147,16 @@ workingSourceStore.subscribe(async ({ url: moleculesPath, ...restOfSource }) => 
         txt += String.fromCharCode(i);
       }
 
-      const [readMolecules, totalCounter, fieldNames, fieldNickNames] = parseSDF(txt, restOfSource);
+      const [readMolecules, totalCounter, fieldNames, fieldNickNames, enabledFieldNames] = parseSDF(
+        txt,
+        restOfSource,
+      );
       mergeNewState({
         molecules: readMolecules,
         totalParsed: totalCounter,
         fieldNames,
         fieldNickNames,
+        enabledFieldNames,
         moleculesErrorMessage: null,
       });
     }

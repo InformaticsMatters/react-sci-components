@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 
 import {
+  Checkbox,
   FormControl,
   InputLabel,
   MenuItem,
@@ -18,6 +19,7 @@ interface IProps {
 
 const FieldConfigInputs = ({ name, config }: IProps) => {
   const [isNumeric, setIsNumeric] = useState(config?.dtype === 'int' || config?.dtype === 'float'); // Initial value depends on the defaultValue given to select field
+  const [enabled, setEnabled] = useState(config?.enabled ?? true);
 
   const handleDtypeChange = (event: React.ChangeEvent<{ value: unknown }>) => {
     if (event.target.value === 'text') {
@@ -29,7 +31,14 @@ const FieldConfigInputs = ({ name, config }: IProps) => {
 
   return (
     <>
-      <Typography noWrap>{name}</Typography>
+      <Checkbox
+        name={`${name}-enabled`}
+        checked={!!enabled}
+        onChange={() => setEnabled(!enabled)}
+      />
+      <Typography align="left" noWrap>
+        {name}
+      </Typography>
       <TextField
         name={`${name}-nickname`}
         size="small"

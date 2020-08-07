@@ -6,6 +6,7 @@ import { useRedux } from 'hooks-for-redux';
 
 export interface FieldConfig {
   name: string;
+  enabled: boolean;
   nickname?: string;
   rank?: 'asc' | 'desc'; // TODO: make ENUM
   dtype?: string; // TODO: make ENUM
