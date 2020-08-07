@@ -14,16 +14,18 @@ const FieldConfiguration = ({ currentSource, fieldNames }: IProps) => {
   const { configs, url, configName, maxRecords } = currentSource;
   return (
     <FieldSet>
-      {fieldNames.map((name, index) => {
-        const config = configs.find((field) => field.name === name);
-        return (
-          <FieldConfigInputs
-            key={`${url}-${configName}-${maxRecords}-${index}`}
-            name={name}
-            config={config}
-          />
-        );
-      })}
+      {fieldNames
+        .filter((name) => name !== 'oclSmiles')
+        .map((name, index) => {
+          const config = configs.find((field) => field.name === name);
+          return (
+            <FieldConfigInputs
+              key={`${url}-${configName}-${maxRecords}-${index}`}
+              name={name}
+              config={config}
+            />
+          );
+        })}
     </FieldSet>
   );
 };

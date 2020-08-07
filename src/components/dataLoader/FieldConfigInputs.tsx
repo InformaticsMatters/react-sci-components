@@ -35,7 +35,6 @@ const FieldConfigInputs = ({ name, config }: IProps) => {
         name={`${name}-enabled`}
         checked={!!enabled}
         onChange={() => setEnabled(!enabled)}
-        disabled={name === 'oclSmiles'}
       />
       <Typography align="left" noWrap>
         {name}
