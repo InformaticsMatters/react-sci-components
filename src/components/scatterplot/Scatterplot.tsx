@@ -1,14 +1,16 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import { Datum } from 'plotly.js';
 import Plot from 'react-plotly.js';
 
-import { Typography, useTheme } from '@material-ui/core';
+import { Switch, Tooltip, Typography, useTheme } from '@material-ui/core';
 
 import { Molecule, useMolecules } from '../../modules/molecules/molecules';
 import { isNumber, isUndefined } from '../../utils';
 import { useScatterplotConfiguration } from './plotConfiguration';
 import { selectPoints } from './plotSelection';
+
+// Utils
 
 const getPropArrayFromMolecules = (molecules: Molecule[], prop: string | null) => {
   if (prop === 'id') {
@@ -17,6 +19,8 @@ const getPropArrayFromMolecules = (molecules: Molecule[], prop: string | null) =
     return molecules.map((molecule) => molecule.fields.find((m) => m.name === prop)?.value);
   }
 };
+
+type AxisSeries = ReturnType<typeof getPropArrayFromMolecules> | number;
 
 /* Gets the axis display text of the curried prop name */
 const getPropDisplayName = (names: string[], nicknames: string[]) => (prop: string | null) => {
@@ -32,19 +36,18 @@ const getPropDisplayName = (names: string[], nicknames: string[]) => (prop: stri
   }
 };
 
-// Types
-
-type AxisSeries = ReturnType<typeof getPropArrayFromMolecules> | number;
-
 interface IProps {
   width: number;
+  colourBar?: boolean;
 }
 
-const ScatterPlot = ({ width }: IProps) => {
+const ScatterPlot = ({ width, colourBar = false }: IProps) => {
   const theme = useTheme();
   const { molecules, fieldNames, fieldNickNames } = useMolecules();
 
   let { xprop, yprop, size, colour } = useScatterplotConfiguration();
+
+  const [showColourBar, setShowColourBar] = useState(false);
 
   let xaxis = getPropArrayFromMolecules(molecules, xprop);
   let yaxis = getPropArrayFromMolecules(molecules, yprop);
@@ -54,14 +57,17 @@ const ScatterPlot = ({ width }: IProps) => {
     colouraxis = 1;
   }
   let sizeaxis: AxisSeries = getPropArrayFromMolecules(molecules, size);
+
+  let min: number | null = null;
+  let max: number | null = null;
   if (sizeaxis.every(isNumber)) {
     // Scale points to
-    const min = Math.min(...sizeaxis.filter(isNumber));
-    const max = Math.max(...sizeaxis.filter(isNumber));
+    min = Math.min(...sizeaxis.filter(isNumber));
+    max = Math.max(...sizeaxis.filter(isNumber));
 
     sizeaxis = sizeaxis.map((v) => {
       if (v !== undefined && typeof v !== 'string') {
-        return (45 * (v - min)) / max + 5;
+        return (45 * (v - (min as number))) / (max as number) + 5;
       }
       return v;
     });
@@ -74,6 +80,7 @@ const ScatterPlot = ({ width }: IProps) => {
   const ylabel = labelGetter(yprop);
 
   const displayWidth = width - 2 * theme.spacing(2);
+
   return (
     <>
       <Plot
@@ -88,7 +95,7 @@ const ScatterPlot = ({ width }: IProps) => {
               color: colouraxis as number[],
               size: sizeaxis as number[],
               colorscale: 'Bluered',
-              colorbar: {},
+              colorbar: showColourBar || colourBar ? {} : undefined,
             },
           },
         ]}
@@ -123,13 +130,18 @@ const ScatterPlot = ({ width }: IProps) => {
         onDeselect={() => selectPoints([])}
       />
       {!!colour && (
-        <Typography variant="body2" align="center">
-          <b>Colour</b>: {labelGetter(colour)}
-        </Typography>
+        <>
+          <Tooltip arrow title="Toggle the colour bar">
+            <Switch checked={showColourBar} onChange={() => setShowColourBar(!showColourBar)} />
+          </Tooltip>
+          <Typography display="inline" variant="body2">
+            <b>Colour</b>: {labelGetter(colour)}
+          </Typography>
+        </>
       )}
       {!!size && (
-        <Typography variant="body2" align="center">
-          <b>Size</b>: {labelGetter(size)}
+        <Typography style={{ marginLeft: 58 }} variant="body2">
+          <b>Size</b>: {labelGetter(size)} <em>({min !== null && max !== null && `${min}–${max}`})</em>
         </Typography>
       )}
     </>
