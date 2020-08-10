@@ -16,13 +16,17 @@ ENV TAG=$tag
 RUN sed -i s/'"0.0.0"'/'"'${TAG:-0.0.0}'"'/ package.json && \
     head package.json
 
-RUN npm install --only=production --unsafe-perm
-RUN npm install react-scripts -g --silent
-RUN npm run build
+RUN yarn \
+        --frozen-lockfile \
+        --only=production \
+        --non-interactive \
+        --unsafe-perm
+RUN yarn global add react-scripts
+RUN yarn run build
 
 # Run stage
 
-FROM nginx:1.19.0-alpine
+FROM nginx:1.19.0
 
 WORKDIR /usr/share/nginx/html/
 COPY --from=builder /build .
