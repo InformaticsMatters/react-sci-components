@@ -113,12 +113,18 @@ const parseSDF = (sdf: string, { maxRecords = Infinity, configs }: Omit<Source, 
   return [readMolecules, totalCounter, fieldNames, fieldNickNames, enabledFieldNames] as const;
 };
 
-workingSourceStore.subscribe(async ({ url: moleculesPath, ...restOfSource }) => {
+workingSourceStore.subscribe(async ({ url, ...restOfSource }) => {
   setIsMoleculesLoading(true);
   const proxyurl = 'https://cors-anywhere.herokuapp.com/';
 
+  const paramIndex = url.indexOf('?');
+  const moleculesPath = paramIndex !== -1 ? url.slice(0, paramIndex) : url;
+
   try {
-    const resp = await fetch(proxyurl + moleculesPath, { mode: 'cors' });
+    const resp = await fetch(proxyurl + url, {
+      mode: 'cors',
+      headers: { origin: '0.0.0.0' }, // Need to specify an origin header in order for Dropbox to work
+    });
 
     // Fetch API doesn't throw an error when there is one
     if (!resp.ok) {
@@ -141,6 +147,7 @@ workingSourceStore.subscribe(async ({ url: moleculesPath, ...restOfSource }) => 
       });
     } else if (moleculesPath.endsWith('gzip') || moleculesPath.endsWith('gz')) {
       const buffer = await resp.arrayBuffer();
+      console.debug(buffer);
       const unzipped = ungzip(new Uint8Array(buffer));
       let txt = '';
       for (let i of unzipped) {
