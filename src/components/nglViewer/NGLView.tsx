@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useEffect } from 'react';
+import React, { memo, useCallback, useEffect, useState } from 'react';
 
 import { throttle } from 'lodash';
 import { Molecule, useMolecules } from 'modules/molecules/molecules';
@@ -11,8 +11,6 @@ import { NGL_PARAMS, VIEWS } from './Constants';
 import { removeNglComponents, setOrientation } from './DispatchActions';
 import {
   initialState as NGL_INITIAL,
-  setNglViewList,
-  setStage,
   useNGLLocalState,
   setfirstTimeShowLigand
 } from './NGLLocalState';
@@ -22,6 +20,11 @@ export interface NGLMolecule {
   id: number;
   mol: Molecule;
   color: string;
+}
+
+interface ViewListItem {
+  id: string;
+  stage: any;
 }
 
 const getMoleculeObjects = (molIds: number[], colors: Colour[], molecules: Molecule[]) => {
@@ -64,45 +67,47 @@ interface IProps {
 export const NglView: React.FC<IProps> = memo(({ div_id, width }) => {
   // connect to NGL Stage object
 
-  const { viewList, stage, protein, nglOrientations, molsInView, firstTimeShowLigand} = useNGLLocalState();
+  const { protein, nglOrientations, molsInView, firstTimeShowLigand} = useNGLLocalState();
+  const [stage, setStage] = useState();
+  const [nglViewList, setNglViewList] = useState<ViewListItem[]>([]);
   const { molecules } = useMolecules();
   const { colours } = useCardActions();
   const classes = useStyles();
 
   const registerNglView = useCallback(
     (id: string, stage: any) => {
-      if (viewList.filter((ngl) => ngl.id === id).length > 0) {
+      if (nglViewList.filter((ngl) => ngl.id === id).length > 0) {
         console.log(new Error(`Cannot register NGL View with used ID! ${id}`));
       } else {
-        let extendedList = viewList;
+        let extendedList = nglViewList;
         extendedList.push({ id, stage });
         setNglViewList(extendedList);
       }
     },
-    [viewList],
+    [nglViewList],
   );
 
   const unregisterNglView = useCallback(
     (id: string) => {
-      if (viewList.filter((ngl) => ngl.id === id).length === 0) {
+      if (nglViewList.filter((ngl) => ngl.id === id).length === 0) {
         console.log(new Error(`Cannot remove NGL View with given ID! ${id}`));
       } else {
-        for (let i = 0; i < viewList.length; i++) {
-          if (viewList[i].id === id) {
-            viewList.splice(i, 1);
-            setNglViewList(viewList);
+        for (let i = 0; i < nglViewList.length; i++) {
+          if (nglViewList[i].id === id) {
+            nglViewList.splice(i, 1);
+            setNglViewList(nglViewList);
             break;
           }
         }
       }
     },
-    [viewList],
+    [nglViewList],
   );
 
   const getNglView = useCallback(
     (id: string) => {
       const filteredList =
-        viewList && viewList.length > 0 ? viewList.filter((ngl) => ngl.id === id) : [];
+      nglViewList && nglViewList.length > 0 ? nglViewList.filter((ngl) => ngl.id === id) : [];
       switch (filteredList.length) {
         case 0:
           return undefined;
@@ -113,7 +118,7 @@ export const NglView: React.FC<IProps> = memo(({ div_id, width }) => {
           break;
       }
     },
-    [viewList],
+    [nglViewList],
   );
 
   const handleOrientationChanged = useCallback(

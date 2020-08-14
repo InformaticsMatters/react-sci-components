@@ -12,6 +12,7 @@ import CardView from './components/cardView/CardView';
 import { NglView } from './components/nglViewer/NGLView';
 import ScatterPlot from './components/scatterplot/Scatterplot';
 import Theme from './theme';
+import StateManagement from './components/state/StateManager';
 
 const App = () => {
   return (
@@ -35,6 +36,7 @@ const FirstPanel = ({ width }: { width: number }) => {
   return (
     <Column>
       <PoseViewerConfig />
+      <StateManagement />
       <Divider />
       <ScatterPlot width={width} />
     </Column>

@@ -3,14 +3,7 @@ import {NGL_PARAMS, BACKGROUND_COLOR} from './Constants';
 import {ProteinState, proteinStore} from '../../modules/protein/protein';
 import {CardActionsState, cardActionsStore} from '../cardView/cardActions';
 
-export interface ViewListItem {
-    id: string;
-    stage: any;
-}
-
 export interface NGLLocalState {
-    viewList: ViewListItem[];
-    stage: any;
     nglOrientations: any;
     viewParams: any;
     protein: string;
@@ -19,8 +12,6 @@ export interface NGLLocalState {
 }
 
 export const initialState: NGLLocalState = {
-    viewList: [],
-    stage: undefined,
     nglOrientations: {},
     viewParams: {
         [NGL_PARAMS.backgroundColor]: BACKGROUND_COLOR.white,
@@ -37,11 +28,9 @@ export const initialState: NGLLocalState = {
 
 export const [
     useNGLLocalState,
-    {setNglViewList, setStage, removeAllNglComponents, setNglOrientation, setProtein, setMoleculesToView, setfirstTimeShowLigand},
+    {removeAllNglComponents, setNglOrientation, setProtein, setMoleculesToView, setfirstTimeShowLigand},
     nglLoacalStateSTore
 ] = useRedux('nglLocalState', initialState, {
-    setNglViewList: (state, viewList: ViewListItem[]) => ({...state, viewList: viewList}),
-    setStage: (state, stage: any) => ({...state, stage}),
     removeAllNglComponents: (state, stage: any) => {
         stage.removeAllComponents();
         return {...state, initialState};
