@@ -1,22 +1,17 @@
-import { DropzoneDialog } from 'material-ui-dropzone';
 import React, { useState } from 'react';
 
+import { useStoreState } from 'hooks/useStoreState';
+import { DropzoneDialog } from 'material-ui-dropzone';
+
 import { IconButton } from '@material-ui/core';
-//import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
 
-// import { useStoreState } from '../../hooks/useStoreState';
 import DownloadButton from '../downloadButton/DownloadButton';
-import { getStore } from 'hooks-for-redux';
 
-//const useStyles = makeStyles((theme: Theme) => createStyles({}));
 interface IProps {}
 
 const StateManagement = () => {
-  //const classes = useStyles();
-
-//   const state = useStoreState();
-  const store = getStore();
+  const state = useStoreState();
 
   const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
 
@@ -24,8 +19,7 @@ const StateManagement = () => {
     <>
       <DownloadButton
         filename={'name.json'}
-        // dump={JSON.stringify(state)}
-        dump={''}
+        dump={JSON.stringify(state)}
         tooltip={'Download State as json'}
       />
       <IconButton aria-label="upload json state" onClick={() => setUploadDialogOpen(true)}>
@@ -33,10 +27,11 @@ const StateManagement = () => {
       </IconButton>
       <DropzoneDialog
         filesLimit={1}
-        onSave={(files: { text: () => Promise<any>; }[]) => {
-          files[0]
-            .text()
-            .then((txt) => store.dispatch({ type: 'SET_FULL_STATE', payload: JSON.parse(txt) }));
+        onSave={(files: { text: () => Promise<any> }[]) => {
+          files[0].text().then((txt) => {
+            localStorage.setItem('state', txt);
+            window.location.reload();
+          });
           setUploadDialogOpen(false);
         }}
         onClose={() => {

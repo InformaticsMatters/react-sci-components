@@ -1,18 +1,13 @@
+import React from 'react';
+
 import { IconButton, Tooltip } from '@material-ui/core';
 import GetAppIcon from '@material-ui/icons/GetApp';
-import React from 'react';
-import { useStoreState } from '../../hooks/useStoreState';
 
 interface Props {
   dump: string;
   filename: string;
   tooltip: string;
-};
-
-interface SliceData {
-  name: string;
-  dump: string;
-};
+}
 
 const DownloadButton = ({ dump, filename, tooltip }: Props) => {
   /*
@@ -24,28 +19,13 @@ const DownloadButton = ({ dump, filename, tooltip }: Props) => {
    * https://stackoverflow.com/questions/44656610/download-a-string-as-txt-file-in-react/44661948
    */
 
-  const state = useStoreState();
-
   const downloadTextAsFile = () => {
-    //dump = JSON.stringify(state);
-    dump = createStateDump();
     const element = document.createElement('a');
-    const file = new Blob([dump], { type: 'text/tab-separated-values' });
+    const file = new Blob([dump], { type: 'text/json' });
     element.href = URL.createObjectURL(file);
     element.download = filename;
     document.body.appendChild(element); // Required for this to work in FireFox
     element.click();
-  };
-
-  const createStateDump = () => {
-    const sliceNames = Object.keys(state);
-    const slices: SliceData[] = sliceNames.map(name => {
-      const sliceData = state[name];
-      return {name: name, dump: JSON.stringify(sliceData)};
-    });
-
-    return JSON.stringify(slices);
-
   };
 
   return (
