@@ -88,7 +88,7 @@ const ScatterPlot = ({ width, colourBar = false }: IProps) => {
           {
             x: xaxis as number[],
             y: yaxis as number[],
-            customdata: molecules.map((m: any) => m.id), // Add custom data for use in selection
+            customdata: molecules.map((m) => m.id), // Add custom data for use in selection
             type: 'scatter',
             mode: 'markers',
             marker: {
@@ -141,7 +141,8 @@ const ScatterPlot = ({ width, colourBar = false }: IProps) => {
       )}
       {!!size && (
         <Typography style={{ marginLeft: 58 }} variant="body2">
-          <b>Size</b>: {labelGetter(size)} <em>({min !== null && max !== null && `${min}–${max}`})</em>
+          <b>Size</b>: {labelGetter(size)}{' '}
+          <em>({min !== null && max !== null && `${min}–${max}`})</em>
         </Typography>
       )}
     </>

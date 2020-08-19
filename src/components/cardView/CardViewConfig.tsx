@@ -38,7 +38,7 @@ const CardViewConfig = ({ title }: IProps) => {
   const [showHidden, setShowHidden] = useState(true);
   // TODO: need to make reordering respect this
 
-  const displayFields = fields.filter(({ name }: {[key:string]:any}) => enabledFields.includes(name) || showHidden);
+  const displayFields = fields.filter(({ name }) => enabledFields.includes(name) || showHidden);
 
   const handleMoveFieldPosition = ({ removedIndex, addedIndex }: DropResult) => {
     // Need to handle indexes different if fields are hidden
@@ -68,7 +68,7 @@ const CardViewConfig = ({ title }: IProps) => {
             value={fieldForDepiction}
             onChange={({ target: { value } }) => setDepictionField(value as string)}
           >
-            {fields.map((field: any, index: any) => (
+            {fields.map((field, index) => (
               <MenuItem key={index} value={field.name}>
                 {field.title}
               </MenuItem>
@@ -85,11 +85,11 @@ const CardViewConfig = ({ title }: IProps) => {
         </Typography>
       </ListHeader>
       <DraggableList
-        fields={displayFields.map(({ title }: {[key:string]:any}) => title)}
-        checked={displayFields.map(({ name }: {[key:string]:any}) => enabledFields.includes(name))}
+        fields={displayFields.map(({ title }) => title)}
+        checked={displayFields.map(({ name }) => enabledFields.includes(name))}
         moveFieldPosition={handleMoveFieldPosition}
         toggleCheckbox={(selectedTitle) => {
-          const name = displayFields.find(({ title }: {[key:string]:any}) => title === selectedTitle)?.name;
+          const name = displayFields.find(({ title }) => title === selectedTitle)?.name;
           if (name !== undefined) {
             toggleFieldIsEnabled(name);
           }

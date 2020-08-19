@@ -1,8 +1,8 @@
 import { plotSelectionStore } from 'components/scatterplot/plotSelection';
 import { useRedux } from 'hooks-for-redux';
-import { resolveState } from '../../modules/state/stateResolver';
 
 import { moleculesStore } from '../../modules/molecules/molecules';
+import { resolveState } from '../../modules/state/stateResolver';
 
 /**
  * Redux store to manage the card state.
@@ -49,24 +49,24 @@ export const [
 ] = useRedux('cardActions', resolveState('cardActions', initialState), {
   resetCardActions: () => initialState,
   resetIdsInNGLViewer: ({ isInNGLViewerIds, colours }) => {
-    const ids = colours.map((c: any) => c.id);
+    const ids = colours.map((c) => c.id);
     return {
       colours: colours,
-      isInNGLViewerIds: isInNGLViewerIds.filter((id: any) => ids.includes(id)),
+      isInNGLViewerIds: isInNGLViewerIds.filter((id) => ids.includes(id)),
     };
   },
   clearColour: ({ colours, ...rest }, id: number) => ({
     ...rest,
-    colours: colours.filter((c: any) => c.id !== id),
+    colours: colours.filter((c) => c.id !== id),
   }),
   setColour: ({ colours, ...rest }, { id, colour }: SetColourPayload) => {
-    const c = colours.find((colourObj: any) => colourObj.id === id);
+    const c = colours.find((colourObj) => colourObj.id === id);
     if (c === undefined) {
       return { ...rest, colours: [...colours, { id, colour }] };
     } else {
       return {
         ...rest,
-        colours: [...colours.filter(({ id: id_}: {[key:string]:any}) => id_ !== id), { id, colour }],
+        colours: [...colours.filter(({ id: id_ }) => id_ !== id), { id, colour }],
       };
     }
   },

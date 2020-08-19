@@ -1,7 +1,7 @@
 import { useRedux } from 'hooks-for-redux';
-import {resolveState} from '../../modules/state/stateResolver';
 
 import { moleculesStore } from '../../modules/molecules/molecules';
+import { resolveState } from '../../modules/state/stateResolver';
 
 const initialState: number[] = []; // ids of selected molecules
 

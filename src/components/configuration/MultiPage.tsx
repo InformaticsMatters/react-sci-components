@@ -18,8 +18,8 @@ interface IProps {
 interface TabPanelProps {
   children?: React.ReactNode;
   dir?: string;
-  index: any;
-  value: any;
+  index: number;
+  value: number;
 }
 
 // Display of section of configuration

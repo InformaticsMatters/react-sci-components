@@ -1,8 +1,8 @@
 import { useRedux } from 'hooks-for-redux';
 import { zip } from 'lodash';
-import { resolveState } from '../../modules/state/stateResolver';
 
 import { moleculesStore } from '../../modules/molecules/molecules';
+import { resolveState } from '../../modules/state/stateResolver';
 
 import type { DropResult } from 'react-smooth-dnd';
 
@@ -26,11 +26,14 @@ export const [
   scatterplotConfigurationStore,
 ] = useRedux('cardViewConfiguration', resolveState('cardViewConfiguration', initialState), {
   setFields: (configuration, fields: CField[]) => ({ ...configuration, fields }),
-  setEnabledFields: (configuration, enabledFields) => ({ ...configuration, enabledFields }),
+  setEnabledFields: (configuration, enabledFields: string[]) => ({
+    ...configuration,
+    enabledFields,
+  }),
   toggleFieldIsEnabled: ({ enabledFields, ...rest }, fieldName: string) => {
-    const index = enabledFields.findIndex((f: any) => f === fieldName);
+    const index = enabledFields.findIndex((f) => f === fieldName);
     if (index !== -1) {
-      return { ...rest, enabledFields: enabledFields.filter((f: any) => f !== fieldName) };
+      return { ...rest, enabledFields: enabledFields.filter((f) => f !== fieldName) };
     }
     return { ...rest, enabledFields: [...enabledFields, fieldName] };
   },
@@ -54,6 +57,6 @@ moleculesStore.subscribe(({ fieldNames, fieldNickNames, enabledFieldNames }) => 
     zipped = zipped.filter(([name]) => enabledFieldNames?.includes(name));
     setFields(zipped.map(([name, title]) => ({ name, title })));
 
-    setEnabledFields(fieldNames.filter((name: any) => enabledFieldNames?.includes(name)).slice(0, 5));
+    setEnabledFields(fieldNames.filter((name) => enabledFieldNames?.includes(name)).slice(0, 5));
   }
 });

@@ -8,6 +8,6 @@ export const isUndefined = <TValue extends unknown>(
 export const isNumber = (x: unknown): x is number => typeof x === 'number';
 
 // Test if value is number-like
-export const isNumeric = (num: any) =>
+export const isNumeric = (num: unknown) =>
   (typeof num === 'number' || (typeof num === 'string' && num.trim() !== '')) &&
   !isNaN(num as number);

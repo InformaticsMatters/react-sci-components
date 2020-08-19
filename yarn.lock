@@ -2190,10 +2190,10 @@
   resolved "https://registry.yarnpkg.com/@mapbox/whoots-js/-/whoots-js-3.1.0.tgz#497c67a1cef50d1a2459ba60f315e448d2ad87fe"
   integrity sha512-Es6WcD0nO5l+2BOQS4uLfNPYQaNDfbot3X1XUoloz+x0mPDS3eeORZJl06HXjwBG1fOGwCRnzK88LMdxKRrd6Q==
 
-"@material-ui/core@^4.10.2":
-  version "4.10.2"
-  resolved "https://registry.yarnpkg.com/@material-ui/core/-/core-4.10.2.tgz#0ef78572132fcef1a25f6969bce0d34652d42e31"
-  integrity sha512-Uf4iDLi9sW6HKbVQDyDZDr1nMR4RUAE7w/RIIJZGNVZResC0xwmpLRZMtaUdSO43N0R0yJehfxTi4Z461Cd49A==
+"@material-ui/core@^4.11.0":
+  version "4.11.0"
+  resolved "https://registry.yarnpkg.com/@material-ui/core/-/core-4.11.0.tgz#b69b26e4553c9e53f2bfaf1053e216a0af9be15a"
+  integrity sha512-bYo9uIub8wGhZySHqLQ833zi4ZML+XCBE1XwJ8EuUVSpTWWG57Pm+YugQToJNFsEyiKFhPh8DPD0bgupz8n01g==
   dependencies:
     "@babel/runtime" "^7.4.4"
     "@material-ui/styles" "^4.10.0"
@@ -10671,10 +10671,10 @@ material-ui-color@^0.4.4:
   resolved "https://registry.yarnpkg.com/material-ui-color/-/material-ui-color-0.4.4.tgz#9a96edb0c2a7332be776917524161566fe626b82"
   integrity sha512-loIMHIUb9Zd1jqv8H/5ghiT+OOMBV1hJWEDtbnVkeMErgJ7wG82DwgyDezXdWIqyDTWzRdA2ASsRVgrmYsHyqw==
 
-material-ui-dropzone@^3.3.1:
-  version "3.3.1"
-  resolved "https://registry.yarnpkg.com/material-ui-dropzone/-/material-ui-dropzone-3.3.1.tgz#e1170442e8d1cb26444f1f22d02426a3f5235c17"
-  integrity sha512-KzCzgcNbN+DcII2ZWl+He5GXqQA5fEVgelK7CXwuj61j/y2Vdcx+I8wBw3iz2f5FiMwRa329SoAoziu4Cf8UxQ==
+material-ui-dropzone@^3.4.0:
+  version "3.4.0"
+  resolved "https://registry.yarnpkg.com/material-ui-dropzone/-/material-ui-dropzone-3.4.0.tgz#0f075a41493209a5f0aa1da2cccad1ccb5630ad9"
+  integrity sha512-c+H0+dQ65+252KJA3oIfcOXou78/+1nHAAakSZxmN9TudtZMoWnXXuUc8JRdM2zCy5p9kopUw5rG9o4/6ISPig==
   dependencies:
     "@babel/runtime" "^7.4.4"
     clsx "^1.0.2"
@@ -15340,7 +15340,7 @@ style-loader@0.23.1:
     loader-utils "^1.1.0"
     schema-utils "^1.0.0"
 
-styled-components@^5.1.1:
+styled-components@^5, styled-components@^5.1.1:
   version "5.1.1"
   resolved "https://registry.yarnpkg.com/styled-components/-/styled-components-5.1.1.tgz#96dfb02a8025794960863b9e8e365e3b6be5518d"
   integrity sha512-1ps8ZAYu2Husx+Vz8D+MvXwEwvMwFv+hqqUwhNlDN5ybg6A+3xyW1ECrAgywhvXapNfXiz79jJyU0x22z0FFTg==

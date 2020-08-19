@@ -55,7 +55,7 @@ export const [
 
 const parseSDF = (sdf: string, { maxRecords = Infinity, configs }: Omit<Source, 'url' | 'id'>) => {
   const readMolecules: Molecule[] = [];
-  // Types for openchemlib are missing strict null checks so need 'null as any' here
+
   // TODO: can we specify the field we use with the second arg?
   const parser = new SDFileParser(sdf, null!);
   const fieldNames = parser.getFieldNames(1);

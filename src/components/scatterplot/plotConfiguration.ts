@@ -1,10 +1,11 @@
 import { useRedux } from 'hooks-for-redux';
-import { resolveState } from '../../modules/state/stateResolver';
 
 import { moleculesStore } from '../../modules/molecules/molecules';
+import { resolveState } from '../../modules/state/stateResolver';
 
 type ConfigOptions = 'xprop' | 'yprop' | 'colour' | 'size';
 type Config = Record<ConfigOptions, string | null>;
+type ConfigItem = { name: string; value: string | null };
 
 const initialState: Config = {
   xprop: 'id',
@@ -19,7 +20,10 @@ export const [
   scatterplotConfigurationStore,
 ] = useRedux('plotConfiguration', resolveState('plotConfiguration', initialState), {
   resetConfiguration: () => initialState,
-  setConfigurationItem: (configuration, { name, value }) => ({ ...configuration, [name]: value }),
+  setConfigurationItem: (configuration, { name, value }: ConfigItem) => ({
+    ...configuration,
+    [name]: value,
+  }),
 });
 
 moleculesStore.subscribe(() => {
