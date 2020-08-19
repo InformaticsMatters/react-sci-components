@@ -1,4 +1,5 @@
 import { useRedux } from 'hooks-for-redux';
+import { resolveState } from '../state/stateResolver';
 
 const initialState = {
   proteinPath: '',
@@ -7,7 +8,7 @@ const initialState = {
 
 export const [useSettings, { setSettings, setProteinPath, setMoleculesPath }, settingsStore] = useRedux(
   'settings',
-  initialState,
+  resolveState('settings', initialState),
   {
     setSettings: (settings, newSettings) => 
       newSettings,

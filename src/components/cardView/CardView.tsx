@@ -78,9 +78,9 @@ const CardView = ({ width }: IProps) => {
   const { isInNGLViewerIds, colours } = actions;
   const { fields, enabledFields, fieldForDepiction } = useCardViewConfiguration();
 
-  const displayMolecules = molecules.filter(({ id }) => {
+  const displayMolecules = molecules.filter(({ id }: {[key:string]:any}) => {
     const isSelected = selectedMoleculesIds.includes(id);
-    const isColoured = colours.filter(({ id: cid }) => cid === id)[0];
+    const isColoured = colours.filter(({ id: cid }: {[key:string]:any}) => cid === id)[0];
     return isSelected || isColoured;
   });
 
@@ -115,15 +115,15 @@ const CardView = ({ width }: IProps) => {
         {displayMolecules
           .sort(moleculeSorter(actions))
           .splice(0, CARDS_PER_PAGE * loadMoreCount)
-          .map(({ id, fields: fieldValues }) => {
-            let smiles = fieldValues.find((field) => field.name === fieldForDepiction)?.value;
+          .map(({ id, fields: fieldValues }: {[key:string]:any}) => {
+            let smiles = fieldValues.find((field: any) => field.name === fieldForDepiction)?.value;
             if (typeof smiles !== 'string') {
               smiles = '';
             }
             fieldValues.sort(
-              (a, b) =>
-                fields.findIndex((f) => f.name === a.name) -
-                fields.findIndex((f) => f.name === b.name),
+              (a: any, b: any) =>
+                fields.findIndex((f: any) => f.name === a.name) -
+                fields.findIndex((f: any) => f.name === b.name),
             );
             const selected = isInNGLViewerIds.includes(id);
             return (
@@ -137,7 +137,7 @@ const CardView = ({ width }: IProps) => {
                   onClick={() => toggleIsInNGLViewer(id)}
                   actionsProps={{ className: classes.actionsRoot }}
                   actions={(hover) => {
-                    const colour = colours.find((c) => c.id === id);
+                    const colour = colours.find((c: any) => c.id === id);
                     return (
                       <Grow in={hover || colour !== undefined}>
                         <span>
@@ -155,8 +155,8 @@ const CardView = ({ width }: IProps) => {
                 >
                   <CalculationsTable
                     properties={fieldValues
-                      .filter(({ name }) => enabledFields.includes(name))
-                      .map(({ name, ...rest }) => ({
+                      .filter(({ name }: {[key:string]:any}) => enabledFields.includes(name))
+                      .map(({ name, ...rest }: {[key:string]:any}) => ({
                         ...rest,
                         name: fieldNickNames[fieldNames.indexOf(name)],
                       }))}

@@ -88,7 +88,7 @@ const ScatterPlot = ({ width, colourBar = false }: IProps) => {
           {
             x: xaxis as number[],
             y: yaxis as number[],
-            customdata: molecules.map((m) => m.id), // Add custom data for use in selection
+            customdata: molecules.map((m: any) => m.id), // Add custom data for use in selection
             type: 'scatter',
             mode: 'markers',
             marker: {

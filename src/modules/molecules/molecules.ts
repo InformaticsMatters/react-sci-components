@@ -2,6 +2,7 @@ import { useRedux } from 'hooks-for-redux';
 import { SDFileParser } from 'openchemlib/minimal';
 import { ungzip } from 'pako';
 import { isNumeric } from 'utils';
+import { resolveState } from '../state/stateResolver';
 
 import { Source, workingSourceStore } from '../../components/dataLoader/sources';
 
@@ -39,7 +40,7 @@ export const [
   useMolecules,
   { mergeNewState, setIsMoleculesLoading, setMoleculesErrorMessage, setTotalParsed },
   moleculesStore,
-] = useRedux('molecules', initialState, {
+] = useRedux('molecules', resolveState('molecules', initialState), {
   mergeNewState: (state, newState: Partial<MoleculesState>) => ({ ...state, ...newState }),
   setIsMoleculesLoading: (state, isMoleculesLoading: boolean) => ({
     ...state,

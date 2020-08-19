@@ -2,6 +2,7 @@ import { useRedux } from 'hooks-for-redux';
 import {NGL_PARAMS, BACKGROUND_COLOR} from './Constants';
 import {ProteinState, proteinStore} from '../../modules/protein/protein';
 import {CardActionsState, cardActionsStore} from '../cardView/cardActions';
+import { resolveState } from '../../modules/state/stateResolver';
 
 export interface NGLLocalState {
     nglOrientations: any;
@@ -30,7 +31,7 @@ export const [
     useNGLLocalState,
     {removeAllNglComponents, setNglOrientation, setProtein, setMoleculesToView, setfirstTimeShowLigand},
     nglLoacalStateSTore
-] = useRedux('nglLocalState', initialState, {
+] = useRedux('nglLocalState', resolveState('nglLocalState', initialState), {
     removeAllNglComponents: (state, stage: any) => {
         stage.removeAllComponents();
         return {...state, initialState};

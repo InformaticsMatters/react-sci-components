@@ -1,4 +1,5 @@
 import { useRedux } from 'hooks-for-redux';
+import { resolveState } from '../../modules/state/stateResolver';
 
 import { moleculesStore } from '../../modules/molecules/molecules';
 
@@ -16,7 +17,7 @@ export const [
   useScatterplotConfiguration,
   { resetConfiguration, setConfigurationItem },
   scatterplotConfigurationStore,
-] = useRedux('plotConfiguration', initialState, {
+] = useRedux('plotConfiguration', resolveState('plotConfiguration', initialState), {
   resetConfiguration: () => initialState,
   setConfigurationItem: (configuration, { name, value }) => ({ ...configuration, [name]: value }),
 });

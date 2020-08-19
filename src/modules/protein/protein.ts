@@ -1,5 +1,6 @@
-import { useRedux } from 'hooks-for-redux'
-import { settingsStore } from '../settings/settings'
+import { useRedux } from 'hooks-for-redux';
+import { settingsStore } from '../settings/settings';
+import { resolveState } from '../state/stateResolver';
 
 export interface Protein {
     definition: string;
@@ -21,7 +22,7 @@ export const [
     useProtein,
     {setProtein, setIsProteinLoading},
     proteinStore,
-] = useRedux('protein', initialState,
+] = useRedux('protein', resolveState('protein', initialState),
 {
     setProtein: (state, protein: Protein) => ({...state, protein}),
     setIsProteinLoading: (state, isProteinLoading: boolean) => ({...state, isProteinLoading})

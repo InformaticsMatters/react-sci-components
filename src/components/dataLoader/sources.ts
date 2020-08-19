@@ -3,6 +3,7 @@
  */
 
 import { useRedux } from 'hooks-for-redux';
+import { resolveState } from '../../modules/state/stateResolver';
 
 export interface FieldConfig {
   name: string;
@@ -32,7 +33,7 @@ type AddSourcePayload = Omit<Source, 'id'>;
 
 export const [useSources, { addSource, selectSource, selectConfig }, sourcesStore] = useRedux(
   'sources',
-  initialSourcesState,
+  resolveState('sources', initialSourcesState),
   {
     addSource: (state, payload: AddSourcePayload) => {
       return [{ id: state.length + 1, ...payload }, ...state];
@@ -40,14 +41,14 @@ export const [useSources, { addSource, selectSource, selectConfig }, sourcesStor
     selectSource: (state, url: string) => {
       // Currently get the first with correct url
       // ? Maybe need to select based on which was used last
-      const indexToSelect = state.findIndex((source) => source.url === url);
+      const indexToSelect = state.findIndex((source: any) => source.url === url);
       if (indexToSelect !== -1) {
         return [state.splice(indexToSelect, 1)[0], ...state];
       }
       return state;
     },
     selectConfig: (state, id: number) => {
-      const indexToSelect = state.findIndex((source) => source.id === id);
+      const indexToSelect = state.findIndex((source: any) => source.id === id);
       if (indexToSelect !== -1) {
         return [state.splice(indexToSelect, 1)[0], ...state];
       }
