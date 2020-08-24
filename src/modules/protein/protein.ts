@@ -2,6 +2,8 @@ import { useRedux } from 'hooks-for-redux';
 
 import { settingsStore } from '../settings/settings';
 import { resolveState } from '../state/stateResolver';
+import {initializeModule, subscribeToInitAll} from '../state/stateConfig';
+
 
 export interface Protein {
   definition: string;
@@ -26,7 +28,7 @@ export const [useProtein, { setProtein, setIsProteinLoading }, proteinStore] = u
   },
 );
 
-settingsStore.subscribe(({ proteinPath }) => {
+const loadProtein = ({proteinPath}: {proteinPath: string}) => {
   setIsProteinLoading(true);
   const proxyurl = 'https://cors-anywhere.herokuapp.com/';
   fetch(proxyurl + proteinPath, { mode: 'cors' })
@@ -40,5 +42,15 @@ settingsStore.subscribe(({ proteinPath }) => {
       console.log('Request failed due to');
       console.log(reason);
     })
-    .finally(() => setIsProteinLoading(false));
-});
+    .finally(() => setIsProteinLoading(false));  
+}
+
+settingsStore.subscribe(loadProtein);
+
+initializeModule('protein');
+
+const onInitAll = () => {
+  loadProtein(settingsStore.getState());
+};
+
+subscribeToInitAll(onInitAll);

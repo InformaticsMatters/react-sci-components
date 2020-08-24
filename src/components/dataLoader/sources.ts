@@ -5,6 +5,8 @@
 import { useRedux } from 'hooks-for-redux';
 
 import { resolveState } from '../../modules/state/stateResolver';
+import {initializeModule} from '../../modules/state/stateConfig';
+
 
 export interface FieldConfig {
   name: string;
@@ -67,8 +69,11 @@ const initialWorkingSourceState: Omit<Source, 'id'> = {
 
 export const [useWorkingSource, { setWorkingSource }, workingSourceStore] = useRedux(
   'workingSource',
-  initialWorkingSourceState,
+  resolveState('workingSource' ,initialWorkingSourceState),
   {
     setWorkingSource: (_, newSource: Omit<Source, 'id'>) => newSource,
   },
 );
+
+initializeModule('sources');
+initializeModule('workingSource');

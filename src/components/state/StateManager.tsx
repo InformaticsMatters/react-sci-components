@@ -7,6 +7,7 @@ import { IconButton } from '@material-ui/core';
 import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
 
 import DownloadButton from '../downloadButton/DownloadButton';
+import {filterOutFromState} from '../../modules/state/stateResolver';
 
 interface IProps {}
 
@@ -19,7 +20,8 @@ const StateManagement = () => {
     <>
       <DownloadButton
         filename={'name.json'}
-        dump={JSON.stringify(state)}
+        dump={
+          JSON.stringify(filterOutFromState(state))}
         tooltip={'Download State as json'}
       />
       <IconButton aria-label="upload json state" onClick={() => setUploadDialogOpen(true)}>

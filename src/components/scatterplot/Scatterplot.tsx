@@ -6,6 +6,7 @@ import Plot from 'react-plotly.js';
 import { Switch, Tooltip, Typography, useTheme } from '@material-ui/core';
 
 import { Molecule, useMolecules } from '../../modules/molecules/molecules';
+// import {DomainContext, Molecule} from '../domain/DomainProvider';
 import { isNumber, isUndefined } from '../../utils';
 import { useScatterplotConfiguration } from './plotConfiguration';
 import { selectPoints } from './plotSelection';
@@ -44,6 +45,8 @@ interface IProps {
 const ScatterPlot = ({ width, colourBar = false }: IProps) => {
   const theme = useTheme();
   let { molecules, fieldNames, fieldNickNames } = useMolecules();
+  // const {state} = useContext(DomainContext);
+  // const { molecules, fieldNames, fieldNickNames } = state.molecules;  
 
   let { xprop, yprop, size, colour } = useScatterplotConfiguration();
 

@@ -7,6 +7,7 @@ import { Button, Grow } from '@material-ui/core';
 import { createStyles, makeStyles, Theme, useTheme } from '@material-ui/core/styles';
 
 import { Molecule, useMolecules } from '../../modules/molecules/molecules';
+// import {DomainContext, Molecule} from '../domain/DomainProvider';
 import { usePlotSelection } from '../scatterplot/plotSelection';
 import CalculationsTable from './CalculationsTable';
 import {
@@ -73,6 +74,8 @@ const CardView = ({ width }: IProps) => {
   const [loadMoreCount, setLoadMoreCount] = useState(1);
 
   const { molecules, fieldNames, fieldNickNames } = useMolecules();
+  // const {state} = useContext(DomainContext);
+  // const { molecules, fieldNames, fieldNickNames } = state.molecules;
   const selectedMoleculesIds = usePlotSelection();
   const actions = useCardActions();
   const { isInNGLViewerIds, colours } = actions;

@@ -3,6 +3,8 @@ import {NGL_PARAMS, BACKGROUND_COLOR} from './Constants';
 import {ProteinState, proteinStore} from '../../modules/protein/protein';
 import {CardActionsState, cardActionsStore} from '../cardView/cardActions';
 import { resolveState } from '../../modules/state/stateResolver';
+import {initializeModule} from '../../modules/state/stateConfig';
+
 
 export interface NGLLocalState {
     nglOrientations: any;
@@ -64,3 +66,4 @@ cardActionsStore.subscribe((state: CardActionsState) => {
     setMoleculesToView(state.isInNGLViewerIds);
 });
 
+initializeModule('nglLocalState');

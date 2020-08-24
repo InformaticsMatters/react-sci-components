@@ -2,6 +2,7 @@ import React, { memo, useCallback, useEffect, useState } from 'react';
 
 import { throttle } from 'lodash';
 import { Molecule, useMolecules } from 'modules/molecules/molecules';
+// import {DomainContext, Molecule} from '../domain/DomainProvider';
 import { Stage } from 'ngl';
 
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
@@ -71,6 +72,8 @@ export const NglView: React.FC<IProps> = memo(({ div_id, width }) => {
   const [stage, setStage] = useState();
   const [nglViewList, setNglViewList] = useState<ViewListItem[]>([]);
   const { molecules } = useMolecules();
+  // const {state} = useContext(DomainContext);
+  // const { molecules } = state.molecules;  
   const { colours } = useCardActions();
   const classes = useStyles();
 

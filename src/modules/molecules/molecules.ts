@@ -3,6 +3,8 @@ import { SDFileParser } from 'openchemlib/minimal';
 import { ungzip } from 'pako';
 import { isNumeric } from 'utils';
 import { resolveState } from '../state/stateResolver';
+import {initializeModule, subscribeToInitAll} from '../state/stateConfig';
+
 
 import { Source, workingSourceStore } from '../../components/dataLoader/sources';
 
@@ -114,15 +116,15 @@ const parseSDF = (sdf: string, { maxRecords = Infinity, configs }: Omit<Source, 
   return [readMolecules, totalCounter, fieldNames, fieldNickNames, enabledFieldNames] as const;
 };
 
-workingSourceStore.subscribe(async ({ url, ...restOfSource }) => {
+const loadMolecules = async (state: Pick<Source, "url" | "configName" | "maxRecords" | "configs">) => {
   setIsMoleculesLoading(true);
   const proxyurl = 'https://cors-anywhere.herokuapp.com/';
 
-  const paramIndex = url.indexOf('?');
-  const moleculesPath = paramIndex !== -1 ? url.slice(0, paramIndex) : url;
+  const paramIndex = state.url.indexOf('?');
+  const moleculesPath = paramIndex !== -1 ? state.url.slice(0, paramIndex) : state.url;
 
   try {
-    const resp = await fetch(proxyurl + url, {
+    const resp = await fetch(proxyurl + state.url, {
       mode: 'cors',
       headers: { origin: '0.0.0.0' }, // Need to specify an origin header in order for Dropbox to work
     });
@@ -136,7 +138,7 @@ workingSourceStore.subscribe(async ({ url, ...restOfSource }) => {
       const txt = await resp.text();
       const [readMolecules, totalCounter, fieldNames, fieldNickNames, enabledFieldNames] = parseSDF(
         txt,
-        restOfSource,
+        state,
       );
       mergeNewState({
         molecules: readMolecules,
@@ -157,7 +159,7 @@ workingSourceStore.subscribe(async ({ url, ...restOfSource }) => {
 
       const [readMolecules, totalCounter, fieldNames, fieldNickNames, enabledFieldNames] = parseSDF(
         txt,
-        restOfSource,
+        state,
       );
       mergeNewState({
         molecules: readMolecules,
@@ -175,5 +177,15 @@ workingSourceStore.subscribe(async ({ url, ...restOfSource }) => {
     setTotalParsed(0);
   } finally {
     setIsMoleculesLoading(false);
-  }
-});
+  }  
+};
+
+workingSourceStore.subscribe(loadMolecules);
+
+initializeModule('molecules');
+
+const onInitAll = () => {
+  loadMolecules(workingSourceStore.getState());
+};
+
+subscribeToInitAll(onInitAll);

@@ -2,6 +2,8 @@ import { useRedux } from 'hooks-for-redux';
 
 import { moleculesStore } from '../../modules/molecules/molecules';
 import { resolveState } from '../../modules/state/stateResolver';
+import {initializeModule} from '../../modules/state/stateConfig';
+
 
 type ConfigOptions = 'xprop' | 'yprop' | 'colour' | 'size';
 type Config = Record<ConfigOptions, string | null>;
@@ -29,3 +31,5 @@ export const [
 moleculesStore.subscribe(() => {
   resetConfiguration();
 });
+
+initializeModule('plotConfiguration');

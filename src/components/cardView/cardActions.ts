@@ -4,6 +4,8 @@ import { useRedux } from 'hooks-for-redux';
 import { moleculesStore } from '../../modules/molecules/molecules';
 import { resolveState } from '../../modules/state/stateResolver';
 
+import {initializeModule} from '../../modules/state/stateConfig';
+
 /**
  * Redux store to manage the card state.
  *
@@ -77,3 +79,5 @@ export const [
 
 moleculesStore.subscribe(() => resetCardActions());
 plotSelectionStore.subscribe(() => resetIdsInNGLViewer());
+
+initializeModule('cardActions');

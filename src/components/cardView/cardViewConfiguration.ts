@@ -6,6 +6,8 @@ import { resolveState } from '../../modules/state/stateResolver';
 
 import type { DropResult } from 'react-smooth-dnd';
 
+import {initializeModule} from '../../modules/state/stateConfig';
+
 export type CField = { name: string; title: string };
 
 interface Config {
@@ -60,3 +62,5 @@ moleculesStore.subscribe(({ fieldNames, fieldNickNames, enabledFieldNames }) => 
     setEnabledFields(fieldNames.filter((name) => enabledFieldNames?.includes(name)).slice(0, 5));
   }
 });
+
+initializeModule('cardViewConfiguration');
