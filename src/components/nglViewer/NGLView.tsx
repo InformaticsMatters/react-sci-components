@@ -2,7 +2,6 @@ import React, { memo, useCallback, useEffect, useState } from 'react';
 
 import { throttle } from 'lodash';
 import { Molecule, useMolecules } from 'modules/molecules/molecules';
-// import {DomainContext, Molecule} from '../domain/DomainProvider';
 import { Stage } from 'ngl';
 
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
@@ -15,6 +14,7 @@ import {
   useNGLLocalState,
   setfirstTimeShowLigand
 } from './NGLLocalState';
+import { useProtein } from '../../modules/protein/protein'
 import { showLigands, showProtein } from './RenderingObjects';
 
 export interface NGLMolecule {
@@ -68,12 +68,11 @@ interface IProps {
 export const NglView: React.FC<IProps> = memo(({ div_id, width }) => {
   // connect to NGL Stage object
 
-  const { protein, nglOrientations, molsInView, firstTimeShowLigand} = useNGLLocalState();
+  const { nglOrientations, molsInView, firstTimeShowLigand} = useNGLLocalState();
+  const { protein } = useProtein();
   const [stage, setStage] = useState();
   const [nglViewList, setNglViewList] = useState<ViewListItem[]>([]);
   const { molecules } = useMolecules();
-  // const {state} = useContext(DomainContext);
-  // const { molecules } = state.molecules;  
   const { colours } = useCardActions();
   const classes = useStyles();
 
@@ -199,19 +198,19 @@ export const NglView: React.FC<IProps> = memo(({ div_id, width }) => {
       registerStageEvents(newStage, getNglView);
       setStage(newStage);
       removeNglComponents(newStage);
-      showProtein(newStage, protein, firstTimeShowLigand);
+      showProtein(newStage, protein.definition, firstTimeShowLigand);
       molsToDisplay = getMoleculeObjects(molsInView, colours, molecules);
       showLigands(newStage, molsToDisplay, firstTimeShowLigand);
     } else if (stage === undefined && nglViewFromContext && nglViewFromContext.stage) {
       registerStageEvents(nglViewFromContext.stage, getNglView);
       setStage(nglViewFromContext.stage);
       removeNglComponents(nglViewFromContext.stage);
-      showProtein(nglViewFromContext.stage, protein, firstTimeShowLigand);
+      showProtein(nglViewFromContext.stage, protein.definition, firstTimeShowLigand);
       molsToDisplay = getMoleculeObjects(molsInView, colours, molecules);
       showLigands(nglViewFromContext.stage, molsToDisplay, firstTimeShowLigand);
     } else if (stage) {
       removeNglComponents(stage);
-      showProtein(stage, protein, firstTimeShowLigand);
+      showProtein(stage, protein.definition, firstTimeShowLigand);
       molsToDisplay = getMoleculeObjects(molsInView, colours, molecules);
       showLigands(stage, molsToDisplay, firstTimeShowLigand);
       registerStageEvents(stage, getNglView);
@@ -237,7 +236,7 @@ export const NglView: React.FC<IProps> = memo(({ div_id, width }) => {
     unregisterStageEvents,
     stage,
     getNglView,
-    protein,
+    protein.definition,
     colours,
     molecules,
     molsInView,
