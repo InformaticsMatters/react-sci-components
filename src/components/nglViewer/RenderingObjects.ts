@@ -53,5 +53,5 @@ export const showLigands = (stage: any, molsInView: NGLMolecule[], centerOn: boo
     molsInView.forEach(mol => showLigand(stage, mol, centerOn));
     if (centerOn === false) {
       stage.viewerControls.orient(currentOrientation);
-    }
+    };
 };

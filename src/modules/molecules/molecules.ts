@@ -184,8 +184,8 @@ workingSourceStore.subscribe(loadMolecules);
 
 initializeModule('molecules');
 
-const onInitAll = () => {
-  loadMolecules(workingSourceStore.getState());
+const onInitAll = async () => {
+  await loadMolecules(workingSourceStore.getState());
 };
 
 subscribeToInitAll(onInitAll);

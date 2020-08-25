@@ -28,7 +28,7 @@ export const [useProtein, { setProtein, setIsProteinLoading }, proteinStore] = u
   },
 );
 
-const loadProtein = ({proteinPath}: {proteinPath: string}) => {
+const loadProtein = async ({proteinPath}: {proteinPath: string}) => {
   setIsProteinLoading(true);
   const proxyurl = 'https://cors-anywhere.herokuapp.com/';
   fetch(proxyurl + proteinPath, { mode: 'cors' })
@@ -49,8 +49,8 @@ settingsStore.subscribe(loadProtein);
 
 initializeModule('protein');
 
-const onInitAll = () => {
-  loadProtein(settingsStore.getState());
+const onInitAll = async () => {
+  await loadProtein(settingsStore.getState());
 };
 
 subscribeToInitAll(onInitAll);

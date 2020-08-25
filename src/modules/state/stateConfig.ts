@@ -1,5 +1,5 @@
 export const doNotSerialize = new Set(['molecules', 'protein']);
-const callbackAllModulesInitialized:{(): void;}[] = [];
+const callbackAllModulesInitialized:{(): Promise<void>;}[] = [];
 
 const moduleInitializationStatus = {
     cardActions: false,
@@ -17,8 +17,9 @@ const moduleInitializationStatus = {
 export const initializeModule = (moduleName: keyof typeof moduleInitializationStatus) => {
     moduleInitializationStatus[moduleName] = true;
     if (areAllModulesInitialized()) {
-        localStorage.clear();
-        onInitiAll();
+        onInitiAll().then(() => {
+            localStorage.clear()
+        });
     };
 };
 
@@ -32,10 +33,18 @@ const areAllModulesInitialized = (): boolean => {
     return result;
 };
 
-export const subscribeToInitAll = (callback:()=>void) => {
+export const isBeingStateReloadedFromFile = (): boolean => {
+    return localStorage.getItem('state') !== null;
+}
+
+export const subscribeToInitAll = (callback:()=>Promise<void>) => {
     callbackAllModulesInitialized.push(callback);
 };
 
-const onInitiAll = () => {
-    callbackAllModulesInitialized.forEach(callback => callback());
+const onInitiAll = async () => {
+    //callbackAllModulesInitialized.forEach(callback => callback());
+    for (let i = 0; i < callbackAllModulesInitialized.length; i++) {
+        let callback = callbackAllModulesInitialized[i];
+        await callback();
+    };
 };

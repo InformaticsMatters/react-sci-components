@@ -28,24 +28,27 @@ interface ViewListItem {
   stage: any;
 }
 
-const getMoleculeObjects = (molIds: number[], colors: Colour[], molecules: Molecule[]) => {
+const getMoleculeObjects = (molIds: number[], colors: Colour[], molecules: Molecule[]): NGLMolecule[] => {
   let i;
   const selectedMols: NGLMolecule[] = [];
-  for (i = 0; i < molIds.length; i++) {
-    const currentId = molIds[i];
-    const currentColor = colors.filter((col) => col.id === currentId);
-    const currentMol = molecules.filter((mol) => mol.id === currentId);
-    if (currentMol) {
-      const nglMol: NGLMolecule = {
-        id: currentId,
-        color: currentColor && currentColor.length === 1 ? currentColor[0].colour : '#909090',
-        mol: currentMol[0],
+  if (molIds && molIds.length > 0 && molecules && molecules.length > 0) {
+    for (i = 0; i < molIds.length; i++) {
+      const currentId = molIds[i];
+      const currentColor = colors.filter((col) => col.id === currentId);
+      const currentMol = molecules.filter((mol) => mol.id === currentId);
+      if (currentMol) {
+        const nglMol: NGLMolecule = {
+          id: currentId,
+          color: currentColor && currentColor.length === 1 ? currentColor[0].colour : '#909090',
+          mol: currentMol[0],
+        };
+        selectedMols.push(nglMol);
       };
-      selectedMols.push(nglMol);
-    }
-  }
+    };
+  };
 
   return selectedMols;
+  
 };
 
 const useStyles = makeStyles((theme: Theme) =>
