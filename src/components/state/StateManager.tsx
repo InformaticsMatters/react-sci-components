@@ -3,11 +3,11 @@ import React, { useState } from 'react';
 import { useStoreState } from 'hooks/useStoreState';
 import { DropzoneDialog } from 'material-ui-dropzone';
 
-import { IconButton } from '@material-ui/core';
-import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
+import { IconButton, Tooltip } from '@material-ui/core';
+import PublishRoundedIcon from '@material-ui/icons/PublishRounded';
 
+import { filterOutFromState } from '../../modules/state/stateResolver';
 import DownloadButton from '../downloadButton/DownloadButton';
-import {filterOutFromState} from '../../modules/state/stateResolver';
 
 interface IProps {}
 
@@ -20,13 +20,14 @@ const StateManagement = () => {
     <>
       <DownloadButton
         filename={'name.json'}
-        dump={
-          JSON.stringify(filterOutFromState(state))}
+        dump={JSON.stringify(filterOutFromState(state))}
         tooltip={'Download State as json'}
       />
-      <IconButton aria-label="upload json state" onClick={() => setUploadDialogOpen(true)}>
-        <ArrowUpwardIcon />
-      </IconButton>
+      <Tooltip arrow title="Upload saved state">
+        <IconButton aria-label="upload json state" onClick={() => setUploadDialogOpen(true)}>
+          <PublishRoundedIcon />
+        </IconButton>
+      </Tooltip>
       <DropzoneDialog
         filesLimit={1}
         onSave={(files: { text: () => Promise<any> }[]) => {
