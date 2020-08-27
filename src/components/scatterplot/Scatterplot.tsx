@@ -9,7 +9,7 @@ import { Molecule, useMolecules } from '../../modules/molecules/molecules';
 // import {DomainContext, Molecule} from '../domain/DomainProvider';
 import { isNumber, isUndefined } from '../../utils';
 import { useScatterplotConfiguration } from './plotConfiguration';
-import { selectPoints } from './plotSelection';
+import { selectPoints, usePlotSelection } from './plotSelection';
 
 // Utils
 
@@ -45,10 +45,11 @@ interface IProps {
 const ScatterPlot = ({ width, colourBar = false }: IProps) => {
   const theme = useTheme();
   let { molecules, fieldNames, fieldNickNames } = useMolecules();
-  // const {state} = useContext(DomainContext);
-  // const { molecules, fieldNames, fieldNickNames } = state.molecules;  
 
   let { xprop, yprop, size, colour } = useScatterplotConfiguration();
+  const selection = usePlotSelection();
+
+  const selectedPoints = selection.map((id) => molecules.findIndex((m) => m.id === id));
 
   const [showColourBar, setShowColourBar] = useState(false);
 
@@ -92,6 +93,7 @@ const ScatterPlot = ({ width, colourBar = false }: IProps) => {
             x: xaxis as number[],
             y: yaxis as number[],
             customdata: molecules.map((m) => m.id), // Add custom data for use in selection
+            selectedpoints: selectedPoints.length ? selectedPoints : null,
             type: 'scatter',
             mode: 'markers',
             marker: {
@@ -100,7 +102,7 @@ const ScatterPlot = ({ width, colourBar = false }: IProps) => {
               colorscale: 'Bluered',
               colorbar: showColourBar || colourBar ? {} : undefined,
             },
-          },
+          } as any,
         ]}
         layout={{
           width: displayWidth,
