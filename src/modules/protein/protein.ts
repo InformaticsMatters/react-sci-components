@@ -29,20 +29,22 @@ export const [useProtein, { setProtein, setIsProteinLoading }, proteinStore] = u
 );
 
 const loadProtein = async ({proteinPath}: {proteinPath: string}) => {
-  setIsProteinLoading(true);
-  const proxyurl = 'https://cors-anywhere.herokuapp.com/';
-  fetch(proxyurl + proteinPath, { mode: 'cors' })
-    .then((resp) => {
-      resp.text().then((pdb) => {
-        console.log(pdb);
-        setProtein({ definition: pdb });
-      });
-    })
-    .catch((reason) => {
-      console.log('Request failed due to');
-      console.log(reason);
-    })
-    .finally(() => setIsProteinLoading(false));  
+  if (proteinPath !== '') {
+    setIsProteinLoading(true);
+    const proxyurl = 'https://cors-anywhere.herokuapp.com/';
+    fetch(proxyurl + proteinPath, { mode: 'cors' })
+      .then((resp) => {
+        resp.text().then((pdb) => {
+          console.log(pdb);
+          setProtein({ definition: pdb });
+        });
+      })
+      .catch((reason) => {
+        console.log('Request failed due to');
+        console.log(reason);
+      })
+      .finally(() => setIsProteinLoading(false));  
+  };
 }
 
 settingsStore.subscribe(loadProtein);

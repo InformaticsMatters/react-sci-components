@@ -3,25 +3,27 @@ import {MOL_REPRESENTATION} from './Constants';
 import {NGLMolecule} from './NGLView';
 
 export const showProtein = (stage: any, protein: string, centerOn: boolean) => {
-    const stringBlob = new Blob([protein], {type: 'text/plain'});
-    stage.loadFile(stringBlob, {ext: "pdb"}).then((comp: any) => {
-        const reprArray = createRepresentationsArray(
-        [
-          createRepresentationStructure(MOL_REPRESENTATION.cartoon, {
-            colorScheme: 'uniform',
-            opacity: 0.3}),
-          createRepresentationStructure(MOL_REPRESENTATION.licorice, {
-            colorScheme: 'uniform',
-            opacity: 0.3,
-            radiusType: 'size',
-            scale: 0.4})
-        ]);
-        if (centerOn) {
-          comp.autoView();
-        };
-
-        return Promise.resolve(assignRepresentationArrayToComp(reprArray, comp));
-    });
+    if (protein && protein !== '') {
+      const stringBlob = new Blob([protein], {type: 'text/plain'});
+      stage.loadFile(stringBlob, {ext: "pdb"}).then((comp: any) => {
+          const reprArray = createRepresentationsArray(
+          [
+            createRepresentationStructure(MOL_REPRESENTATION.cartoon, {
+              colorScheme: 'uniform',
+              opacity: 0.3}),
+            createRepresentationStructure(MOL_REPRESENTATION.licorice, {
+              colorScheme: 'uniform',
+              opacity: 0.3,
+              radiusType: 'size',
+              scale: 0.4})
+          ]);
+          if (centerOn) {
+            comp.autoView();
+          };
+  
+          return Promise.resolve(assignRepresentationArrayToComp(reprArray, comp));
+      });
+    };
 };
 
 const showLigand = ( stage: any, molecule: NGLMolecule, centerOn: boolean) => {

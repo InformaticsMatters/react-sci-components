@@ -12,10 +12,11 @@ import { removeNglComponents, setOrientation } from './DispatchActions';
 import {
   initialState as NGL_INITIAL,
   useNGLLocalState,
-  setfirstTimeShowLigand
+  setfirstTimeShowLigand,
 } from './NGLLocalState';
 import { useProtein } from '../../modules/protein/protein'
 import { showLigands, showProtein } from './RenderingObjects';
+import {isBeingStateReloadedFromFile} from '../../modules/state/stateConfig';
 
 export interface NGLMolecule {
   id: number;
@@ -73,7 +74,7 @@ export const NglView: React.FC<IProps> = memo(({ div_id, width }) => {
 
   const { nglOrientations, molsInView, firstTimeShowLigand} = useNGLLocalState();
   const { protein } = useProtein();
-  const [stage, setStage] = useState();
+  const [stage, setStage] = useState<any>(null);
   const [nglViewList, setNglViewList] = useState<ViewListItem[]>([]);
   const { molecules } = useMolecules();
   const { colours } = useCardActions();
@@ -141,7 +142,7 @@ export const NglView: React.FC<IProps> = memo(({ div_id, width }) => {
   const handleResize = useCallback(() => {
     const newStage = getNglView(div_id);
     if (newStage) {
-      newStage.stage.handleResize();
+      setTimeout(() => newStage.stage.handleResize(), 100);
     }
   }, [div_id, getNglView]);
 
@@ -181,9 +182,20 @@ export const NglView: React.FC<IProps> = memo(({ div_id, width }) => {
   );
 
   useEffect(() => {
+      if (nglOrientations && stage !== null && nglOrientations[div_id] !== undefined) {
+        stage.viewerControls.orient(nglOrientations[div_id].elements);
+      };
+    }, [
+        nglOrientations,
+        stage,
+        div_id,
+      ]
+  );
+
+  useEffect(() => {
     const nglViewFromContext = getNglView(div_id);
     let molsToDisplay;
-    if (stage === undefined && !nglViewFromContext) {
+    if (stage == null && !nglViewFromContext) {
       const newStage = new Stage(div_id);
       // set default settings
       if (div_id === VIEWS.MAJOR_VIEW) {
@@ -204,7 +216,7 @@ export const NglView: React.FC<IProps> = memo(({ div_id, width }) => {
       showProtein(newStage, protein.definition, firstTimeShowLigand);
       molsToDisplay = getMoleculeObjects(molsInView, colours, molecules);
       showLigands(newStage, molsToDisplay, firstTimeShowLigand);
-    } else if (stage === undefined && nglViewFromContext && nglViewFromContext.stage) {
+    } else if (stage == null && nglViewFromContext && nglViewFromContext.stage) {
       registerStageEvents(nglViewFromContext.stage, getNglView);
       setStage(nglViewFromContext.stage);
       removeNglComponents(nglViewFromContext.stage);
@@ -219,7 +231,11 @@ export const NglView: React.FC<IProps> = memo(({ div_id, width }) => {
       registerStageEvents(stage, getNglView);
     }
 
-    if (molsToDisplay && molsToDisplay.length > 0) {
+    if (!isBeingStateReloadedFromFile()) {
+      handleOrientationChanged();
+    }
+
+    if ((molsToDisplay && molsToDisplay.length > 0) || isBeingStateReloadedFromFile()) {
       setfirstTimeShowLigand(false);
     }
 

@@ -38,7 +38,7 @@ export const [
     setNglOrientation: (state, orientationInfo: any) => {
         const div_id = orientationInfo.div_id;
         const orientation = orientationInfo.orientation;
-        const toSetDiv = JSON.parse(JSON.stringify(state.nglOrientations));
+        const toSetDiv = {...state.nglOrientations};
         toSetDiv[div_id] = orientation;
         return {...state, nglOrientations: toSetDiv};
     },
