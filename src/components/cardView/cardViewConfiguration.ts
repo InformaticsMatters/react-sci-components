@@ -2,11 +2,10 @@ import { useRedux } from 'hooks-for-redux';
 import { zip } from 'lodash';
 
 import { moleculesStore } from '../../modules/molecules/molecules';
+import { initializeModule } from '../../modules/state/stateConfig';
 import { resolveState } from '../../modules/state/stateResolver';
 
 import type { DropResult } from 'react-smooth-dnd';
-
-import {initializeModule} from '../../modules/state/stateConfig';
 
 export type CField = { name: string; title: string };
 

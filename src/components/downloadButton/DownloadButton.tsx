@@ -1,19 +1,19 @@
 import React from 'react';
 
+
+
 import { IconButton, Tooltip } from '@material-ui/core';
 import GetAppRoundedIcon from '@material-ui/icons/GetAppRounded';
 
-import { useStoreState } from 'hooks/useStoreState';
 
-import { filterOutFromState } from '../../modules/state/stateResolver';
 
 interface Props {
-  // dump: string;
+  dump: string;
   filename: string;
   tooltip: string;
 }
 
-const DownloadButton = ({ /*dump, */filename, tooltip }: Props) => {
+const DownloadButton = ({ dump, filename, tooltip }: Props) => {
   /*
    * Creates a Blob object which can be downloaded
    * Mime type using less common tab-separated-values
@@ -23,10 +23,7 @@ const DownloadButton = ({ /*dump, */filename, tooltip }: Props) => {
    * https://stackoverflow.com/questions/44656610/download-a-string-as-txt-file-in-react/44661948
    */
 
-  const state = useStoreState();
-
   const downloadTextAsFile = () => {
-    let dump = JSON.stringify(filterOutFromState(state));
     const element = document.createElement('a');
     const file = new Blob([dump], { type: 'text/json' });
     element.href = URL.createObjectURL(file);

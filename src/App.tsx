@@ -11,8 +11,8 @@ import AccordionView from './components/AccordionView';
 import CardView from './components/cardView/CardView';
 import { NglView } from './components/nglViewer/NGLView';
 import ScatterPlot from './components/scatterplot/Scatterplot';
-import Theme from './theme';
 import StateManagement from './components/state/StateManager';
+import Theme from './theme';
 
 const App = () => {
   return (

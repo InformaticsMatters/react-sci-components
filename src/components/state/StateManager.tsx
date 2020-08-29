@@ -1,30 +1,26 @@
 import React, { useState } from 'react';
 
-//import { useStoreState } from 'hooks/useStoreState';
+import { useStoreState } from 'hooks/useStoreState';
 import { DropzoneDialog } from 'material-ui-dropzone';
+import { filterOutFromState } from 'modules/state/stateResolver';
 
 import { IconButton, Tooltip } from '@material-ui/core';
 import PublishRoundedIcon from '@material-ui/icons/PublishRounded';
 
-// import { filterOutFromState } from '../../modules/state/stateResolver';
 import DownloadButton from '../downloadButton/DownloadButton';
-
-// import {stringify} from 'flatted';
 
 interface IProps {}
 
 const StateManagement = () => {
-  // const state = useStoreState();
+  const state = useStoreState();
+
+  const dump = JSON.stringify(filterOutFromState(state));
 
   const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
 
   return (
     <>
-      <DownloadButton
-        filename={'name.json'}
-        // dump={stringify(filterOutFromState(state))}
-        tooltip={'Download State as json'}
-      />
+      <DownloadButton filename={'name.json'} dump={dump} tooltip={'Download State as json'} />
       <Tooltip arrow title="Upload saved state">
         <IconButton aria-label="upload json state" onClick={() => setUploadDialogOpen(true)}>
           <PublishRoundedIcon />

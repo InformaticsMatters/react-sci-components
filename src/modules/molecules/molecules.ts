@@ -2,11 +2,10 @@ import { useRedux } from 'hooks-for-redux';
 import { SDFileParser } from 'openchemlib/minimal';
 import { ungzip } from 'pako';
 import { isNumeric } from 'utils';
-import { resolveState } from '../state/stateResolver';
-import {initializeModule, subscribeToInitAll} from '../state/stateConfig';
-
 
 import { Source, workingSourceStore } from '../../components/dataLoader/sources';
+import { initializeModule, subscribeToInitAll } from '../state/stateConfig';
+import { resolveState } from '../state/stateResolver';
 
 export interface Field {
   name: 'oclSmiles' | string;
@@ -116,7 +115,9 @@ const parseSDF = (sdf: string, { maxRecords = Infinity, configs }: Omit<Source, 
   return [readMolecules, totalCounter, fieldNames, fieldNickNames, enabledFieldNames] as const;
 };
 
-const loadMolecules = async (state: Pick<Source, "url" | "configName" | "maxRecords" | "configs">) => {
+const loadMolecules = async (
+  state: Pick<Source, 'url' | 'configName' | 'maxRecords' | 'configs'>,
+) => {
   setIsMoleculesLoading(true);
   const proxyurl = 'https://cors-anywhere.herokuapp.com/';
 
@@ -177,7 +178,7 @@ const loadMolecules = async (state: Pick<Source, "url" | "configName" | "maxReco
     setTotalParsed(0);
   } finally {
     setIsMoleculesLoading(false);
-  }  
+  }
 };
 
 workingSourceStore.subscribe(loadMolecules);

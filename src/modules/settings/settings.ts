@@ -1,8 +1,7 @@
 import { useRedux } from 'hooks-for-redux';
 
+import { initializeModule } from '../state/stateConfig';
 import { resolveState } from '../state/stateResolver';
-import {initializeModule} from '../state/stateConfig';
-
 
 const initialState = {
   proteinPath: '',
