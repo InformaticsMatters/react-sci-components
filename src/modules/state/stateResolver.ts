@@ -10,11 +10,11 @@ export const resolveState = <T>(reducerName: string, initialState: T): T => {
   }
 };
 
-export const filterOutFromState = <T>(state: T): T => {
-  const filteredState: T = { ...state };
+export const filterOutFromState = <T extends { [key: string]: any }>(state: T): T => {
+  const filteredState = { ...state };
 
-  (Object.keys(filteredState) as Array<keyof T>).forEach((key) => {
-    if (doNotSerialize.has(key.toString())) {
+  Object.keys(filteredState).forEach((key) => {
+    if (doNotSerialize.has(key)) {
       delete filteredState[key];
     }
   });
