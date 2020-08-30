@@ -6,7 +6,6 @@ import { Button, CircularProgress } from '@material-ui/core';
 
 import SourceCombobox from '../../components/dataLoader/SourceCombobox';
 import { useProtein } from '../../modules/protein/protein';
-// import {DomainContext} from '../domain/DomainProvider';
 import { setSettings, useSettings } from '../../modules/settings/settings';
 
 /**
@@ -14,8 +13,7 @@ import { setSettings, useSettings } from '../../modules/settings/settings';
  */
 const Settings = () => {
   const { isProteinLoading } = useProtein();
-  // const {state} = useContext(DomainContext);
-  // const { isProteinLoading } = state.protein;
+
   const { proteinPath } = useSettings();
 
   return (

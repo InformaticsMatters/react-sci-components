@@ -31,7 +31,9 @@ interface IProps {
  * @param title used for setting ids for this card view and avoid id conflicts (a11y)
  */
 const CardViewConfig = ({ title }: IProps) => {
-  const { fields, enabledFields, fieldForDepiction } = useCardViewConfiguration();
+  const { fields, fieldForDepiction } = useCardViewConfiguration();
+
+  const enabledFields = fields.filter((field) => field.isVisible).map((field) => field.name);
 
   const depictionSelectionId = `${title}-depiction-field-selection`;
 

@@ -1,50 +1,52 @@
 export const doNotSerialize = new Set(['molecules', 'protein']);
-const callbackAllModulesInitialized:{(): Promise<void>;}[] = [];
+const callbackAllModulesInitialized: { (): Promise<void> }[] = [];
 
 const moduleInitializationStatus = {
-    cardActions: false,
-    cardViewConfiguration: false,
-    sources: false,
-    workingSource: false,
-    nglLocalState: false,
-    plotConfiguration: false,
-    plotSelection: false,
-    molecules: false,
-    protein: false,
-    settings: false,
+  cardActions: false,
+  cardViewConfiguration: false,
+  sources: false,
+  workingSource: false,
+  nglLocalState: false,
+  plotConfiguration: false,
+  plotSelection: false,
+  molecules: false,
+  protein: false,
+  settings: false,
 };
 
 export const initializeModule = (moduleName: keyof typeof moduleInitializationStatus) => {
-    moduleInitializationStatus[moduleName] = true;
-    if (areAllModulesInitialized()) {
-        onInitiAll().then(() => {
-            localStorage.clear()
-        });
-    };
+  moduleInitializationStatus[moduleName] = true;
+  if (areAllModulesInitialized()) {
+    onAllInit().then(() => {
+      localStorage.clear();
+    });
+  }
 };
 
 const areAllModulesInitialized = (): boolean => {
-    let result: boolean = true;
+  let result: boolean = true;
 
-    (Object.keys(moduleInitializationStatus) as Array<keyof typeof moduleInitializationStatus>).forEach(key => {
-        result = result && moduleInitializationStatus[key];
-    })
+  (Object.keys(moduleInitializationStatus) as Array<
+    keyof typeof moduleInitializationStatus
+  >).forEach((key) => {
+    result = result && moduleInitializationStatus[key];
+  });
 
-    return result;
+  return result;
 };
 
 export const isBeingStateReloadedFromFile = (): boolean => {
-    return localStorage.getItem('state') !== null;
-}
-
-export const subscribeToInitAll = (callback:()=>Promise<void>) => {
-    callbackAllModulesInitialized.push(callback);
+  return localStorage.getItem('state') !== null;
 };
 
-const onInitiAll = async () => {
-    //callbackAllModulesInitialized.forEach(callback => callback());
-    for (let i = 0; i < callbackAllModulesInitialized.length; i++) {
-        let callback = callbackAllModulesInitialized[i];
-        await callback();
-    };
+export const subscribeToAllInit = (callback: () => Promise<void>) => {
+  callbackAllModulesInitialized.push(callback);
+};
+
+const onAllInit = async () => {
+  //callbackAllModulesInitialized.forEach(callback => callback());
+  for (let i = 0; i < callbackAllModulesInitialized.length; i++) {
+    let callback = callbackAllModulesInitialized[i];
+    await callback();
+  }
 };

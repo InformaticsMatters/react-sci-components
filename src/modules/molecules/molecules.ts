@@ -4,7 +4,7 @@ import { ungzip } from 'pako';
 import { isNumeric } from 'utils';
 
 import { Source, workingSourceStore } from '../../components/dataLoader/sources';
-import { initializeModule, subscribeToInitAll } from '../state/stateConfig';
+import { initializeModule, subscribeToAllInit } from '../state/stateConfig';
 import { resolveState } from '../state/stateResolver';
 
 export interface Field {
@@ -189,4 +189,4 @@ const onInitAll = async () => {
   await loadMolecules(workingSourceStore.getState());
 };
 
-subscribeToInitAll(onInitAll);
+subscribeToAllInit(onInitAll);

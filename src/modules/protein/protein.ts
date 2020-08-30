@@ -1,7 +1,7 @@
 import { useRedux } from 'hooks-for-redux';
 
 import { settingsStore } from '../settings/settings';
-import { initializeModule, subscribeToInitAll } from '../state/stateConfig';
+import { initializeModule, subscribeToAllInit } from '../state/stateConfig';
 import { resolveState } from '../state/stateResolver';
 
 export interface Protein {
@@ -54,4 +54,4 @@ const onInitAll = async () => {
   await loadProtein(settingsStore.getState());
 };
 
-subscribeToInitAll(onInitAll);
+subscribeToAllInit(onInitAll);

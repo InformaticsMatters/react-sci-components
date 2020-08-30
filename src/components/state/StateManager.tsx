@@ -9,12 +9,14 @@ import PublishRoundedIcon from '@material-ui/icons/PublishRounded';
 
 import DownloadButton from '../downloadButton/DownloadButton';
 
+const STATE_VERSION = '1';
+
 interface IProps {}
 
-const StateManagement = () => {
+const StateManagement: React.FC<IProps> = () => {
   const state = useStoreState();
 
-  const dump = JSON.stringify(filterOutFromState(state));
+  const dump = JSON.stringify({ __version__: STATE_VERSION, ...filterOutFromState(state) });
 
   const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
 
