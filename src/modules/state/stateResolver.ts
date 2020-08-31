@@ -1,7 +1,7 @@
-import { doNotSerialize } from './stateConfig';
+import { doNotSerialize, STATE_KEY } from './stateConfig';
 
 export const resolveState = <T>(reducerName: string, initialState: T): T => {
-  const storedStateJson = localStorage.getItem('state');
+  const storedStateJson = localStorage.getItem(STATE_KEY);
   const storedState = storedStateJson && JSON.parse(storedStateJson);
   if (storedState && storedState.hasOwnProperty(reducerName) && !doNotSerialize.has(reducerName)) {
     return storedState[reducerName];

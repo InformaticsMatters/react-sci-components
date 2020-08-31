@@ -31,18 +31,17 @@ const loadProtein = async ({ proteinPath }: { proteinPath: string }) => {
   if (proteinPath !== '') {
     setIsProteinLoading(true);
     const proxyurl = 'https://cors-anywhere.herokuapp.com/';
-    fetch(proxyurl + proteinPath, { mode: 'cors' })
-      .then((resp) => {
-        resp.text().then((pdb) => {
-          console.log(pdb);
-          setProtein({ definition: pdb });
-        });
-      })
-      .catch((reason) => {
-        console.log('Request failed due to');
-        console.log(reason);
-      })
-      .finally(() => setIsProteinLoading(false));
+    try {
+      const resp = await fetch(proxyurl + proteinPath, { mode: 'cors' });
+      const pdb = await resp.text();
+      // console.log(pdb);
+      setProtein({ definition: pdb });
+    } catch (reason) {
+      console.log('Request failed due to');
+      console.log(reason);
+    } finally {
+      setIsProteinLoading(false);
+    }
   }
 };
 

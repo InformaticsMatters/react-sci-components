@@ -1,4 +1,5 @@
 export const doNotSerialize = new Set(['molecules', 'protein']);
+export const STATE_KEY = 'poseViewerState';
 
 type InitialisationCallback = () => Promise<void>;
 
@@ -21,16 +22,16 @@ export const initializeModule = async (moduleName: keyof typeof moduleInitializa
   moduleInitializationStatus[moduleName] = true;
   if (areAllModulesInitialized()) {
     await onAllInit();
-    localStorage.clear();
+    localStorage.removeItem(STATE_KEY);
   }
 };
 
-const areAllModulesInitialized = (): boolean => {
+const areAllModulesInitialized = () => {
   return Object.values(moduleInitializationStatus).every((b) => b);
 };
 
-export const isBeingStateReloadedFromFile = (): boolean => {
-  return localStorage.getItem('state') !== null;
+export const isBeingStateReloadedFromFile = () => {
+  return localStorage.getItem(STATE_KEY) !== null;
 };
 
 export const subscribeToAllInit = (callback: () => Promise<void>) => {

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 
 import { useStoreState } from 'hooks/useStoreState';
 import { DropzoneDialog } from 'material-ui-dropzone';
+import { STATE_KEY } from 'modules/state/stateConfig';
 import { filterOutFromState } from 'modules/state/stateResolver';
 
 import { IconButton, Tooltip } from '@material-ui/core';
@@ -30,11 +31,10 @@ const StateManagement: React.FC<IProps> = () => {
       </Tooltip>
       <DropzoneDialog
         filesLimit={1}
-        onSave={(files: { text: () => Promise<any> }[]) => {
-          files[0].text().then((txt) => {
-            localStorage.setItem('state', txt);
-            window.location.reload();
-          });
+        onSave={async (files: File[]) => {
+          const txt = await files[0].text();
+          localStorage.setItem(STATE_KEY, txt);
+          window.location.reload();
           setUploadDialogOpen(false);
         }}
         onClose={() => {
