@@ -1,5 +1,6 @@
 import { useRedux } from 'hooks-for-redux';
 
+import { initializeModule } from '../state/stateConfig';
 import { resolveState } from '../state/stateResolver';
 
 const initialState = {
@@ -18,3 +19,5 @@ export const [
   setMoleculesPath: (settings, moleculesPathPar) =>
     Object.assign({}, settings, { moleculesPath: moleculesPathPar }),
 });
+
+initializeModule('settings');

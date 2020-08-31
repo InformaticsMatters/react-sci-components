@@ -1,6 +1,7 @@
 import { useRedux } from 'hooks-for-redux';
 
 import { settingsStore } from '../settings/settings';
+import { initializeModule, subscribeToAllInit } from '../state/stateConfig';
 import { resolveState } from '../state/stateResolver';
 
 export interface Protein {
@@ -26,19 +27,30 @@ export const [useProtein, { setProtein, setIsProteinLoading }, proteinStore] = u
   },
 );
 
-settingsStore.subscribe(({ proteinPath }) => {
-  setIsProteinLoading(true);
-  const proxyurl = 'https://cors-anywhere.herokuapp.com/';
-  fetch(proxyurl + proteinPath, { mode: 'cors' })
-    .then((resp) => {
-      resp.text().then((pdb) => {
-        console.log(pdb);
-        setProtein({ definition: pdb });
-      });
-    })
-    .catch((reason) => {
+const loadProtein = async ({ proteinPath }: { proteinPath: string }) => {
+  if (proteinPath !== '') {
+    setIsProteinLoading(true);
+    const proxyurl = 'https://cors-anywhere.herokuapp.com/';
+    try {
+      const resp = await fetch(proxyurl + proteinPath, { mode: 'cors' });
+      const pdb = await resp.text();
+      // console.log(pdb);
+      setProtein({ definition: pdb });
+    } catch (reason) {
       console.log('Request failed due to');
       console.log(reason);
-    })
-    .finally(() => setIsProteinLoading(false));
-});
+    } finally {
+      setIsProteinLoading(false);
+    }
+  }
+};
+
+settingsStore.subscribe(loadProtein);
+
+initializeModule('protein');
+
+const onInitAll = async () => {
+  await loadProtein(settingsStore.getState());
+};
+
+subscribeToAllInit(onInitAll);

@@ -73,10 +73,13 @@ const CardView = ({ width }: IProps) => {
   const [loadMoreCount, setLoadMoreCount] = useState(1);
 
   const { molecules, fieldNames, fieldNickNames } = useMolecules();
+
   const selectedMoleculesIds = usePlotSelection();
   const actions = useCardActions();
   const { isInNGLViewerIds, colours } = actions;
-  const { fields, enabledFields, fieldForDepiction } = useCardViewConfiguration();
+  const { fields, fieldForDepiction } = useCardViewConfiguration();
+
+  const enabledFields = fields.filter((field) => field.isVisible).map((field) => field.name);
 
   const displayMolecules = molecules.filter(({ id }) => {
     const isSelected = selectedMoleculesIds.includes(id);

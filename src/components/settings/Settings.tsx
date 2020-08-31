@@ -13,6 +13,7 @@ import { setSettings, useSettings } from '../../modules/settings/settings';
  */
 const Settings = () => {
   const { isProteinLoading } = useProtein();
+
   const { proteinPath } = useSettings();
 
   return (

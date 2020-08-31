@@ -1,6 +1,7 @@
 import { useRedux } from 'hooks-for-redux';
 
 import { moleculesStore } from '../../modules/molecules/molecules';
+import { initializeModule, isBeingStateReloadedFromFile } from '../../modules/state/stateConfig';
 import { resolveState } from '../../modules/state/stateResolver';
 
 type ConfigOptions = 'xprop' | 'yprop' | 'colour' | 'size';
@@ -27,5 +28,9 @@ export const [
 });
 
 moleculesStore.subscribe(() => {
-  resetConfiguration();
+  if (!isBeingStateReloadedFromFile()) {
+    resetConfiguration();
+  }
 });
+
+initializeModule('plotConfiguration');

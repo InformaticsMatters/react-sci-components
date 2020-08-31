@@ -1,7 +1,11 @@
 import React from 'react';
 
+
+
 import { IconButton, Tooltip } from '@material-ui/core';
-import GetAppIcon from '@material-ui/icons/GetApp';
+import GetAppRoundedIcon from '@material-ui/icons/GetAppRounded';
+
+
 
 interface Props {
   dump: string;
@@ -31,7 +35,7 @@ const DownloadButton = ({ dump, filename, tooltip }: Props) => {
   return (
     <Tooltip arrow title={tooltip}>
       <IconButton onClick={downloadTextAsFile}>
-        <GetAppIcon />
+        <GetAppRoundedIcon />
       </IconButton>
     </Tooltip>
   );

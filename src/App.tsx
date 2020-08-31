@@ -2,21 +2,26 @@ import React from 'react';
 
 import './App.css';
 
-import PoseViewerConfig from 'PoseViewerConfig';
 import styled from 'styled-components';
 
 import { Divider as MuiDivider } from '@material-ui/core';
 
 import AccordionView from './components/AccordionView';
 import CardView from './components/cardView/CardView';
+import Loader from './components/Loader';
 import { NglView } from './components/nglViewer/NGLView';
 import ScatterPlot from './components/scatterplot/Scatterplot';
-import Theme from './theme';
 import StateManagement from './components/state/StateManager';
+import { useIsStateLoaded } from './hooks/useIsStateLoaded';
+import PoseViewerConfig from './PoseViewerConfig';
+import Theme from './theme';
 
 const App = () => {
+  const isLoadingFromJSON = useIsStateLoaded();
+
   return (
     <Theme>
+      <Loader open={isLoadingFromJSON} reason="Loading..." />
       <AccordionView labels={['Settings / Scatter Plot', 'Card View', 'NGL Viewer']}>
         {(width) => {
           return [
