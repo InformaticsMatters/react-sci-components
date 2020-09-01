@@ -6,23 +6,24 @@ import FieldConfigInputs from './FieldConfigInputs';
 import { Source } from './sources';
 
 interface IProps {
-  currentSource: Omit<Source, 'id'>;
-  fieldNames: string[];
+  currentSource?: Omit<Source, 'id'>; // !
+  metadata: { name: string; type: string }[] | null;
 }
 
-const FieldConfiguration = ({ currentSource, fieldNames }: IProps) => {
-  const { configs, url, configName, maxRecords } = currentSource;
+const FieldConfiguration = ({ currentSource, metadata }: IProps) => {
+  // const { configs, url, configName, maxRecords } = currentSource;
   return (
     <FieldSet>
-      {fieldNames
-        .filter((name) => name !== 'oclSmiles')
-        .map((name, index) => {
-          const config = configs.find((field) => field.name === name);
+      {metadata
+        ?.filter(({ name }) => name !== 'oclSmiles')
+        .map(({ name, type }, index) => {
+          // const config = configs.find((field) => field.name === name);
           return (
             <FieldConfigInputs
-              key={`${url}-${configName}-${maxRecords}-${index}`}
+              key={index} // !
               name={name}
-              config={config}
+              type={type}
+              // config={config}
             />
           );
         })}

@@ -27,8 +27,8 @@ const MIN_CARD_WIDTH = 144; //px === 9rem
 const GUTTER_SIZE = 16; // px === 1rem
 
 const moleculeSorter = ({ colours }: CardActionsState) => (ma: Molecule, mb: Molecule) => {
-  const ca = colours.find((c) => c.id === ma.id);
-  const cb = colours.find((c) => c.id === mb.id);
+  const ca = colours.find(({ id }) => id === ma.id);
+  const cb = colours.find(({ id }) => id === mb.id);
 
   if (ca && !cb) {
     return -1;

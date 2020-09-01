@@ -14,7 +14,7 @@ import { selectPoints, usePlotSelection } from './plotSelection';
 
 const getPropArrayFromMolecules = (molecules: Molecule[], prop: string | null) => {
   if (prop === 'id') {
-    return molecules.map((molecules) => molecules.id);
+    return molecules.map((molecule) => molecule.id);
   } else {
     return molecules.map((molecule) => molecule.fields.find((m) => m.name === prop)?.value);
   }

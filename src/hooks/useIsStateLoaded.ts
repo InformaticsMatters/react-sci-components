@@ -5,7 +5,7 @@ import { STATE_KEY } from 'modules/state/stateConfig';
 /**
  * Check if state is in localStorage. localStorage is cleared when state
  * is loaded so this shows whether state is still being loaded.
- * @private
+ * @privateRemarks
  * Can't do this with a 'storage' event listener or retrieving
  * localStorage each render due to the update order.
  */

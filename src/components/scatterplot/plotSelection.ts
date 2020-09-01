@@ -14,7 +14,7 @@ export const [usePlotSelection, { selectPoints }, plotSelectionStore] = useRedux
   },
 );
 
-moleculesStore.subscribe((molecules) => {
+moleculesStore.subscribe(() => {
   if (!isBeingStateReloadedFromFile()) {
     selectPoints([]);
   }

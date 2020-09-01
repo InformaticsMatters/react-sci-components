@@ -1,9 +1,11 @@
 import { useRedux } from 'hooks-for-redux';
-import { SDFileParser } from 'openchemlib/minimal';
-import { ungzip } from 'pako';
-import { isNumeric } from 'utils';
+import DataTierAPI from 'services/DataTierAPI';
 
-import { Source, workingSourceStore } from '../../components/dataLoader/sources';
+import {
+  dTypes,
+  WorkingSourceState,
+  workingSourceStore,
+} from '../../components/dataLoader/sources';
 import { initializeModule, subscribeToAllInit } from '../state/stateConfig';
 import { resolveState } from '../state/stateResolver';
 
@@ -20,8 +22,6 @@ export interface Molecule {
 }
 
 export interface MoleculesState {
-  isMoleculesLoading: boolean;
-  moleculesErrorMessage: string | null;
   molecules: Molecule[];
   totalParsed?: number;
   fieldNames: string[];
@@ -30,8 +30,6 @@ export interface MoleculesState {
 }
 
 const initialState: MoleculesState = {
-  isMoleculesLoading: false,
-  moleculesErrorMessage: null,
   molecules: [],
   fieldNames: [],
   fieldNickNames: [],
@@ -54,123 +52,55 @@ export const [
   setTotalParsed: (state, totalParsed: number) => ({ ...state, totalParsed }),
 });
 
-const parseSDF = (sdf: string, { maxRecords = Infinity, configs }: Omit<Source, 'url' | 'id'>) => {
-  const readMolecules: Molecule[] = [];
+const loadMolecules = async (state: WorkingSourceState) => {
+  if (state === null) return;
 
-  // TODO: can we specify the field we use with the second arg?
-  const parser = new SDFileParser(sdf, null!);
-  const fieldNames = parser.getFieldNames(1);
+  const { projectId, datasetId, maxRecords, configs } = state;
 
-  const enabledFieldNames = fieldNames.filter(
-    (name) => configs.find((config) => config.name === name)?.enabled !== false, // ?
-  );
-
-  const configLookup = Object.fromEntries(
-    fieldNames.map((name) => [name, configs.find((config) => config.name === name)]),
-  );
-
-  let counter = 0;
-  let totalCounter = 0;
-  while (parser.next() && counter < maxRecords) {
-    const sdfMolecule = parser.getMolecule();
-    const currentMolFile = sdfMolecule.toMolfile();
-    const smiles = sdfMolecule.toIsomericSmiles();
-    const fields: Field[] = [{ name: 'oclSmiles', value: smiles }];
-
-    let valid = true;
-    enabledFieldNames.forEach((name) => {
-      const fieldValue = parser.getField(name);
-      const config = configLookup[name];
-      let value;
-      if (isNumeric(fieldValue)) {
-        value = parseFloat(fieldValue);
-        if (config?.min && value < config.min) {
-          valid = false;
-        }
-        if (config?.max && value > config.max) {
-          valid = false;
-        }
-      } else {
-        value = fieldValue;
-      }
-      fields.push({ name, nickname: config?.nickname || name, value });
-    });
-
-    if (valid) {
-      readMolecules.push({
-        id: counter,
-        molFile: currentMolFile,
-        fields: fields,
-      });
-      counter++;
-    }
-    totalCounter++;
-  }
-  fieldNames.unshift('oclSmiles');
-  enabledFieldNames.unshift('oclSmiles');
-  const fieldNickNames = fieldNames.map(
-    (name) => configs.find((config) => config.name === name)?.nickname || name,
-  );
-
-  return [readMolecules, totalCounter, fieldNames, fieldNickNames, enabledFieldNames] as const;
-};
-
-const loadMolecules = async (
-  state: Pick<Source, 'url' | 'configName' | 'maxRecords' | 'configs'>,
-) => {
   setIsMoleculesLoading(true);
-  const proxyurl = 'https://cors-anywhere.herokuapp.com/';
-
-  const paramIndex = state.url.indexOf('?');
-  const moleculesPath = paramIndex !== -1 ? state.url.slice(0, paramIndex) : state.url;
 
   try {
-    const resp = await fetch(proxyurl + state.url, {
-      mode: 'cors',
-      headers: { origin: '0.0.0.0' }, // Need to specify an origin header in order for Dropbox to work
-    });
+    const dataset = await DataTierAPI.downloadDatasetFromProjectAsJSON(projectId, datasetId);
 
-    // Fetch API doesn't throw an error when there is one
-    if (!resp.ok) {
-      throw new Error();
-    }
+    const molecules: Molecule[] = [];
+    let totalParsed = 0;
+    for (const mol of dataset) {
+      if (maxRecords !== undefined && molecules.length >= maxRecords) break;
 
-    if (moleculesPath.endsWith('.sdf')) {
-      const txt = await resp.text();
-      const [readMolecules, totalCounter, fieldNames, fieldNickNames, enabledFieldNames] = parseSDF(
-        txt,
-        state,
-      );
-      mergeNewState({
-        molecules: readMolecules,
-        totalParsed: totalCounter,
-        fieldNames,
-        fieldNickNames,
-        enabledFieldNames,
-        moleculesErrorMessage: null,
-      });
-    } else if (moleculesPath.endsWith('gzip') || moleculesPath.endsWith('gz')) {
-      const buffer = await resp.arrayBuffer();
-      console.debug(buffer);
-      const unzipped = ungzip(new Uint8Array(buffer));
-      let txt = '';
-      for (let i of unzipped) {
-        txt += String.fromCharCode(i);
+      const values = Object.entries(mol.values);
+      let valid = true;
+      for (let config of configs) {
+        if (config.dtype !== dTypes.TEXT) {
+          for (const [, value] of values) {
+            const numericValue = parseFloat(value);
+            if (isNaN(numericValue)) {
+              valid = false;
+              break;
+            }
+
+            if (config?.min && numericValue < config.min) {
+              valid = false;
+              break;
+            }
+            if (config?.max && numericValue > config.max) {
+              valid = false;
+              break;
+            }
+          }
+          if (!valid) break;
+        }
       }
-
-      const [readMolecules, totalCounter, fieldNames, fieldNickNames, enabledFieldNames] = parseSDF(
-        txt,
-        state,
-      );
-      mergeNewState({
-        molecules: readMolecules,
-        totalParsed: totalCounter,
-        fieldNames,
-        fieldNickNames,
-        enabledFieldNames,
-        moleculesErrorMessage: null,
-      });
+      // TODO: Add defaultValue
+      // TODO: Apply nickname transforms
+      if (valid)
+        molecules.push({
+          id: totalParsed,
+          fields: values.map(([name, value]) => ({ name, value })),
+          molFile: mol.molecule.molblock ?? '', // TODO: handle missing molblock with display of error msg
+        });
+      totalParsed++;
     }
+    mergeNewState({ molecules, totalParsed, fieldNames: configs.map(({ name }) => name) });
   } catch (error) {
     console.info({ error });
     const err = error as Error;

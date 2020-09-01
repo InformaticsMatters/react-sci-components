@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { unzip, zip } from 'lodash';
+import { MIMETypes } from 'services/apiTypes';
 
 import { Typography } from '@material-ui/core';
 
@@ -8,7 +9,7 @@ import CardViewConfig from './components/cardView/CardViewConfig';
 import Configuration from './components/configuration/Configuration';
 import DataLoader from './components/dataLoader/DataLoader';
 import ScatterplotConfig from './components/scatterplot/ScatterplotConfig';
-import Settings from './components/settings/Settings';
+// import Settings from './components/settings/Settings';
 import { useMolecules } from './modules/molecules/molecules';
 
 interface IProps {}
@@ -36,9 +37,9 @@ const PoseViewerConfig: React.FC<IProps> = () => {
       titles={['PDB Source', 'SDF Sources', 'Scatterplot', 'Card View']}
     >
       {/* PDB */}
-      <Settings />
+      <DataLoader fileType={MIMETypes.PDB} enableConfigs={false} />
       {/* SDF */}
-      <DataLoader />
+      <DataLoader fileType={MIMETypes.SDF} enableConfigs />
       {/* Scatterplot */}
       <ScatterplotConfig title="Scatterplot" properties={[fieldNames, fieldNickNames]} />
       {/* Card View */}
