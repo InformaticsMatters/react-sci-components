@@ -1,5 +1,7 @@
 import React from 'react';
 
+import styled from 'styled-components';
+
 interface IProps {
   smiles: string;
   width?: number;
@@ -47,7 +49,8 @@ const DepictMolecule = (props: Readonly<IProps>) => {
   );
 
   return (
-    <img
+    <Image
+      loading="lazy"
       width={width}
       height={height}
       src={smiles && `${fragnet_server}${depict_route}?${searchParams.join('&')}`}
@@ -55,5 +58,12 @@ const DepictMolecule = (props: Readonly<IProps>) => {
     />
   );
 };
+
+const Image = styled.img`
+  overflow: hidden;
+  display: inline-block;
+  max-width: 100%;
+  height: auto;
+`;
 
 export default DepictMolecule;

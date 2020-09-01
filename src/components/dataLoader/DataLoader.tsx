@@ -21,23 +21,33 @@ import { setWorkingSource, useWorkingSource } from './sources';
 import { getDataFromForm } from './utils';
 
 interface IProps {
+  title: string;
   fileType: AllowedMIMETypes;
   enableConfigs: boolean;
 }
 /**
  * Component for loading and configuring sdf data files
+ * @param name the use for the file selected by this data loader
  * @param fileType the type of file to allow selection of
  * @param enableConfigs whether to show the config inputs when a dataset is loaded
  */
-const DataLoader: React.FC<IProps> = ({ fileType, enableConfigs }) => {
+const DataLoader: React.FC<IProps> = ({ title, fileType, enableConfigs }) => {
   const formRef = useRef<HTMLFormElement>(null!);
-  // const sources = useSources();
+
   const currentSource = useWorkingSource();
 
   const { isProjectsLoading, projects } = useProjects();
-  const [currentProject, setCurrentProject] = useState<Project | null>(null);
+  let [currentProject, setCurrentProject] = useState<Project | null>(null);
+  currentProject =
+    currentProject ??
+    projects.find((project) => project.projectId === currentSource?.projectId) ??
+    null;
   let { isDatasetsLoading, datasets } = useDatasets(currentProject);
-  const [currentDataset, setCurrentDataset] = useState<Dataset | null>(null);
+  let [currentDataset, setCurrentDataset] = useState<Dataset | null>(null);
+  currentDataset =
+    currentDataset ??
+    datasets.find((dataset) => dataset.datasetId === currentSource?.datasetId) ??
+    null;
   const { isMetadataLoading, metadata } = useDatasetMeta(currentProject, currentDataset);
 
   datasets = datasets.filter(({ type }) => type === fileType);
@@ -46,12 +56,14 @@ const DataLoader: React.FC<IProps> = ({ fileType, enableConfigs }) => {
     const datasetId = currentDataset?.datasetId;
     const projectId = currentProject?.projectId;
     if (metadata !== null && datasetId !== undefined && projectId !== undefined) {
-      const formData = getDataFromForm(
-        formRef.current,
-        metadata.map(({ name }) => name),
-      );
+      const formData = enableConfigs
+        ? getDataFromForm(
+            formRef.current,
+            metadata.map(({ name }) => name),
+          )
+        : {};
 
-      setWorkingSource({ ...formData, projectId, datasetId });
+      setWorkingSource({ title, state: { ...formData, projectId, datasetId } });
     }
   };
 
@@ -103,14 +115,19 @@ const DataLoader: React.FC<IProps> = ({ fileType, enableConfigs }) => {
               variant="outlined"
               size="small"
               color="secondary"
-              defaultValue={currentSource?.maxRecords}
+              defaultValue={currentSource?.maxRecords ?? 500}
             />
             {/* {numOfMolsParsed !== undefined && (
           <Typography>
             <strong>{numOfMolsKept}</strong> loaded. <strong>{numOfMolsParsed}</strong> parsed.
           </Typography>
         )} */}
-            <Button variant="contained" color="primary" onClick={handleLoad}>
+            <Button
+              disabled={currentDataset === null || isMetadataLoading}
+              variant="contained"
+              color="primary"
+              onClick={handleLoad}
+            >
               Load
             </Button>
           </SourceRowTwo>
@@ -124,7 +141,7 @@ const DataLoader: React.FC<IProps> = ({ fileType, enableConfigs }) => {
             ) : metadata === null ? (
               <Typography>Load a data source to apply filters/transforms</Typography>
             ) : (
-              <FieldConfiguration metadata={metadata} />
+              <FieldConfiguration currentSource={currentSource} metadata={metadata} />
             )}
           </FieldsWrapper>
         </>

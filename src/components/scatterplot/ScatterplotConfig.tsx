@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { zip } from 'lodash';
+import { FieldMeta } from 'modules/molecules/molecules';
 import styled from 'styled-components';
 
 import { FormControl, InputLabel, MenuItem, Select } from '@material-ui/core';
@@ -9,17 +9,17 @@ import { setConfigurationItem, useScatterplotConfiguration } from './plotConfigu
 
 interface IProps {
   title: string;
-  properties: [string[], string[]];
+  fields: FieldMeta[];
 }
 
-const ScatterplotConfig = ({ title, properties }: IProps) => {
+const ScatterplotConfig = ({ title, fields }: IProps) => {
   const config = useScatterplotConfiguration();
 
   return (
     <>
       <h3>Displayed Scores</h3>
       <SelectsWrapper>
-        {properties.length ? (
+        {fields.length ? (
           Object.entries(config).map(([name, value], i) => {
             return (
               <FormControl key={i}>
@@ -32,9 +32,9 @@ const ScatterplotConfig = ({ title, properties }: IProps) => {
                   }
                 >
                   <MenuItem value={'id'}>id</MenuItem>
-                  {zip(...properties).map(([prop, title], j) => (
-                    <MenuItem key={j} value={prop}>
-                      {title}
+                  {fields.map(({ name, nickname, dtype }, j) => (
+                    <MenuItem key={j} value={name}>
+                      {`${nickname} (${dtype})`}
                     </MenuItem>
                   ))}
                 </Select>

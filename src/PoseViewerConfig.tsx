@@ -1,6 +1,5 @@
 import React from 'react';
 
-import { unzip, zip } from 'lodash';
 import { MIMETypes } from 'services/apiTypes';
 
 import { Typography } from '@material-ui/core';
@@ -19,16 +18,8 @@ interface IProps {}
  * This is a hard-coded example of a mini-app
  */
 const PoseViewerConfig: React.FC<IProps> = () => {
-  // Card View
-  let { molecules, fieldNames, fieldNickNames, enabledFieldNames } = useMolecules();
-
-  // Scatterplot
-  [fieldNames = [], fieldNickNames = []] = unzip(
-    zip(fieldNames, fieldNickNames).filter(([name]) => enabledFieldNames?.includes(name!)) as [
-      string,
-      string,
-    ][],
-  );
+  // Card View / Scatterplot
+  let { molecules, fields } = useMolecules();
 
   return (
     <Configuration
@@ -37,11 +28,11 @@ const PoseViewerConfig: React.FC<IProps> = () => {
       titles={['PDB Source', 'SDF Sources', 'Scatterplot', 'Card View']}
     >
       {/* PDB */}
-      <DataLoader fileType={MIMETypes.PDB} enableConfigs={false} />
+      <DataLoader title="pdb" fileType={MIMETypes.PDB} enableConfigs={false} />
       {/* SDF */}
-      <DataLoader fileType={MIMETypes.SDF} enableConfigs />
+      <DataLoader title="sdb" fileType={MIMETypes.SDF} enableConfigs />
       {/* Scatterplot */}
-      <ScatterplotConfig title="Scatterplot" properties={[fieldNames, fieldNickNames]} />
+      <ScatterplotConfig title="Scatterplot" fields={fields} />
       {/* Card View */}
       {!!molecules.length ? (
         <CardViewConfig title="Card View" />

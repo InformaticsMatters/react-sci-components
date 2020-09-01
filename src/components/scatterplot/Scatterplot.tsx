@@ -5,7 +5,7 @@ import Plot from 'react-plotly.js';
 
 import { Switch, Tooltip, Typography, useTheme } from '@material-ui/core';
 
-import { Molecule, useMolecules } from '../../modules/molecules/molecules';
+import { FieldMeta, Molecule, useMolecules } from '../../modules/molecules/molecules';
 import { isNumber, isUndefined } from '../../utils';
 import { useScatterplotConfiguration } from './plotConfiguration';
 import { selectPoints, usePlotSelection } from './plotSelection';
@@ -23,14 +23,9 @@ const getPropArrayFromMolecules = (molecules: Molecule[], prop: string | null) =
 type AxisSeries = ReturnType<typeof getPropArrayFromMolecules> | number;
 
 /* Gets the axis display text of the curried prop name */
-const getPropDisplayName = (names: string[], nicknames: string[]) => (prop: string | null) => {
+const getPropDisplayName = (fields: FieldMeta[]) => (prop: string | null) => {
   if (prop !== null) {
-    const idx = names.indexOf(prop);
-    if (idx !== -1) {
-      return nicknames[idx];
-    } else {
-      return prop;
-    }
+    return fields.find((f) => f.name === prop)?.nickname ?? prop;
   } else {
     return 'Select a property to display';
   }
@@ -43,7 +38,7 @@ interface IProps {
 
 const ScatterPlot = ({ width, colourBar = false }: IProps) => {
   const theme = useTheme();
-  let { molecules, fieldNames, fieldNickNames } = useMolecules();
+  let { molecules, fields } = useMolecules();
 
   let { xprop, yprop, size, colour } = useScatterplotConfiguration();
   const selection = usePlotSelection();
@@ -78,7 +73,7 @@ const ScatterPlot = ({ width, colourBar = false }: IProps) => {
     sizeaxis = 10;
   }
 
-  const labelGetter = getPropDisplayName(fieldNames, fieldNickNames);
+  const labelGetter = getPropDisplayName(fields);
   const xlabel = labelGetter(xprop);
   const ylabel = labelGetter(yprop);
 

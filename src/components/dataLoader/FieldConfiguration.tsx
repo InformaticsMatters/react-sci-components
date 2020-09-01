@@ -3,30 +3,23 @@ import React from 'react';
 import styled from 'styled-components';
 
 import FieldConfigInputs from './FieldConfigInputs';
-import { Source } from './sources';
+import { WorkingSourceState } from './sources';
 
 interface IProps {
-  currentSource?: Omit<Source, 'id'>; // !
+  currentSource: WorkingSourceState;
   metadata: { name: string; type: string }[] | null;
 }
 
 const FieldConfiguration = ({ currentSource, metadata }: IProps) => {
-  // const { configs, url, configName, maxRecords } = currentSource;
   return (
     <FieldSet>
-      {metadata
-        ?.filter(({ name }) => name !== 'oclSmiles')
-        .map(({ name, type }, index) => {
-          // const config = configs.find((field) => field.name === name);
-          return (
-            <FieldConfigInputs
-              key={index} // !
-              name={name}
-              type={type}
-              // config={config}
-            />
-          );
-        })}
+      {metadata?.map(({ name, type }, index) => {
+        const config =
+          currentSource === null
+            ? null
+            : currentSource.configs?.find((field) => field.name === name);
+        return <FieldConfigInputs key={index} name={name} type={type} config={config} />;
+      })}
     </FieldSet>
   );
 };

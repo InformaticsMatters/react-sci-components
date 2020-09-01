@@ -70,9 +70,9 @@ const CardViewConfig = ({ title }: IProps) => {
             value={fieldForDepiction}
             onChange={({ target: { value } }) => setDepictionField(value as string)}
           >
-            {fields.map((field, index) => (
-              <MenuItem key={index} value={field.name}>
-                {field.title}
+            {fields.map(({ name, title, dtype }, index) => (
+              <MenuItem key={index} value={name}>
+                {`${title} (${name}, ${dtype})`}
               </MenuItem>
             ))}
           </Select>
@@ -87,7 +87,7 @@ const CardViewConfig = ({ title }: IProps) => {
         </Typography>
       </ListHeader>
       <DraggableList
-        fields={displayFields.map(({ title }) => title)}
+        fields={displayFields.map(({ name, title, dtype }) => `${title} (${name}, ${dtype})`)}
         checked={displayFields.map(({ name }) => enabledFields.includes(name))}
         moveFieldPosition={handleMoveFieldPosition}
         toggleCheckbox={(selectedTitle) => {

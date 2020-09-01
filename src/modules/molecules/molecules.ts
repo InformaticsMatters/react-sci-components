@@ -10,7 +10,7 @@ import { initializeModule, subscribeToAllInit } from '../state/stateConfig';
 import { resolveState } from '../state/stateResolver';
 
 export interface Field {
-  name: 'oclSmiles' | string;
+  name: string;
   nickname?: string;
   value: number | string;
 }
@@ -21,30 +21,32 @@ export interface Molecule {
   molFile: string;
 }
 
+export interface FieldMeta {
+  dtype: dTypes;
+  name: string;
+  nickname: string;
+  enabled: boolean;
+}
+
 export interface MoleculesState {
   molecules: Molecule[];
   totalParsed?: number;
-  fieldNames: string[];
-  fieldNickNames: string[];
-  enabledFieldNames?: string[];
+  fields: FieldMeta[];
+  moleculesErrorMessage: string | null;
 }
 
 const initialState: MoleculesState = {
   molecules: [],
-  fieldNames: [],
-  fieldNickNames: [],
+  fields: [],
+  moleculesErrorMessage: null,
 };
 
 export const [
   useMolecules,
-  { mergeNewState, setIsMoleculesLoading, setMoleculesErrorMessage, setTotalParsed },
+  { mergeNewState, setMoleculesErrorMessage, setTotalParsed },
   moleculesStore,
 ] = useRedux('molecules', resolveState('molecules', initialState), {
   mergeNewState: (state, newState: Partial<MoleculesState>) => ({ ...state, ...newState }),
-  setIsMoleculesLoading: (state, isMoleculesLoading: boolean) => ({
-    ...state,
-    isMoleculesLoading,
-  }),
   setMoleculesErrorMessage: (state, moleculesErrorMessage: string | null) => ({
     ...state,
     moleculesErrorMessage,
@@ -57,8 +59,6 @@ const loadMolecules = async (state: WorkingSourceState) => {
 
   const { projectId, datasetId, maxRecords, configs } = state;
 
-  setIsMoleculesLoading(true);
-
   try {
     const dataset = await DataTierAPI.downloadDatasetFromProjectAsJSON(projectId, datasetId);
 
@@ -69,23 +69,22 @@ const loadMolecules = async (state: WorkingSourceState) => {
 
       const values = Object.entries(mol.values);
       let valid = true;
-      for (let config of configs) {
+      for (let config of configs ?? []) {
+        const [, value] = values.find(([name]) => config.name === name)!;
         if (config.dtype !== dTypes.TEXT) {
-          for (const [, value] of values) {
-            const numericValue = parseFloat(value);
-            if (isNaN(numericValue)) {
-              valid = false;
-              break;
-            }
+          const numericValue = parseFloat(value);
+          if (isNaN(numericValue)) {
+            valid = false;
+            break;
+          }
 
-            if (config?.min && numericValue < config.min) {
-              valid = false;
-              break;
-            }
-            if (config?.max && numericValue > config.max) {
-              valid = false;
-              break;
-            }
+          if (config?.min && numericValue < config.min) {
+            valid = false;
+            break;
+          }
+          if (config?.max && numericValue > config.max) {
+            valid = false;
+            break;
           }
           if (!valid) break;
         }
@@ -95,19 +94,28 @@ const loadMolecules = async (state: WorkingSourceState) => {
       if (valid)
         molecules.push({
           id: totalParsed,
-          fields: values.map(([name, value]) => ({ name, value })),
+          fields: values.map(([name, value]) => ({ name, nickname: name, value })),
           molFile: mol.molecule.molblock ?? '', // TODO: handle missing molblock with display of error msg
         });
       totalParsed++;
     }
-    mergeNewState({ molecules, totalParsed, fieldNames: configs.map(({ name }) => name) });
+
+    mergeNewState({
+      molecules,
+      totalParsed,
+      fields: (configs ?? []).map(({ name, nickname, dtype }) => ({
+        name,
+        nickname: nickname || name,
+        dtype,
+        enabled: true,
+      })),
+    });
   } catch (error) {
     console.info({ error });
     const err = error as Error;
     setMoleculesErrorMessage(err.message || 'An unknown error occurred');
     setTotalParsed(0);
   } finally {
-    setIsMoleculesLoading(false);
   }
 };
 

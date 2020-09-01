@@ -15,12 +15,14 @@ import { FieldConfig } from './sources';
 interface IProps {
   name: string;
   type: string;
-  config?: FieldConfig;
+  config?: FieldConfig | null;
 }
 
 const FieldConfigInputs = ({ name, type, config }: IProps) => {
   const [isNumeric, setIsNumeric] = useState(type === 'int' || type === 'float'); // Initial value depends on the defaultValue given to select field
-  const [enabled, setEnabled] = useState(config !== undefined);
+  const [enabled, setEnabled] = useState(
+    config === null ? true : config === undefined ? false : true,
+  );
 
   const handleDtypeChange = (event: React.ChangeEvent<{ value: unknown }>) => {
     if (event.target.value === 'text') {

@@ -72,7 +72,7 @@ const CardView = ({ width }: IProps) => {
 
   const [loadMoreCount, setLoadMoreCount] = useState(1);
 
-  const { molecules, fieldNames, fieldNickNames } = useMolecules();
+  const { molecules, fields: moleculesFields } = useMolecules();
 
   const selectedMoleculesIds = usePlotSelection();
   const actions = useCardActions();
@@ -161,7 +161,7 @@ const CardView = ({ width }: IProps) => {
                       .filter(({ name }) => enabledFields.includes(name))
                       .map(({ name, ...rest }) => ({
                         ...rest,
-                        name: fieldNickNames[fieldNames.indexOf(name)],
+                        name: moleculesFields.find((f) => f.name === name)?.nickname ?? name,
                       }))}
                     fontSize={'0.6rem'}
                   />
