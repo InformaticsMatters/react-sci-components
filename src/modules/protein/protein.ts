@@ -1,9 +1,9 @@
-import { StatePiece, WorkingSourceState } from 'components/dataLoader/sources';
+import { StatePiece, WorkingSourceState, workingSourceStore } from 'components/dataLoader/sources';
 import { useRedux } from 'hooks-for-redux';
 import isEqual from 'lodash/isEqual';
 import DataTierAPI from 'services/DataTierAPI';
 
-import { initializeModule } from '../state/stateConfig';
+import { initializeModule, subscribeToAllInit } from '../state/stateConfig';
 import { resolveState } from '../state/stateResolver';
 
 export interface Protein {
@@ -41,38 +41,22 @@ const loadProtein = async (workingSources: WorkingSourceState) => {
 
   try {
     setIsProteinLoading(true);
-    const dataset = await DataTierAPI.downloadDatasetFromProjectAsJSON(projectId, datasetId);
-
+    const dataset = await DataTierAPI.downloadDatasetFromProjectAsNative(projectId, datasetId);
+    setProtein({ definition: dataset });
   } catch (error) {
     const err = error as Error;
     console.log(err);
   } finally {
     setIsProteinLoading(false);
   }
-
-  // if (proteinPath !== '') {
-  //   setIsProteinLoading(true);
-  //   const proxyurl = 'https://cors-anywhere.herokuapp.com/';
-  //   try {
-  //     const resp = await fetch(proxyurl + proteinPath, { mode: 'cors' });
-  //     const pdb = await resp.text();
-  //     // console.log(pdb);
-  //     setProtein({ definition: pdb });
-  //   } catch (reason) {
-  //     console.log('Request failed due to');
-  //     console.log(reason);
-  //   } finally {
-  //     setIsProteinLoading(false);
-  //   }
-  // }
 };
 
-// workingSourceStore.subscribe(loadProtein);
+workingSourceStore.subscribe(loadProtein);
 
 initializeModule('protein');
 
-// const onInitAll = async () => {
-//   await loadProtein(settingsStore.getState());
-// };
+const onInitAll = async () => {
+  await loadProtein(workingSourceStore.getState());
+};
 
-// subscribeToAllInit(onInitAll);
+subscribeToAllInit(onInitAll);

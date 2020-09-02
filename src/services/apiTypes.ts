@@ -33,8 +33,7 @@ export type AllowedMIMETypes = MIMETypes;
 
 export type AllowedMediaTypes =
   | 'application/schema+json'
-  | 'application/x-squonk-dataset-molecule-v2+json'
-  | 'chemical/x-mdl-sdfile';
+  | 'application/x-squonk-dataset-molecule-v2+json';
 
 export interface PostDatasetArgs extends BasePostDataset {
   datasetFile: File;

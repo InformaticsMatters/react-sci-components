@@ -56,13 +56,14 @@ const DataLoader: React.FC<IProps> = ({ title, fileType, enableConfigs }) => {
   const handleLoad = (_: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     const datasetId = currentDataset?.datasetId;
     const projectId = currentProject?.projectId;
-    if (metadata !== null && datasetId !== undefined && projectId !== undefined) {
-      const formData = enableConfigs
-        ? getDataFromForm(
-            formRef.current,
-            metadata.map(({ name }) => name),
-          )
-        : {};
+    if (datasetId !== undefined && projectId !== undefined) {
+      const formData =
+        enableConfigs && metadata !== null
+          ? getDataFromForm(
+              formRef.current,
+              metadata.map(({ name }) => name),
+            )
+          : {};
 
       setWorkingSource({ title, state: { ...formData, projectId, datasetId } });
     }
@@ -157,7 +158,7 @@ const DataLoader: React.FC<IProps> = ({ title, fileType, enableConfigs }) => {
   );
 };
 
-export default DataLoader
+export default DataLoader;
 
 const SourcesWrapper = styled.div`
   & > div {

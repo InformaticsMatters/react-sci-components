@@ -60,7 +60,7 @@ class DataTierAPI extends APIService {
    * @param datasetId
    */
   async downloadDatasetFromProjectAsNative(projectId: string, datasetId: string): Promise<any> {
-    const data = await this._fetchDatasetFromProject(projectId, datasetId, 'chemical/x-mdl-sdfile');
+    const data = await this._fetchDatasetFromProject(projectId, datasetId);
     return data;
   }
 

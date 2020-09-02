@@ -67,7 +67,7 @@ const CardViewConfig = ({ title }: IProps) => {
           <InputLabel id={depictionSelectionId}>Depiction Field Selection</InputLabel>
           <Select
             labelId={depictionSelectionId}
-            value={fieldForDepiction}
+            value={fieldForDepiction ?? ''}
             onChange={({ target: { value } }) => setDepictionField(value as string)}
           >
             {fields.map(({ name, title, dtype }, index) => (

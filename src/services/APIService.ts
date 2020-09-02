@@ -1,5 +1,4 @@
 /**
- * Singleton instance that implements Mini-Apps Data Tier API 0.1 with axios
  * ! VERSION 1.0.1
  */
 import axios from 'axios';
@@ -12,6 +11,8 @@ enum Endpoints {
   DATASET = 'dataset',
   LABEL = 'label',
 }
+
+type QueryParam = string | number | boolean;
 
 export class APIService {
   protected token?: string;
@@ -114,6 +115,18 @@ export class APIService {
     return response.data;
   }
 
+  private paramIsUndefined(param: unknown): param is [string, QueryParam] {
+    const p = param as [string, QueryParam];
+    return p[1] !== undefined;
+  }
+
+  private encodeParams(params: { [key: string]: QueryParam | undefined }): string {
+    return Object.entries(params)
+      .filter(this.paramIsUndefined)
+      .map(([key, value]) => `${key}=${encodeURIComponent(value)}`)
+      .join('&');
+  }
+
   /**
    * Fetch a dataset, file or metadata, with given id from a project with given project id.
    * @param projectId the id of the project which the dataset is a part of
@@ -123,25 +136,21 @@ export class APIService {
   protected async _fetchDatasetFromProject(
     projectId: string,
     datasetId: string,
-    mediaType: AllowedMediaTypes,
+    mediaType?: AllowedMediaTypes,
   ) {
-    const response = await axios.get(
-      `${this.url}/${Endpoints.PROJECT}/${projectId}/${Endpoints.DATASET}/${datasetId}`,
-      {
-        headers: {
-          ...this.getAuthHeaders(),
-          Accept: mediaType,
-          'Cache-Control': 'no-store',
-          // Vary: 'Content-Type'
-        },
-      },
-    );
+    const url = `${this.url}/${Endpoints.PROJECT}/${projectId}/${
+      Endpoints.DATASET
+    }/${datasetId}?${this.encodeParams({ format: mediaType })}`;
+
+    const response = await axios.get(url, {
+      headers: this.getAuthHeaders(),
+    });
     return response.data;
   }
 
   /** Create new file on server
    * @param file the `File` object to be sent
-   * @param MIMEType the MIME type of the file being sent. Currently only
+   * @param MIMEType the MIME type of the file being sent.
    */
   protected async _postDataset(args: PostDatasetArgs) {
     const formData = new FormData();
