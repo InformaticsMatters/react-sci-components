@@ -5,10 +5,9 @@ import { MIMETypes } from 'services/apiTypes';
 import { Typography } from '@material-ui/core';
 
 import CardViewConfig from './components/cardView/CardViewConfig';
-import Configuration from './components/configuration/Configuration';
+import MultiPage from './components/configuration/MultiPage';
 import DataLoader from './components/dataLoader/DataLoader';
 import ScatterplotConfig from './components/scatterplot/ScatterplotConfig';
-// import Settings from './components/settings/Settings';
 import { useMolecules } from './modules/molecules/molecules';
 
 interface IProps {}
@@ -22,7 +21,7 @@ const PoseViewerConfig: React.FC<IProps> = () => {
   let { molecules, fields } = useMolecules();
 
   return (
-    <Configuration
+    <MultiPage
       width={'50rem'}
       height={'80vh'}
       titles={['PDB Source', 'SDF Sources', 'Scatterplot', 'Card View']}
@@ -30,7 +29,7 @@ const PoseViewerConfig: React.FC<IProps> = () => {
       {/* PDB */}
       <DataLoader title="pdb" fileType={MIMETypes.PDB} enableConfigs={false} />
       {/* SDF */}
-      <DataLoader title="sdb" fileType={MIMETypes.SDF} enableConfigs />
+      <DataLoader title="sdf" fileType={MIMETypes.SDF} enableConfigs />
       {/* Scatterplot */}
       <ScatterplotConfig title="Scatterplot" fields={fields} />
       {/* Card View */}
@@ -39,7 +38,7 @@ const PoseViewerConfig: React.FC<IProps> = () => {
       ) : (
         <Typography>No molecules are loaded yet</Typography>
       )}
-    </Configuration>
+    </MultiPage>
   );
 };
 

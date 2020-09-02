@@ -1,8 +1,10 @@
 import { useRedux } from 'hooks-for-redux';
+import isEqual from 'lodash/isEqual';
 import DataTierAPI from 'services/DataTierAPI';
 
 import {
   dTypes,
+  StatePiece,
   WorkingSourceState,
   workingSourceStore,
 } from '../../components/dataLoader/sources';
@@ -54,8 +56,13 @@ export const [
   setTotalParsed: (state, totalParsed: number) => ({ ...state, totalParsed }),
 });
 
-const loadMolecules = async (state: WorkingSourceState) => {
-  if (state === null) return;
+let prevSource: StatePiece | null = null;
+
+const loadMolecules = async (workingSources: WorkingSourceState) => {
+  const state = workingSources.find((slice) => slice.title === 'sdf')?.state ?? null;
+  if (state === null || isEqual(prevSource, state)) return;
+
+  prevSource = state;
 
   const { projectId, datasetId, maxRecords, configs } = state;
 

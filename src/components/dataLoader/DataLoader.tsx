@@ -34,7 +34,8 @@ interface IProps {
 const DataLoader: React.FC<IProps> = ({ title, fileType, enableConfigs }) => {
   const formRef = useRef<HTMLFormElement>(null!);
 
-  const currentSource = useWorkingSource();
+  const currentSources = useWorkingSource();
+  const currentSource = currentSources.find((slice) => slice.title === title)?.state ?? null;
 
   const { isProjectsLoading, projects } = useProjects();
   let [currentProject, setCurrentProject] = useState<Project | null>(null);
@@ -104,53 +105,59 @@ const DataLoader: React.FC<IProps> = ({ title, fileType, enableConfigs }) => {
         />
       </SourcesWrapper>
 
-      {enableConfigs && (
-        <>
-          <SourceRowTwo row>
-            <TextField
-              name="maxRecords"
-              inputProps={{ min: 0, step: 100 }}
-              type="number"
-              label="Max. Records"
-              variant="outlined"
-              size="small"
-              color="secondary"
-              defaultValue={currentSource?.maxRecords ?? 500}
-            />
-            {/* {numOfMolsParsed !== undefined && (
+      <>
+        <SourceRowTwo row>
+          {enableConfigs && (
+            <>
+              <TextField
+                name="maxRecords"
+                inputProps={{ min: 0, step: 100 }}
+                type="number"
+                label="Max. Records"
+                variant="outlined"
+                size="small"
+                color="secondary"
+                defaultValue={currentSource?.maxRecords ?? 500}
+              />
+              {/* {numOfMolsParsed !== undefined && (
           <Typography>
             <strong>{numOfMolsKept}</strong> loaded. <strong>{numOfMolsParsed}</strong> parsed.
           </Typography>
         )} */}
-            <Button
-              disabled={currentDataset === null || isMetadataLoading}
-              variant="contained"
-              color="primary"
-              onClick={handleLoad}
-            >
-              Load
-            </Button>
-          </SourceRowTwo>
+            </>
+          )}
+          <Button
+            disabled={currentDataset === null || isMetadataLoading}
+            variant="contained"
+            color="primary"
+            onClick={handleLoad}
+          >
+            Load
+          </Button>
+        </SourceRowTwo>
 
-          <Divider />
+        {enableConfigs && (
+          <>
+            <Divider />
 
-          <FieldsWrapper>
-            <Typography variant="h6">Field Configuration</Typography>
-            {isMetadataLoading ? (
-              <Progress />
-            ) : metadata === null ? (
-              <Typography>Load a data source to apply filters/transforms</Typography>
-            ) : (
-              <FieldConfiguration currentSource={currentSource} metadata={metadata} />
-            )}
-          </FieldsWrapper>
-        </>
-      )}
+            <FieldsWrapper>
+              <Typography variant="h6">Field Configuration</Typography>
+              {isMetadataLoading ? (
+                <Progress />
+              ) : metadata === null ? (
+                <Typography>Load a data source to apply filters/transforms</Typography>
+              ) : (
+                <FieldConfiguration currentSource={currentSource} metadata={metadata} />
+              )}
+            </FieldsWrapper>
+          </>
+        )}
+      </>
     </form>
   );
 };
 
-export default DataLoader;
+export default DataLoader
 
 const SourcesWrapper = styled.div`
   & > div {

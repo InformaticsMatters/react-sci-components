@@ -32,15 +32,24 @@ export interface Source {
   configs?: FieldConfig[];
 }
 
-export type WorkingSourceState = Omit<Source, 'configName'> | null;
+export type StatePiece = Omit<Source, 'configName'>;
 
-type SetWorkingSourcePayload = { title: string; state: NonNullable<WorkingSourceState> };
+export type WorkingSourceState = { title: string; state: StatePiece | null }[];
+
+type SetWorkingSourcePayload = { title: string; state: NonNullable<StatePiece> };
 
 export const [useWorkingSource, { setWorkingSource }, workingSourceStore] = useRedux(
   'workingSource',
-  resolveState('workingSource', null) as WorkingSourceState,
+  resolveState('workingSource', [] as WorkingSourceState),
   {
-    setWorkingSource: (_, { title, state }: SetWorkingSourcePayload) => state,
+    setWorkingSource: (prevState, { title, state }: SetWorkingSourcePayload) => {
+      const toUpdate = prevState.findIndex((state) => state.title === title);
+      if (toUpdate !== -1) {
+        return prevState.map((slice, index) => (index === toUpdate ? { title, state } : slice));
+      } else {
+        return [...prevState, { title, state }];
+      }
+    },
   },
 );
 

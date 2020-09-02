@@ -1,17 +1,18 @@
 import React, { useState } from 'react';
 
-import SwipeableViews from 'react-swipeable-views';
-
 import { AppBar, Tab } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 
 import { CloseButton, Content, Tabs, Title } from './components';
+import Configuration from './Configuration';
 
 // Types
 
 interface IProps {
+  width: number | string;
+  height: number | string;
   titles: string[];
-  close: () => void;
+  draggable?: boolean;
   children: React.ReactNode;
 }
 
@@ -44,11 +45,20 @@ const TabPanel = ({ children, value, index, ...other }: TabPanelProps) => {
  *
  * @param children the content of each panel. This is mapped over with React.Children.map
  */
-const MultiPage: React.FC<IProps> = ({ titles, close, children }) => {
+const MultiPage: React.FC<IProps> = ({ width, height, titles, draggable = true, children }) => {
   const [value, setValue] = useState(0);
 
+  const [open, setOpen] = useState(false);
+
   return (
-    <>
+    <Configuration
+      draggable={draggable}
+      width={width}
+      height={height}
+      open={open}
+      onOpen={() => setOpen(true)}
+      onClose={() => setOpen(false)}
+    >
       <Title id="configuration-title">
         <AppBar color="default">
           <Tabs
@@ -69,20 +79,18 @@ const MultiPage: React.FC<IProps> = ({ titles, close, children }) => {
             ))}
           </Tabs>
         </AppBar>
-        <CloseButton aria-label="close" onClick={close}>
+        <CloseButton aria-label="close" onClick={() => setOpen(false)}>
           <CloseIcon />
         </CloseButton>
       </Title>
       <Content dividers id="configuration-content">
-        <SwipeableViews index={value} onChangeIndex={(_, newValue) => setValue(newValue)}>
-          {React.Children.map(children, (child, j) => (
-            <TabPanel value={value} index={j} key={j}>
-              {child}
-            </TabPanel>
-          ))}
-        </SwipeableViews>
+        {React.Children.map(children, (child, j) => (
+          <TabPanel value={value} index={j} key={j}>
+            {child}
+          </TabPanel>
+        ))}
       </Content>
-    </>
+    </Configuration>
   );
 };
 

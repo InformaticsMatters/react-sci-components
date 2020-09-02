@@ -3,10 +3,10 @@ import React from 'react';
 import styled from 'styled-components';
 
 import FieldConfigInputs from './FieldConfigInputs';
-import { WorkingSourceState } from './sources';
+import { StatePiece } from './sources';
 
 interface IProps {
-  currentSource: WorkingSourceState;
+  currentSource: StatePiece | null;
   metadata: { name: string; type: string }[] | null;
 }
 

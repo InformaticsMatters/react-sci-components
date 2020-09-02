@@ -8,12 +8,20 @@ export const usePromise = <T>(func: () => Promise<T>, defaultValue: T) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    let isMounted = true;
     const resolvePromise = async () => {
       setLoading(true);
-      setData(await func());
+      if (isMounted) {
+        const data = await func();
+        setData(data);
+      }
       setLoading(false);
     };
     resolvePromise();
+
+    return () => {
+      isMounted = false;
+    };
   }, [func]);
 
   return { data, loading };

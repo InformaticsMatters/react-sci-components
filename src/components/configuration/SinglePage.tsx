@@ -3,6 +3,7 @@ import React from 'react';
 import CloseIcon from '@material-ui/icons/Close';
 
 import { CloseButton, Content, Title } from './components';
+import Configuration from './Configuration';
 
 interface IProps {
   title: string;
@@ -14,7 +15,7 @@ interface IProps {
  */
 const SinglePage: React.FC<IProps> = ({ title, close, children }) => {
   return (
-    <>
+    <Configuration>
       <Title id="modal-title">
         {title}
         <CloseButton aria-label="close" onClick={close}>
@@ -24,7 +25,7 @@ const SinglePage: React.FC<IProps> = ({ title, close, children }) => {
       <Content dividers id="configuration-content">
         {children}
       </Content>
-    </>
+    </Configuration>
   );
 };
 

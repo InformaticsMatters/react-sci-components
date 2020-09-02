@@ -1,4 +1,4 @@
-// ! VERSION 1.1.1
+// ! VERSION 1.2.1
 
 import { APIService } from './APIService';
 import { AddNewDatasetArgs, Dataset, IMMolecule, Project } from './apiTypes';
@@ -56,11 +56,13 @@ class DataTierAPI extends APIService {
   }
 
   /**
-   * @private not yet implemented
    * @param projectId
    * @param datasetId
    */
-  async downloadDatasetFromProjectAsNative(projectId: string, datasetId: string): Promise<any> {}
+  async downloadDatasetFromProjectAsNative(projectId: string, datasetId: string): Promise<any> {
+    const data = await this._fetchDatasetFromProject(projectId, datasetId, 'chemical/x-mdl-sdfile');
+    return data;
+  }
 
   /**
    * Asynchronously add a new project with the provided name
