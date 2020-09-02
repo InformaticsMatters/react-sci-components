@@ -5,6 +5,7 @@ import styled from 'styled-components';
 
 import { FormControl, InputLabel, MenuItem, Select } from '@material-ui/core';
 
+import { getDisplayText } from '../utils';
 import { setConfigurationItem, useScatterplotConfiguration } from './plotConfiguration';
 
 interface IProps {
@@ -34,7 +35,7 @@ const ScatterplotConfig = ({ title, fields }: IProps) => {
                   <MenuItem value={'id'}>id</MenuItem>
                   {fields.map(({ name, nickname, dtype }, j) => (
                     <MenuItem key={j} value={name}>
-                      {`${nickname} (${dtype})`}
+                      {getDisplayText({ name, title: nickname, dtype })}
                     </MenuItem>
                   ))}
                 </Select>
