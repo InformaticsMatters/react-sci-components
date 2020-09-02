@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 
+import SwipeableViews from 'react-swipeable-views';
+
 import { AppBar, Tab } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 
@@ -84,11 +86,13 @@ const MultiPage: React.FC<IProps> = ({ width, height, titles, draggable = true, 
         </CloseButton>
       </Title>
       <Content dividers id="configuration-content">
-        {React.Children.map(children, (child, j) => (
-          <TabPanel value={value} index={j} key={j}>
-            {child}
-          </TabPanel>
-        ))}
+        <SwipeableViews index={value} onChangeIndex={(_, newValue) => setValue(newValue)}>
+          {React.Children.map(children, (child, j) => (
+            <TabPanel value={value} index={j} key={j}>
+              {child}
+            </TabPanel>
+          ))}
+        </SwipeableViews>
       </Content>
     </Configuration>
   );
