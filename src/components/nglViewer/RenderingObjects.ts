@@ -10,8 +10,8 @@ export const showProtein = (stage: any, protein: string, centerOn: boolean) => {
           [
             createRepresentationStructure(MOL_REPRESENTATION.cartoon, {
               colorScheme: 'uniform',
-              opacity: 0.3}),
-            createRepresentationStructure(MOL_REPRESENTATION.licorice, {
+              opacity: 0.7}),
+              createRepresentationStructure(MOL_REPRESENTATION.licorice, {
               colorScheme: 'uniform',
               opacity: 0.3,
               radiusType: 'size',
@@ -43,6 +43,12 @@ const showLigand = ( stage: any, molecule: NGLMolecule, centerOn: boolean) => {
           )
         ]);
       
+      if (comp.name !== undefined && comp.name) {
+        comp.name = comp.name + '_LIGAND';
+      } else {
+        comp.name = '_LIGAND';
+      }
+
       if (centerOn) {
         comp.autoView('ligand');
       };

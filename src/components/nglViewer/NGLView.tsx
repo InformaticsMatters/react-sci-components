@@ -82,7 +82,11 @@ export const NglView: React.FC<IProps> = memo(({ div_id, width }) => {
 
   const handleNglViewPick = (stage: any, pickingProxy: any, getNglView: any) => {
     if (pickingProxy !== undefined && pickingProxy.component) {
-      pickingProxy.component.autoView('ligand');
+      if (pickingProxy.component.name && pickingProxy.component.name.endsWith('_LIGAND')) {
+        pickingProxy.component.autoView('ligand');
+      } else {
+        stage.animationControls.move(pickingProxy.position.clone());
+      };
     }
   };
 
