@@ -53,5 +53,5 @@ export const [useWorkingSource, { setWorkingSource }, workingSourceStore] = useR
   },
 );
 
-initializeModule('sources');
+// initializeModule('sources');
 initializeModule('workingSource');
