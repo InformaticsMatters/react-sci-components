@@ -63,7 +63,10 @@ moleculesStore.subscribe(({ fields }) => {
   );
 
   // Use the first text field as the depiction field - best guess
-  setDepictionField(enabledFields.filter((f) => f.dtype === dTypes.TEXT)[0].name);
+  const enabledTextFields = enabledFields.filter((f) => f.dtype === dTypes.TEXT);
+  if (enabledTextFields.length) {
+    setDepictionField(enabledTextFields[0].name);
+  }
 });
 
 initializeModule('cardViewConfiguration');
