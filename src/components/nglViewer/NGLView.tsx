@@ -80,6 +80,12 @@ export const NglView: React.FC<IProps> = memo(({ div_id, width }) => {
   const { colours } = useCardActions();
   const classes = useStyles();
 
+  const handleNglViewPick = (stage: any, pickingProxy: any, getNglView: any) => {
+    if (pickingProxy !== undefined && pickingProxy.component) {
+      pickingProxy.component.autoView('ligand');
+    }
+  };
+
   const registerNglView = useCallback(
     (id: string, stage: any) => {
       if (nglViewList.filter((ngl) => ngl.id === id).length > 0) {
@@ -153,9 +159,9 @@ export const NglView: React.FC<IProps> = memo(({ div_id, width }) => {
     (newStage, getNglView) => {
       if (newStage) {
         window.addEventListener('resize', handleResize);
-        // newStage.mouseControls.add('clickPick-left', (st, pickingProxy) =>
-        //   handleNglViewPick(st, pickingProxy, getNglView)
-        // );
+        newStage.mouseControls.add('clickPick-left', (st: any, pickingProxy: any) =>
+          handleNglViewPick(st, pickingProxy, getNglView)
+        );
 
         newStage.mouseObserver.signals.scrolled.add(handleOrientationChanged);
         newStage.mouseObserver.signals.dropped.add(handleOrientationChanged);
@@ -170,9 +176,9 @@ export const NglView: React.FC<IProps> = memo(({ div_id, width }) => {
       if (newStage) {
         window.addEventListener('resize', handleResize);
         window.removeEventListener('resize', handleResize);
-        // newStage.mouseControls.remove('clickPick-left', (st, pickingProxy) =>
-        //   handleNglViewPick(st, pickingProxy, getNglView)
-        // );
+        newStage.mouseControls.remove('clickPick-left', (st: any, pickingProxy: any) =>
+          handleNglViewPick(st, pickingProxy, getNglView)
+        );
         newStage.mouseObserver.signals.scrolled.remove(handleOrientationChanged);
         newStage.mouseObserver.signals.dropped.remove(handleOrientationChanged);
         newStage.mouseObserver.signals.dragged.remove(handleOrientationChanged);
@@ -239,12 +245,12 @@ export const NglView: React.FC<IProps> = memo(({ div_id, width }) => {
       setfirstTimeShowLigand(false);
     }
 
-    /*return () => {
+    return () => {
       if (stage) {
         unregisterStageEvents(stage, getNglView);
-        unregisterNglView(div_id);
+        // unregisterNglView(div_id);
       }
-    };*/
+    };
   }, [
     div_id,
     handleResize,
