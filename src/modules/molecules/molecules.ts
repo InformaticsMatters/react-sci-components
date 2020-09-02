@@ -14,7 +14,7 @@ import { resolveState } from '../state/stateResolver';
 export interface Field {
   name: string;
   nickname?: string;
-  value: number | string;
+  value: string | number;
 }
 
 export interface Molecule {
@@ -101,7 +101,14 @@ const loadMolecules = async (workingSources: WorkingSourceState) => {
       if (valid)
         molecules.push({
           id: totalParsed,
-          fields: values.map(([name, value]) => ({ name, nickname: name, value })),
+          fields: values.map(([name, value]) => {
+            const numericValue = parseFloat(value);
+            if (isNaN(numericValue)) {
+              return { name, nickname: name, value };
+            } else {
+              return { name, nickname: name, value: numericValue };
+            }
+          }),
           molFile: mol.molecule.molblock ?? '', // TODO: handle missing molblock with display of error msg
         });
       totalParsed++;
