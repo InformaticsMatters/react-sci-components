@@ -85,11 +85,11 @@ const loadMolecules = async (workingSources: WorkingSourceState) => {
             break;
           }
 
-          if (config?.min && numericValue < config.min) {
+          if (config?.min !== undefined && numericValue < config.min) {
             valid = false;
             break;
           }
-          if (config?.max && numericValue > config.max) {
+          if (config?.max !== undefined && numericValue > config.max) {
             valid = false;
             break;
           }
