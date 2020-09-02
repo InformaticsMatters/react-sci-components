@@ -14,12 +14,15 @@ import { FieldConfig } from './sources';
 
 interface IProps {
   name: string;
-  config?: FieldConfig;
+  type: string;
+  config?: FieldConfig | null;
 }
 
-const FieldConfigInputs = ({ name, config }: IProps) => {
-  const [isNumeric, setIsNumeric] = useState(config?.dtype === 'int' || config?.dtype === 'float'); // Initial value depends on the defaultValue given to select field
-  const [enabled, setEnabled] = useState(config?.enabled ?? true);
+const FieldConfigInputs = ({ name, type, config }: IProps) => {
+  const [isNumeric, setIsNumeric] = useState(type === 'int' || type === 'float'); // Initial value depends on the defaultValue given to select field
+  const [enabled, setEnabled] = useState(
+    config === null ? true : config === undefined ? false : true,
+  );
 
   const handleDtypeChange = (event: React.ChangeEvent<{ value: unknown }>) => {
     if (event.target.value === 'text') {
@@ -64,7 +67,7 @@ const FieldConfigInputs = ({ name, config }: IProps) => {
           onChange={handleDtypeChange}
           name={`${name}-dtype`}
           labelId={`dtype-${name}`}
-          defaultValue={config?.dtype ?? 'text'}
+          defaultValue={config?.dtype ?? type ?? 'text'}
           label="Rank"
         >
           <MenuItem value="float">float</MenuItem>

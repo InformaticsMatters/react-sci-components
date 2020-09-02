@@ -6,79 +6,55 @@ import styled from 'styled-components';
 import { Button, Dialog, Paper as MuiPaper, PaperProps } from '@material-ui/core';
 import SettingsIcon from '@material-ui/icons/Settings';
 
-import MultiPage from './MultiPage';
-import SinglePage from './SinglePage';
-
-const createPaperComponent = (id: string) => (props: PaperProps) => {
+const MyPaper: React.FC<PaperProps & { handle: string }> = ({ handle, ...paperProps }) => {
   return (
-    <Draggable bounds={'parent'} handle={`#${id}`} cancel={'[class*="MuiDialogContent-root"]'}>
-      <Paper {...props} />
+    <Draggable bounds={'parent'} handle={`#${handle}`} cancel={'[class*="MuiDialogContent-root"]'}>
+      <Paper {...paperProps} />
     </Draggable>
   );
 };
 
-type Titles = string | string[];
-
-interface IContentProps {
-  titles: Titles;
-  handleClose: () => void;
-}
-
-const Content: React.FC<IContentProps> = ({ titles, handleClose, children }) => {
-  if (typeof titles === 'string') {
-    return (
-      <SinglePage title={titles} close={handleClose}>
-        {children}
-      </SinglePage>
-    );
-  } else if (titles.length !== React.Children.count(children)) {
-    throw new Error('You must pass an equal number of titles and children');
-  } else {
-    return (
-      <MultiPage titles={titles} close={handleClose}>
-        {children}
-      </MultiPage>
-    );
-  }
-};
-
 interface IProps {
-  titles: Titles;
   ModalOpenIcon?: React.ReactNode;
   draggable?: boolean;
+  open?: boolean;
+  onOpen?: () => void;
+  onClose?: () => void;
   width?: number | string;
   height?: number | string;
 }
 
 /**
- * Renders a settings cog button that open a modal with a close button.
- * @param titles
- * * if string: the text rendered in the title of the dialog
- * * if string[]: each item is rendered in a tab
+ * Renders a settings cog button that opens a modal with a close button.
  * @param ModalOpenIcon the icon button that opens the dialog
  * @param draggable whether the component can be dragged around the screen
- * @param draggable whether the component can be dragged around the screen
+ * @param open use this to control the open state your self
+ * @param onClose optional callback run when the close button is pressed
  * @param width the width of the paper component (number inferred as px, or string)
  * @param height the height of the paper component (number inferred as px, or string)
  *
  * @param children are rendered in the model content
  */
 const Configuration: React.FC<IProps> = ({
+  children,
   width,
   height,
-  titles,
-  children,
+  open: propOpen,
+  onOpen: propOnOpen,
+  onClose: propOnClose,
   ModalOpenIcon,
   draggable = true,
 }) => {
-  const [open, setOpen] = useState(false);
+  let [stateOpen, setStateOpen] = useState(false);
 
-  const handleClose = () => setOpen(false);
+  const open = propOpen ?? stateOpen;
+  const handleOpen = propOnOpen ?? (() => setStateOpen(true));
+  const handleClose = propOnClose ?? (() => setStateOpen(false));
 
   return (
     <>
       <Button
-        onClick={() => setOpen(true)}
+        onClick={handleOpen}
         variant="contained"
         color="secondary"
         startIcon={ModalOpenIcon ?? <SettingsIcon />}
@@ -91,10 +67,10 @@ const Configuration: React.FC<IProps> = ({
         open={open}
         onClose={handleClose}
         maxWidth="lg"
-        PaperComponent={draggable ? createPaperComponent('configuration-title') : undefined}
-        PaperProps={{ style: { width, height } }}
+        PaperComponent={draggable ? (MyPaper as any) : undefined}
+        PaperProps={{ style: { width, height }, handle: 'configuration-title' } as any}
       >
-        <Content titles={titles} handleClose={handleClose} children={children} />
+        {children}
       </Dialog>
     </>
   );

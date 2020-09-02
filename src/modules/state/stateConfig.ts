@@ -8,14 +8,13 @@ const callbackAllModulesInitialised: InitialisationCallback[] = [];
 const moduleInitializationStatus = {
   cardActions: false,
   cardViewConfiguration: false,
-  sources: false,
+  // sources: false,
   workingSource: false,
   nglLocalState: false,
   plotConfiguration: false,
   plotSelection: false,
   molecules: false,
   protein: false,
-  settings: false,
 };
 
 export const initializeModule = async (moduleName: keyof typeof moduleInitializationStatus) => {

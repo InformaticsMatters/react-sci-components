@@ -1,26 +1,28 @@
+import { dTypes } from 'components/dataLoader/sources';
 import { useRedux } from 'hooks-for-redux';
-import { zip } from 'lodash';
 
 import { moleculesStore } from '../../modules/molecules/molecules';
 import { initializeModule } from '../../modules/state/stateConfig';
 import { resolveState } from '../../modules/state/stateResolver';
 
 import type { DropResult } from 'react-smooth-dnd';
+const NUM_ENABLED_DEFAULT = 5;
 
 export interface CField {
   name: string;
   title: string;
+  dtype: dTypes;
   isVisible: boolean;
 }
 
 interface Config {
   fields: CField[];
-  fieldForDepiction: string;
+  fieldForDepiction: string | null;
 }
 
 const initialState: Config = {
   fields: [],
-  fieldForDepiction: 'oclSmiles',
+  fieldForDepiction: null,
 };
 
 export const [
@@ -49,18 +51,21 @@ export const [
   }),
 });
 
-moleculesStore.subscribe(({ fieldNames, fieldNickNames, enabledFieldNames }) => {
-  // This check is probably unnecessary
-  if (fieldNames.length === fieldNickNames.length) {
-    let zipped = zip(fieldNames, fieldNickNames) as [string, string][];
-    zipped = zipped.filter(([name]) => enabledFieldNames?.includes(name));
-    setFields(
-      zipped.map(([name, title], index) => ({
-        name,
-        title,
-        isVisible: !!enabledFieldNames?.includes(name) && index < 5,
-      })),
-    );
+moleculesStore.subscribe(({ fields }) => {
+  const enabledFields = fields.filter((f) => f.enabled);
+  setFields(
+    enabledFields.map(({ name, nickname, dtype }, index) => ({
+      name,
+      dtype,
+      title: nickname,
+      isVisible: index < NUM_ENABLED_DEFAULT,
+    })),
+  );
+
+  // Use the first text field as the depiction field - best guess
+  const enabledTextFields = enabledFields.filter((f) => f.dtype === dTypes.TEXT);
+  if (enabledTextFields.length) {
+    setDepictionField(enabledTextFields[0].name);
   }
 });
 

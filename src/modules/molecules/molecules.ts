@@ -1,16 +1,20 @@
 import { useRedux } from 'hooks-for-redux';
-import { SDFileParser } from 'openchemlib/minimal';
-import { ungzip } from 'pako';
-import { isNumeric } from 'utils';
+import isEqual from 'lodash/isEqual';
+import DataTierAPI from 'services/DataTierAPI';
 
-import { Source, workingSourceStore } from '../../components/dataLoader/sources';
+import {
+  dTypes,
+  StatePiece,
+  WorkingSourceState,
+  workingSourceStore,
+} from '../../components/dataLoader/sources';
 import { initializeModule, subscribeToAllInit } from '../state/stateConfig';
 import { resolveState } from '../state/stateResolver';
 
 export interface Field {
-  name: 'oclSmiles' | string;
+  name: string;
   nickname?: string;
-  value: number | string;
+  value: string | number;
 }
 
 export interface Molecule {
@@ -19,34 +23,32 @@ export interface Molecule {
   molFile: string;
 }
 
+export interface FieldMeta {
+  dtype: dTypes;
+  name: string;
+  nickname: string;
+  enabled: boolean;
+}
+
 export interface MoleculesState {
-  isMoleculesLoading: boolean;
-  moleculesErrorMessage: string | null;
   molecules: Molecule[];
   totalParsed?: number;
-  fieldNames: string[];
-  fieldNickNames: string[];
-  enabledFieldNames?: string[];
+  fields: FieldMeta[];
+  moleculesErrorMessage: string | null;
 }
 
 const initialState: MoleculesState = {
-  isMoleculesLoading: false,
-  moleculesErrorMessage: null,
   molecules: [],
-  fieldNames: [],
-  fieldNickNames: [],
+  fields: [],
+  moleculesErrorMessage: null,
 };
 
 export const [
   useMolecules,
-  { mergeNewState, setIsMoleculesLoading, setMoleculesErrorMessage, setTotalParsed },
+  { mergeNewState, setMoleculesErrorMessage, setTotalParsed },
   moleculesStore,
 ] = useRedux('molecules', resolveState('molecules', initialState), {
   mergeNewState: (state, newState: Partial<MoleculesState>) => ({ ...state, ...newState }),
-  setIsMoleculesLoading: (state, isMoleculesLoading: boolean) => ({
-    ...state,
-    isMoleculesLoading,
-  }),
   setMoleculesErrorMessage: (state, moleculesErrorMessage: string | null) => ({
     ...state,
     moleculesErrorMessage,
@@ -54,130 +56,80 @@ export const [
   setTotalParsed: (state, totalParsed: number) => ({ ...state, totalParsed }),
 });
 
-const parseSDF = (sdf: string, { maxRecords = Infinity, configs }: Omit<Source, 'url' | 'id'>) => {
-  const readMolecules: Molecule[] = [];
+let prevSource: StatePiece | null = null;
 
-  // TODO: can we specify the field we use with the second arg?
-  const parser = new SDFileParser(sdf, null!);
-  const fieldNames = parser.getFieldNames(1);
+const loadMolecules = async (workingSources: WorkingSourceState) => {
+  const state = workingSources.find((slice) => slice.title === 'sdf')?.state ?? null;
+  if (state === null || isEqual(prevSource, state)) return;
 
-  const enabledFieldNames = fieldNames.filter(
-    (name) => configs.find((config) => config.name === name)?.enabled !== false, // ?
-  );
+  prevSource = state;
 
-  const configLookup = Object.fromEntries(
-    fieldNames.map((name) => [name, configs.find((config) => config.name === name)]),
-  );
-
-  let counter = 0;
-  let totalCounter = 0;
-  while (parser.next() && counter < maxRecords) {
-    const sdfMolecule = parser.getMolecule();
-    const currentMolFile = sdfMolecule.toMolfile();
-    const smiles = sdfMolecule.toIsomericSmiles();
-    const fields: Field[] = [{ name: 'oclSmiles', value: smiles }];
-
-    let valid = true;
-    enabledFieldNames.forEach((name) => {
-      const fieldValue = parser.getField(name);
-      const config = configLookup[name];
-      let value;
-      if (isNumeric(fieldValue)) {
-        value = parseFloat(fieldValue);
-        if (config?.min && value < config.min) {
-          valid = false;
-        }
-        if (config?.max && value > config.max) {
-          valid = false;
-        }
-      } else {
-        value = fieldValue;
-      }
-      fields.push({ name, nickname: config?.nickname || name, value });
-    });
-
-    if (valid) {
-      readMolecules.push({
-        id: counter,
-        molFile: currentMolFile,
-        fields: fields,
-      });
-      counter++;
-    }
-    totalCounter++;
-  }
-  fieldNames.unshift('oclSmiles');
-  enabledFieldNames.unshift('oclSmiles');
-  const fieldNickNames = fieldNames.map(
-    (name) => configs.find((config) => config.name === name)?.nickname || name,
-  );
-
-  return [readMolecules, totalCounter, fieldNames, fieldNickNames, enabledFieldNames] as const;
-};
-
-const loadMolecules = async (
-  state: Pick<Source, 'url' | 'configName' | 'maxRecords' | 'configs'>,
-) => {
-  setIsMoleculesLoading(true);
-  const proxyurl = 'https://cors-anywhere.herokuapp.com/';
-
-  const paramIndex = state.url.indexOf('?');
-  const moleculesPath = paramIndex !== -1 ? state.url.slice(0, paramIndex) : state.url;
+  const { projectId, datasetId, maxRecords, configs } = state;
 
   try {
-    const resp = await fetch(proxyurl + state.url, {
-      mode: 'cors',
-      headers: { origin: '0.0.0.0' }, // Need to specify an origin header in order for Dropbox to work
-    });
+    const dataset = await DataTierAPI.downloadDatasetFromProjectAsJSON(projectId, datasetId);
 
-    // Fetch API doesn't throw an error when there is one
-    if (!resp.ok) {
-      throw new Error();
-    }
+    const molecules: Molecule[] = [];
+    let totalParsed = 0;
+    for (const mol of dataset) {
+      if (maxRecords !== undefined && molecules.length >= maxRecords) break;
 
-    if (moleculesPath.endsWith('.sdf')) {
-      const txt = await resp.text();
-      const [readMolecules, totalCounter, fieldNames, fieldNickNames, enabledFieldNames] = parseSDF(
-        txt,
-        state,
-      );
-      mergeNewState({
-        molecules: readMolecules,
-        totalParsed: totalCounter,
-        fieldNames,
-        fieldNickNames,
-        enabledFieldNames,
-        moleculesErrorMessage: null,
-      });
-    } else if (moleculesPath.endsWith('gzip') || moleculesPath.endsWith('gz')) {
-      const buffer = await resp.arrayBuffer();
-      console.debug(buffer);
-      const unzipped = ungzip(new Uint8Array(buffer));
-      let txt = '';
-      for (let i of unzipped) {
-        txt += String.fromCharCode(i);
+      const values = Object.entries(mol.values);
+      let valid = true;
+      for (let config of configs ?? []) {
+        const [, value] = values.find(([name]) => config.name === name)!;
+        if (config.dtype !== dTypes.TEXT) {
+          const numericValue = parseFloat(value);
+          if (isNaN(numericValue)) {
+            valid = false;
+            break;
+          }
+
+          if (config?.min !== undefined && numericValue < config.min) {
+            valid = false;
+            break;
+          }
+          if (config?.max !== undefined && numericValue > config.max) {
+            valid = false;
+            break;
+          }
+          if (!valid) break;
+        }
       }
-
-      const [readMolecules, totalCounter, fieldNames, fieldNickNames, enabledFieldNames] = parseSDF(
-        txt,
-        state,
-      );
-      mergeNewState({
-        molecules: readMolecules,
-        totalParsed: totalCounter,
-        fieldNames,
-        fieldNickNames,
-        enabledFieldNames,
-        moleculesErrorMessage: null,
-      });
+      // TODO: Add defaultValue
+      // TODO: Apply nickname transforms
+      if (valid)
+        molecules.push({
+          id: totalParsed,
+          fields: values.map(([name, value]) => {
+            const numericValue = parseFloat(value);
+            if (isNaN(numericValue)) {
+              return { name, nickname: name, value };
+            } else {
+              return { name, nickname: name, value: numericValue };
+            }
+          }),
+          molFile: mol.molecule.molblock ?? '', // TODO: handle missing molblock with display of error msg
+        });
+      totalParsed++;
     }
+
+    mergeNewState({
+      molecules,
+      totalParsed,
+      fields: (configs ?? []).map(({ name, nickname, dtype }) => ({
+        name,
+        nickname: nickname || name,
+        dtype,
+        enabled: true,
+      })),
+    });
   } catch (error) {
     console.info({ error });
     const err = error as Error;
     setMoleculesErrorMessage(err.message || 'An unknown error occurred');
     setTotalParsed(0);
   } finally {
-    setIsMoleculesLoading(false);
   }
 };
 

@@ -13,6 +13,7 @@ import {
 } from '@material-ui/core';
 
 import DraggableList from '../../components/DraggableList';
+import { getDisplayText } from '../utils';
 import {
   moveFieldPosition,
   setDepictionField,
@@ -21,7 +22,6 @@ import {
 } from './cardViewConfiguration';
 
 import type { DropResult } from 'react-smooth-dnd';
-
 interface IProps {
   title: string;
 }
@@ -67,12 +67,12 @@ const CardViewConfig = ({ title }: IProps) => {
           <InputLabel id={depictionSelectionId}>Depiction Field Selection</InputLabel>
           <Select
             labelId={depictionSelectionId}
-            value={fieldForDepiction}
+            value={fieldForDepiction ?? ''}
             onChange={({ target: { value } }) => setDepictionField(value as string)}
           >
-            {fields.map((field, index) => (
-              <MenuItem key={index} value={field.name}>
-                {field.title}
+            {fields.map(({ name, ...rest }, index) => (
+              <MenuItem key={index} value={name}>
+                {getDisplayText({ name, ...rest })}
               </MenuItem>
             ))}
           </Select>
@@ -87,7 +87,7 @@ const CardViewConfig = ({ title }: IProps) => {
         </Typography>
       </ListHeader>
       <DraggableList
-        fields={displayFields.map(({ title }) => title)}
+        fields={displayFields.map((field) => getDisplayText(field))}
         checked={displayFields.map(({ name }) => enabledFields.includes(name))}
         moveFieldPosition={handleMoveFieldPosition}
         toggleCheckbox={(selectedTitle) => {

@@ -27,8 +27,8 @@ const MIN_CARD_WIDTH = 144; //px === 9rem
 const GUTTER_SIZE = 16; // px === 1rem
 
 const moleculeSorter = ({ colours }: CardActionsState) => (ma: Molecule, mb: Molecule) => {
-  const ca = colours.find((c) => c.id === ma.id);
-  const cb = colours.find((c) => c.id === mb.id);
+  const ca = colours.find(({ id }) => id === ma.id);
+  const cb = colours.find(({ id }) => id === mb.id);
 
   if (ca && !cb) {
     return -1;
@@ -72,7 +72,7 @@ const CardView = ({ width }: IProps) => {
 
   const [loadMoreCount, setLoadMoreCount] = useState(1);
 
-  const { molecules, fieldNames, fieldNickNames } = useMolecules();
+  const { molecules, fields: moleculesFields } = useMolecules();
 
   const selectedMoleculesIds = usePlotSelection();
   const actions = useCardActions();
@@ -161,7 +161,7 @@ const CardView = ({ width }: IProps) => {
                       .filter(({ name }) => enabledFields.includes(name))
                       .map(({ name, ...rest }) => ({
                         ...rest,
-                        name: fieldNickNames[fieldNames.indexOf(name)],
+                        name: moleculesFields.find((f) => f.name === name)?.nickname ?? name,
                       }))}
                     fontSize={'0.6rem'}
                   />

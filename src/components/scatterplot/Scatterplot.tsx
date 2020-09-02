@@ -2,11 +2,12 @@ import React, { useState } from 'react';
 
 import { Datum } from 'plotly.js';
 import Plot from 'react-plotly.js';
+import styled from 'styled-components';
+import { isNumber } from 'utils';
 
 import { Switch, Tooltip, Typography, useTheme } from '@material-ui/core';
 
-import { Molecule, useMolecules } from '../../modules/molecules/molecules';
-import { isNumber, isUndefined } from '../../utils';
+import { FieldMeta, Molecule, useMolecules } from '../../modules/molecules/molecules';
 import { useScatterplotConfiguration } from './plotConfiguration';
 import { selectPoints, usePlotSelection } from './plotSelection';
 
@@ -14,26 +15,46 @@ import { selectPoints, usePlotSelection } from './plotSelection';
 
 const getPropArrayFromMolecules = (molecules: Molecule[], prop: string | null) => {
   if (prop === 'id') {
-    return molecules.map((molecules) => molecules.id);
+    return molecules.map((molecule) => molecule.id);
   } else {
-    return molecules.map((molecule) => molecule.fields.find((m) => m.name === prop)?.value);
+    return molecules.map((molecule) => molecule.fields.find((field) => field.name === prop)?.value);
   }
 };
 
-type AxisSeries = ReturnType<typeof getPropArrayFromMolecules> | number;
+type AxisSeries = ReturnType<typeof getPropArrayFromMolecules>;
 
 /* Gets the axis display text of the curried prop name */
-const getPropDisplayName = (names: string[], nicknames: string[]) => (prop: string | null) => {
+const getPropDisplayName = (fields: FieldMeta[]) => (prop: string | null) => {
   if (prop !== null) {
-    const idx = names.indexOf(prop);
-    if (idx !== -1) {
-      return nicknames[idx];
-    } else {
-      return prop;
-    }
+    return fields.find((f) => f.name === prop)?.nickname ?? prop;
   } else {
     return 'Select a property to display';
   }
+};
+
+const scaleToSize = (sizeaxis: AxisSeries) => {
+  if (sizeaxis.every(isNumber)) {
+    const sx = sizeaxis as number[];
+    const min = Math.min(...sx);
+    const max = Math.max(...sx);
+
+    const scaledSizes = sx.map((v) => (45 * (v - min)) / max + 5);
+
+    return { sizes: scaledSizes, min, max };
+  }
+  return { sizes: 10 };
+};
+
+const validateColours = (colouraxis: AxisSeries) => {
+  if (colouraxis.every(isNumber)) {
+    const cx = colouraxis as number[];
+
+    const min = Math.min(...cx);
+    const max = Math.max(...cx);
+
+    return { colours: colouraxis, min, max };
+  }
+  return { colours: 1 };
 };
 
 interface IProps {
@@ -43,7 +64,7 @@ interface IProps {
 
 const ScatterPlot = ({ width, colourBar = false }: IProps) => {
   const theme = useTheme();
-  let { molecules, fieldNames, fieldNickNames } = useMolecules();
+  let { molecules, fields } = useMolecules();
 
   let { xprop, yprop, size, colour } = useScatterplotConfiguration();
   const selection = usePlotSelection();
@@ -52,33 +73,16 @@ const ScatterPlot = ({ width, colourBar = false }: IProps) => {
 
   const [showColourBar, setShowColourBar] = useState(false);
 
-  let xaxis = getPropArrayFromMolecules(molecules, xprop);
-  let yaxis = getPropArrayFromMolecules(molecules, yprop);
+  const xaxis = getPropArrayFromMolecules(molecules, xprop);
+  const yaxis = getPropArrayFromMolecules(molecules, yprop);
 
-  let colouraxis: AxisSeries = getPropArrayFromMolecules(molecules, colour);
-  if (colouraxis.every(isUndefined)) {
-    colouraxis = 1;
-  }
-  let sizeaxis: AxisSeries = getPropArrayFromMolecules(molecules, size);
+  const sizeaxis = getPropArrayFromMolecules(molecules, size);
+  const colouraxis = getPropArrayFromMolecules(molecules, colour);
 
-  let min: number | null = null;
-  let max: number | null = null;
-  if (sizeaxis.every(isNumber)) {
-    // Scale points to
-    min = Math.min(...sizeaxis.filter(isNumber));
-    max = Math.max(...sizeaxis.filter(isNumber));
+  const { sizes, ...sizeExtent } = scaleToSize(sizeaxis);
+  const { colours, ...colourExtent } = validateColours(colouraxis);
 
-    sizeaxis = sizeaxis.map((v) => {
-      if (v !== undefined && typeof v !== 'string') {
-        return (45 * (v - (min as number))) / (max as number) + 5;
-      }
-      return v;
-    });
-  } else {
-    sizeaxis = 10;
-  }
-
-  const labelGetter = getPropDisplayName(fieldNames, fieldNickNames);
+  const labelGetter = getPropDisplayName(fields);
   const xlabel = labelGetter(xprop);
   const ylabel = labelGetter(yprop);
 
@@ -89,15 +93,15 @@ const ScatterPlot = ({ width, colourBar = false }: IProps) => {
       <Plot
         data={[
           {
-            x: xaxis as number[],
-            y: yaxis as number[],
+            x: xaxis,
+            y: yaxis,
             customdata: molecules.map((m) => m.id), // Add custom data for use in selection
             selectedpoints: selectedPoints.length ? selectedPoints : null,
             type: 'scatter',
             mode: 'markers',
             marker: {
-              color: colouraxis as number[],
-              size: sizeaxis as number[],
+              color: colours,
+              size: sizes,
               colorscale: 'Bluered',
               colorbar: showColourBar || colourBar ? {} : undefined,
             },
@@ -134,23 +138,42 @@ const ScatterPlot = ({ width, colourBar = false }: IProps) => {
         onDeselect={() => selectPoints([])}
       />
       {!!colour && (
-        <>
+        <ColourLabel>
           <Tooltip arrow title="Toggle the colour bar">
             <Switch checked={showColourBar} onChange={() => setShowColourBar(!showColourBar)} />
           </Tooltip>
           <Typography display="inline" variant="body2">
             <b>Colour</b>: {labelGetter(colour)}
+            <br />
+            <em>
+              (
+              {colourExtent.min !== undefined &&
+                colourExtent.max !== undefined &&
+                `${colourExtent.min}–${colourExtent.max}`}
+              )
+            </em>
           </Typography>
-        </>
+        </ColourLabel>
       )}
       {!!size && (
         <Typography style={{ marginLeft: 58 }} variant="body2">
-          <b>Size</b>: {labelGetter(size)}{' '}
-          <em>({min !== null && max !== null && `${min}–${max}`})</em>
+          <b>Size</b>: {labelGetter(size)}
+          <br />
+          <em>
+            (
+            {sizeExtent.min !== undefined &&
+              sizeExtent.max !== undefined &&
+              `${sizeExtent.min}–${sizeExtent.max}`}
+            )
+          </em>
         </Typography>
       )}
     </>
   );
 };
 
-export default ScatterPlot;
+export default React.memo(ScatterPlot);
+
+const ColourLabel = styled.div`
+  display: flex;
+`;
