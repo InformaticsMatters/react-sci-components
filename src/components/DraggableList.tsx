@@ -13,7 +13,7 @@ import {
 import DragHandleIcon from '@material-ui/icons/DragHandle';
 
 interface IProps {
-  fields: string[];
+  fields: { name: string; title: string }[];
   checked: boolean[];
   moveFieldPosition: (event: DropResult) => void;
   showCheckboxes?: boolean;
@@ -34,9 +34,9 @@ const DraggableList = ({
         lockAxis="y"
         onDrop={(event) => moveFieldPosition(event)}
       >
-        {fields.map((field, index) => (
+        {fields.map(({name, title}, index) => (
           <Draggable key={index}>
-            <ListItem dense button onClick={() => toggleCheckbox(field)}>
+            <ListItem dense button onClick={() => toggleCheckbox(name)}>
               {showCheckboxes && (
                 <ListItemIcon>
                   <Checkbox
@@ -47,7 +47,7 @@ const DraggableList = ({
                   />
                 </ListItemIcon>
               )}
-              <ListItemText primary={field} />
+              <ListItemText primary={title} />
               <ListItemSecondaryAction>
                 <DragHandleIcon className="drag-handle" />
               </ListItemSecondaryAction>

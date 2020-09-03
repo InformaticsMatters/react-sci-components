@@ -32,13 +32,11 @@ interface IProps {
  */
 const CardViewConfig = ({ title }: IProps) => {
   const { fields, fieldForDepiction } = useCardViewConfiguration();
-
   const enabledFields = fields.filter((field) => field.isVisible).map((field) => field.name);
 
   const depictionSelectionId = `${title}-depiction-field-selection`;
 
   const [showHidden, setShowHidden] = useState(true);
-  // TODO: need to make reordering respect this
 
   const displayFields = fields.filter(({ name }) => enabledFields.includes(name) || showHidden);
 
@@ -87,11 +85,14 @@ const CardViewConfig = ({ title }: IProps) => {
         </Typography>
       </ListHeader>
       <DraggableList
-        fields={displayFields.map((field) => getDisplayText(field))}
+        fields={displayFields.map(({ title, name, dtype }) => ({
+          name,
+          title: getDisplayText({ title, name, dtype }),
+        }))}
         checked={displayFields.map(({ name }) => enabledFields.includes(name))}
         moveFieldPosition={handleMoveFieldPosition}
         toggleCheckbox={(selectedTitle) => {
-          const name = displayFields.find(({ title }) => title === selectedTitle)?.name;
+          const name = displayFields.find(({ title: t }) => t === selectedTitle)?.name;
           if (name !== undefined) {
             toggleFieldIsEnabled(name);
           }
