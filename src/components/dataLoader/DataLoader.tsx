@@ -24,14 +24,25 @@ interface IProps {
   title: string;
   fileType: AllowedMIMETypes;
   enableConfigs: boolean;
+  totalParsed?: number;
+  moleculesKept?: number;
 }
 /**
- * Component for loading and configuring sdf data files
+ * Component for loading and configuring sdf and pdb data files
  * @param name the use for the file selected by this data loader
  * @param fileType the type of file to allow selection of
- * @param enableConfigs whether to show the config inputs when a dataset is loaded
+ * @param enableConfigs whether to show the config inputs when a dataset is loaded.
+ * Typically sdf use this feature but not pdb datasets.
+ * @param totalParsed the total number of molecules parsed including those filtered out
+ * @param moleculesKept the total number of molecules parsed excluding those filtered out
  */
-const DataLoader: React.FC<IProps> = ({ title, fileType, enableConfigs }) => {
+const DataLoader: React.FC<IProps> = ({
+  title,
+  fileType,
+  enableConfigs,
+  totalParsed,
+  moleculesKept,
+}) => {
   const formRef = useRef<HTMLFormElement>(null!);
 
   const currentSources = useWorkingSource();
@@ -120,11 +131,11 @@ const DataLoader: React.FC<IProps> = ({ title, fileType, enableConfigs }) => {
                 color="secondary"
                 defaultValue={currentSource?.maxRecords ?? 500}
               />
-              {/* {numOfMolsParsed !== undefined && (
-          <Typography>
-            <strong>{numOfMolsKept}</strong> loaded. <strong>{numOfMolsParsed}</strong> parsed.
-          </Typography>
-        )} */}
+              {totalParsed !== undefined && moleculesKept !== undefined && (
+                <Typography>
+                  <strong>{moleculesKept}</strong> loaded. <strong>{totalParsed}</strong> parsed.
+                </Typography>
+              )}
             </>
           )}
           <Button

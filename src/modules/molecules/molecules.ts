@@ -96,8 +96,7 @@ const loadMolecules = async (workingSources: WorkingSourceState) => {
           if (!valid) break;
         }
       }
-      // TODO: Add defaultValue
-      // TODO: Apply nickname transforms
+
       if (valid)
         molecules.push({
           id: totalParsed,
