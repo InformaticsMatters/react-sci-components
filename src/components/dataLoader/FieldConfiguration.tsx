@@ -2,6 +2,8 @@ import React from 'react';
 
 import styled from 'styled-components';
 
+import { Typography } from '@material-ui/core';
+
 import FieldConfigInputs from './FieldConfigInputs';
 import { StatePiece } from './sources';
 
@@ -11,17 +13,21 @@ interface IProps {
 }
 
 const FieldConfiguration = ({ currentSource, metadata }: IProps) => {
-  return (
-    <FieldSet>
-      {metadata?.map(({ name, type }, index) => {
-        const config =
-          currentSource === null
-            ? null
-            : currentSource.configs?.find((field) => field.name === name);
-        return <FieldConfigInputs key={index} name={name} type={type} config={config} />;
-      })}
-    </FieldSet>
-  );
+  if (metadata?.length) {
+    return (
+      <FieldSet>
+        {metadata?.map(({ name, type }, index) => {
+          const config =
+            currentSource === null
+              ? null
+              : currentSource.configs?.find((field) => field.name === name);
+          return <FieldConfigInputs key={index} name={name} type={type} config={config} />;
+        })}
+      </FieldSet>
+    );
+  } else {
+    return <Typography>No fields exist in this dataset</Typography>
+  }
 };
 
 export default FieldConfiguration;
