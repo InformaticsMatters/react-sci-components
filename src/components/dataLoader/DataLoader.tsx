@@ -24,6 +24,7 @@ interface IProps {
   title: string;
   fileType: AllowedMIMETypes;
   enableConfigs: boolean;
+  loading: boolean;
   totalParsed?: number;
   moleculesKept?: number;
 }
@@ -33,6 +34,8 @@ interface IProps {
  * @param fileType the type of file to allow selection of
  * @param enableConfigs whether to show the config inputs when a dataset is loaded.
  * Typically sdf use this feature but not pdb datasets.
+ * @param loading whether data is currently being loaded, controls the Load button
+ * loading indicator.
  * @param totalParsed the total number of molecules parsed including those filtered out
  * @param moleculesKept the total number of molecules parsed excluding those filtered out
  */
@@ -40,6 +43,7 @@ const DataLoader: React.FC<IProps> = ({
   title,
   fileType,
   enableConfigs,
+  loading,
   totalParsed,
   moleculesKept,
 }) => {
@@ -145,6 +149,7 @@ const DataLoader: React.FC<IProps> = ({
             onClick={handleLoad}
           >
             Load
+            {loading && <Progress size={24} />}
           </Button>
         </SourceRowTwo>
 
@@ -197,5 +202,5 @@ const Divider = styled(MuiDivider)`
 `;
 
 const Progress = styled(CircularProgress)`
-  margin-top: ${({ theme }) => theme.spacing(4)}px;
+  position: 'absolute',
 `;

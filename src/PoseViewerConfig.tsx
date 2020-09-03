@@ -18,7 +18,7 @@ interface IProps {}
  */
 const PoseViewerConfig: React.FC<IProps> = () => {
   // Card View / Scatterplot
-  let { molecules, fields, totalParsed } = useMolecules();
+  let { molecules, fields, totalParsed, isMoleculesLoading } = useMolecules();
 
   return (
     <MultiPage
@@ -27,9 +27,15 @@ const PoseViewerConfig: React.FC<IProps> = () => {
       titles={['PDB Source', 'SDF Sources', 'Scatterplot', 'Card View']}
     >
       {/* PDB */}
-      <DataLoader title="pdb" fileType={MIMETypes.PDB} enableConfigs={false} />
+      <DataLoader
+        loading={isMoleculesLoading}
+        title="pdb"
+        fileType={MIMETypes.PDB}
+        enableConfigs={false}
+      />
       {/* SDF */}
       <DataLoader
+        loading={isMoleculesLoading}
         title="sdf"
         fileType={MIMETypes.SDF}
         enableConfigs

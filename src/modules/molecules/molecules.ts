@@ -34,21 +34,24 @@ export interface MoleculesState {
   molecules: Molecule[];
   totalParsed?: number;
   fields: FieldMeta[];
+  isMoleculesLoading: boolean;
   moleculesErrorMessage: string | null;
 }
 
 const initialState: MoleculesState = {
   molecules: [],
   fields: [],
+  isMoleculesLoading: false,
   moleculesErrorMessage: null,
 };
 
 export const [
   useMolecules,
-  { mergeNewState, setMoleculesErrorMessage, setTotalParsed },
+  { mergeNewState, setLoading, setMoleculesErrorMessage, setTotalParsed },
   moleculesStore,
 ] = useRedux('molecules', resolveState('molecules', initialState), {
   mergeNewState: (state, newState: Partial<MoleculesState>) => ({ ...state, ...newState }),
+  setLoading: (state, isMoleculesLoading: boolean) => ({ ...state, isMoleculesLoading }),
   setMoleculesErrorMessage: (state, moleculesErrorMessage: string | null) => ({
     ...state,
     moleculesErrorMessage,
@@ -67,6 +70,7 @@ const loadMolecules = async (workingSources: WorkingSourceState) => {
   const { projectId, datasetId, maxRecords, configs } = state;
 
   try {
+    setLoading(true);
     const dataset = await DataTierAPI.downloadDatasetFromProjectAsJSON(projectId, datasetId);
 
     const molecules: Molecule[] = [];
@@ -129,6 +133,7 @@ const loadMolecules = async (workingSources: WorkingSourceState) => {
     setMoleculesErrorMessage(err.message || 'An unknown error occurred');
     setTotalParsed(0);
   } finally {
+    setLoading(false)
   }
 };
 
