@@ -9,6 +9,6 @@ export const useProjects = () => {
   const func = useCallback(() => {
     return DataTierAPI.getAvailableProjects();
   }, []);
-  const { data, loading } = usePromise(func, [] as Project[]);
-  return { projects: data, isProjectsLoading: loading };
+  const { data, loading, error } = usePromise(func, [] as Project[]);
+  return { projects: data, isProjectsLoading: loading, projectsError: error };
 };

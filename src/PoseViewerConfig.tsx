@@ -1,5 +1,6 @@
 import React from 'react';
 
+import { useProtein } from 'modules/protein/protein';
 import { MIMETypes } from 'services/apiTypes';
 
 import { Typography } from '@material-ui/core';
@@ -17,8 +18,15 @@ interface IProps {}
  * This is a hard-coded example of a mini-app
  */
 const PoseViewerConfig: React.FC<IProps> = () => {
-  // Card View / Scatterplot
-  let { molecules, fields, totalParsed, isMoleculesLoading } = useMolecules();
+  // Card View / Scatterplot / DataLoader
+  const {
+    molecules,
+    fields,
+    totalParsed,
+    isMoleculesLoading,
+    moleculesErrorMessage,
+  } = useMolecules();
+  const { isProteinLoading, proteinErrorMessage } = useProtein();
 
   return (
     <MultiPage
@@ -28,7 +36,8 @@ const PoseViewerConfig: React.FC<IProps> = () => {
     >
       {/* PDB */}
       <DataLoader
-        loading={isMoleculesLoading}
+        loading={isProteinLoading}
+        error={proteinErrorMessage}
         title="pdb"
         fileType={MIMETypes.PDB}
         enableConfigs={false}
@@ -36,6 +45,7 @@ const PoseViewerConfig: React.FC<IProps> = () => {
       {/* SDF */}
       <DataLoader
         loading={isMoleculesLoading}
+        error={moleculesErrorMessage}
         title="sdf"
         fileType={MIMETypes.SDF}
         enableConfigs

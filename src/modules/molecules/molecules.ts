@@ -47,12 +47,12 @@ const initialState: MoleculesState = {
 
 export const [
   useMolecules,
-  { mergeNewState, setLoading, setMoleculesErrorMessage, setTotalParsed },
+  { mergeNewState, setLoading, setErrorMessage, setTotalParsed },
   moleculesStore,
 ] = useRedux('molecules', resolveState('molecules', initialState), {
   mergeNewState: (state, newState: Partial<MoleculesState>) => ({ ...state, ...newState }),
   setLoading: (state, isMoleculesLoading: boolean) => ({ ...state, isMoleculesLoading }),
-  setMoleculesErrorMessage: (state, moleculesErrorMessage: string | null) => ({
+  setErrorMessage: (state, moleculesErrorMessage: string | null) => ({
     ...state,
     moleculesErrorMessage,
   }),
@@ -70,6 +70,7 @@ const loadMolecules = async (workingSources: WorkingSourceState) => {
   const { projectId, datasetId, maxRecords, configs } = state;
 
   try {
+    setErrorMessage(null);
     setLoading(true);
     const dataset = await DataTierAPI.downloadDatasetFromProjectAsJSON(projectId, datasetId);
 
@@ -130,10 +131,12 @@ const loadMolecules = async (workingSources: WorkingSourceState) => {
   } catch (error) {
     console.info({ error });
     const err = error as Error;
-    setMoleculesErrorMessage(err.message || 'An unknown error occurred');
+    if (err.message) {
+      setErrorMessage(err.message || 'An unknown error occurred');
+    }
     setTotalParsed(0);
   } finally {
-    setLoading(false)
+    setLoading(false);
   }
 };
 

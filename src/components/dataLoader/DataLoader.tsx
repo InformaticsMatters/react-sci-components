@@ -11,6 +11,7 @@ import {
   CircularProgress,
   Divider as MuiDivider,
   FormGroup,
+  LinearProgress,
   TextField,
   Typography,
 } from '@material-ui/core';
@@ -24,7 +25,8 @@ interface IProps {
   title: string;
   fileType: AllowedMIMETypes;
   enableConfigs: boolean;
-  loading: boolean;
+  loading?: boolean;
+  error?: string | null;
   totalParsed?: number;
   moleculesKept?: number;
 }
@@ -36,6 +38,7 @@ interface IProps {
  * Typically sdf use this feature but not pdb datasets.
  * @param loading whether data is currently being loaded, controls the Load button
  * loading indicator.
+ * @param error The main error message to display.
  * @param totalParsed the total number of molecules parsed including those filtered out
  * @param moleculesKept the total number of molecules parsed excluding those filtered out
  */
@@ -44,6 +47,7 @@ const DataLoader: React.FC<IProps> = ({
   fileType,
   enableConfigs,
   loading,
+  error,
   totalParsed,
   moleculesKept,
 }) => {
@@ -52,19 +56,22 @@ const DataLoader: React.FC<IProps> = ({
   const currentSources = useWorkingSource();
   const currentSource = currentSources.find((slice) => slice.title === title)?.state ?? null;
 
-  const { isProjectsLoading, projects } = useProjects();
+  const { isProjectsLoading, projects, projectsError } = useProjects();
   let [currentProject, setCurrentProject] = useState<Project | null>(null);
   currentProject =
     currentProject ??
     projects.find((project) => project.projectId === currentSource?.projectId) ??
     null;
-  let { isDatasetsLoading, datasets } = useDatasets(currentProject);
+  let { isDatasetsLoading, datasets, datasetsError } = useDatasets(currentProject);
   let [currentDataset, setCurrentDataset] = useState<Dataset | null>(null);
   currentDataset =
     currentDataset ??
     datasets.find((dataset) => dataset.datasetId === currentSource?.datasetId) ??
     null;
-  const { isMetadataLoading, metadata } = useDatasetMeta(currentProject, currentDataset);
+  const { isMetadataLoading, metadata, metadataError } = useDatasetMeta(
+    currentProject,
+    currentDataset,
+  );
 
   datasets = datasets.filter(({ type }) => type === fileType);
 
@@ -99,7 +106,13 @@ const DataLoader: React.FC<IProps> = ({
           getOptionLabel={(option) => option.name}
           fullWidth
           renderInput={(params) => (
-            <TextField color="secondary" {...params} label="Select project" variant="outlined" />
+            <TextField
+              color="secondary"
+              {...params}
+              label={projectsError || 'Select project'}
+              error={!!projectsError}
+              variant="outlined"
+            />
           )}
           onChange={(_, newProject) => {
             setCurrentDataset(null);
@@ -115,7 +128,13 @@ const DataLoader: React.FC<IProps> = ({
           getOptionLabel={(option) => option.name}
           fullWidth
           renderInput={(params) => (
-            <TextField color="secondary" {...params} label="Select dataset" variant="outlined" />
+            <TextField
+              color="secondary"
+              {...params}
+              label={datasetsError || 'Select dataset'}
+              error={!!datasetsError}
+              variant="outlined"
+            />
           )}
           onChange={(_, newDataset) => setCurrentDataset(newDataset)}
         />
@@ -143,7 +162,7 @@ const DataLoader: React.FC<IProps> = ({
             </>
           )}
           <Button
-            disabled={currentDataset === null || isMetadataLoading}
+            disabled={currentDataset === null || isMetadataLoading || loading}
             variant="contained"
             color="primary"
             onClick={handleLoad}
@@ -160,7 +179,12 @@ const DataLoader: React.FC<IProps> = ({
             <FieldsWrapper>
               <Typography variant="h6">Field Configuration</Typography>
               {isMetadataLoading ? (
-                <Progress />
+                <LinearProgress color="secondary" />
+              ) : !!metadataError || !!error ? (
+                <>
+                  {metadataError && <Typography>{metadataError}</Typography>}
+                  {error && <Typography>{error}</Typography>}
+                </>
               ) : metadata === null ? (
                 <Typography>Load a data source to apply filters/transforms</Typography>
               ) : (
@@ -191,7 +215,7 @@ const SourceRowTwo = styled(FormGroup)`
 `;
 
 const FieldsWrapper = styled.div`
-  height: 40vh;
+  height: 50vh;
   overflow-y: scroll;
   text-align: center;
 `;
@@ -202,5 +226,9 @@ const Divider = styled(MuiDivider)`
 `;
 
 const Progress = styled(CircularProgress)`
-  position: 'absolute',
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-top: -12px;
+  margin-left: -12px;
 `;

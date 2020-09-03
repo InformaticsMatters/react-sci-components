@@ -14,6 +14,6 @@ export const useDatasets = (project: Project | null) => {
       return Promise.resolve([]);
     }
   }, [projectId]);
-  const { data, loading } = usePromise(func, []);
-  return { datasets: data, isDatasetsLoading: loading };
+  const { data, loading, error } = usePromise(func, []);
+  return { datasets: data, isDatasetsLoading: loading, datasetsError: error };
 };

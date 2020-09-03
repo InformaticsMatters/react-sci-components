@@ -37,17 +37,18 @@ export const useDatasetMeta = (project: Project | null, dataset: Dataset | null)
     }
   }, [projectId, datasetId, dtype]);
 
-  const { data, loading } = usePromise(func, null);
+  const { data, loading, error } = usePromise(func, null);
+  const output = { isMetadataLoading: loading, metadataError: error };
 
   if (data === null) {
-    return { metadata: null, isMetadataLoading: loading };
+    return { metadata: null, ...output };
   } else if (data?.properties?.values?.properties !== undefined) {
     const metadata = Object.entries(data?.properties?.values?.properties)
       .filter(isSchemaProp)
       .map(([name, value]) => ({ name, type: getAppTypeName(value.type) }));
 
-    return { metadata, isMetadataLoading: loading };
+    return { metadata, ...output };
   } else {
-    return { metadata: null, isMetadataLoading: loading };
+    return { metadata: null, ...output };
   }
 };

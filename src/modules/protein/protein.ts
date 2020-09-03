@@ -13,19 +13,25 @@ export interface Protein {
 export interface ProteinState {
   protein: Protein;
   isProteinLoading: boolean;
+  proteinErrorMessage: string | null;
 }
 
 export const initialState: ProteinState = {
   protein: { definition: '' },
   isProteinLoading: false,
+  proteinErrorMessage: null,
 };
 
-export const [useProtein, { setProtein, setIsProteinLoading }, proteinStore] = useRedux(
+export const [useProtein, { setProtein, setIsProteinLoading, setErrorMessage }, proteinStore] = useRedux(
   'protein',
   resolveState('protein', initialState),
   {
     setProtein: (state, protein: Protein) => ({ ...state, protein }),
     setIsProteinLoading: (state, isProteinLoading: boolean) => ({ ...state, isProteinLoading }),
+    setErrorMessage: (state, proteinErrorMessage: string | null) => ({
+      ...state,
+      proteinErrorMessage,
+    }),
   },
 );
 
@@ -41,11 +47,14 @@ const loadProtein = async (workingSources: WorkingSourceState) => {
 
   try {
     setIsProteinLoading(true);
+    setErrorMessage(null);
     const dataset = await DataTierAPI.downloadDatasetFromProjectAsNative(projectId, datasetId);
     setProtein({ definition: dataset });
   } catch (error) {
     const err = error as Error;
-    console.log(err);
+    if (err.message) {
+      setErrorMessage(err.message)
+    }
   } finally {
     setIsProteinLoading(false);
   }

@@ -5,17 +5,24 @@ import { useEffect, useState } from 'react';
  */
 export const usePromise = <T>(func: () => Promise<T>, defaultValue: T) => {
   const [data, setData] = useState<T>(defaultValue);
+  const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     let isMounted = true;
     const resolvePromise = async () => {
-      setLoading(true);
-      if (isMounted) {
-        const data = await func();
-        setData(data);
+      try {
+        setError(null);
+        setLoading(true);
+        if (isMounted) {
+          const data = await func();
+          setData(data);
+        }
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     };
     resolvePromise();
 
@@ -24,5 +31,5 @@ export const usePromise = <T>(func: () => Promise<T>, defaultValue: T) => {
     };
   }, [func]);
 
-  return { data, loading };
+  return { data, loading, error };
 };
