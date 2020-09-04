@@ -1,6 +1,6 @@
 import { useRedux } from 'hooks-for-redux';
 
-import { moleculesStore } from '../../modules/molecules/molecules';
+import { FieldMeta, moleculesStore } from '../../modules/molecules/molecules';
 import { initializeModule, isBeingStateReloadedFromFile } from '../../modules/state/stateConfig';
 import { resolveState } from '../../modules/state/stateResolver';
 
@@ -17,19 +17,36 @@ const initialState: Config = {
 
 export const [
   useScatterplotConfiguration,
-  { resetConfiguration, setConfigurationItem },
+  { resetWithNewFields, setConfigurationItem },
   scatterplotConfigurationStore,
 ] = useRedux('plotConfiguration', resolveState('plotConfiguration', initialState), {
-  resetConfiguration: () => initialState,
+  resetWithNewFields: (configuration, newFields: FieldMeta[]) => {
+    const names = newFields.map(({ name }) => name);
+
+    const newConfig = Object.entries(configuration).map(([prop, name]) => {
+      if (name === 'id') {
+        return [prop, 'id'];
+      }
+      if (name !== null && names.includes(name)) {
+        return [prop, name];
+      }
+      if (prop === 'xprop' || prop === 'yprop') {
+        return [prop, 'id'];
+      }
+      return [prop, null];
+    });
+
+    return Object.fromEntries(newConfig);
+  },
   setConfigurationItem: (configuration, { name, value }: ConfigItem) => ({
     ...configuration,
     [name]: value,
   }),
 });
 
-moleculesStore.subscribe(() => {
+moleculesStore.subscribe(({ fields }) => {
   if (!isBeingStateReloadedFromFile()) {
-    resetConfiguration();
+    resetWithNewFields(fields);
   }
 });
 
