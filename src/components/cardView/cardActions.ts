@@ -2,7 +2,7 @@ import { plotSelectionStore } from 'components/scatterplot/plotSelection';
 import { useRedux } from 'hooks-for-redux';
 
 import { moleculesStore } from '../../modules/molecules/molecules';
-import { initializeModule, isBeingStateReloadedFromFile } from '../../modules/state/stateConfig';
+import { initializeModule, isStateLoadingFromFile } from '../../modules/state/stateConfig';
 import { resolveState } from '../../modules/state/stateResolver';
 
 /**
@@ -77,12 +77,12 @@ export const [
 });
 
 moleculesStore.subscribe(() => {
-  if (!isBeingStateReloadedFromFile()) {
+  if (!isStateLoadingFromFile()) {
     resetCardActions();
   }
 });
 plotSelectionStore.subscribe(() => {
-  if (!isBeingStateReloadedFromFile()) {
+  if (!isStateLoadingFromFile()) {
     resetIdsInNGLViewer();
   }
 });

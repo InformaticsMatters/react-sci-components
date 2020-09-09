@@ -33,11 +33,11 @@ const App = () => {
   const isLoadingFromJSON = useIsStateLoaded();
 
   const onKeycloakEvent = (event: KeycloakEvent, error: KeycloakError | undefined) => {
-    console.log('onKeycloakEvent', event, error);
+    // console.log('onKeycloakEvent', event, error);
   };
 
   const onKeycloakTokens = (tokens: KeycloakTokens) => {
-    console.log('onKeycloakTokens', tokens);
+    // console.log('onKeycloakTokens', tokens);
     DataTierAPI.setToken(tokens.token);
     setToken(tokens);
   };

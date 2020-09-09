@@ -6,17 +6,17 @@ import { Stage } from 'ngl';
 
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 
+import { useProtein } from '../../modules/protein/protein';
+import { isStateLoadingFromFile } from '../../modules/state/stateConfig';
 import { Colour, useCardActions } from '../cardView/cardActions';
 import { NGL_PARAMS, VIEWS } from './Constants';
 import { removeNglComponents, setOrientation } from './DispatchActions';
 import {
   initialState as NGL_INITIAL,
-  useNGLLocalState,
   setfirstTimeShowLigand,
+  useNGLLocalState,
 } from './NGLLocalState';
-import { useProtein } from '../../modules/protein/protein'
 import { showLigands, showProtein } from './RenderingObjects';
-import {isBeingStateReloadedFromFile} from '../../modules/state/stateConfig';
 
 export interface NGLMolecule {
   id: number;
@@ -49,7 +49,7 @@ const getMoleculeObjects = (molIds: number[], colors: Colour[], molecules: Molec
   };
 
   return selectedMols;
-  
+
 };
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -241,11 +241,11 @@ export const NglView: React.FC<IProps> = memo(({ div_id, width }) => {
       registerStageEvents(stage, getNglView);
     }
 
-    if (!isBeingStateReloadedFromFile()) {
+    if (!isStateLoadingFromFile()) {
       handleOrientationChanged();
     }
 
-    if ((molsToDisplay && molsToDisplay.length > 0) || isBeingStateReloadedFromFile()) {
+    if ((molsToDisplay && molsToDisplay.length > 0) || isStateLoadingFromFile()) {
       setfirstTimeShowLigand(false);
     }
 

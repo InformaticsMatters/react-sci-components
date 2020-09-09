@@ -2,7 +2,7 @@ import { dTypes } from 'components/dataLoader/sources';
 import { useRedux } from 'hooks-for-redux';
 
 import { moleculesStore } from '../../modules/molecules/molecules';
-import { initializeModule } from '../../modules/state/stateConfig';
+import { initializeModule, isStateLoadingFromFile } from '../../modules/state/stateConfig';
 import { resolveState } from '../../modules/state/stateResolver';
 
 import type { DropResult } from 'react-smooth-dnd';
@@ -52,20 +52,22 @@ export const [
 });
 
 moleculesStore.subscribe(({ fields }) => {
-  const enabledFields = fields.filter((f) => f.enabled);
-  setFields(
-    enabledFields.map(({ name, nickname, dtype }, index) => ({
-      name,
-      dtype,
-      title: nickname,
-      isVisible: index < NUM_ENABLED_DEFAULT,
-    })),
-  );
+  if (!isStateLoadingFromFile()) {
+    const enabledFields = fields.filter((f) => f.enabled);
+    setFields(
+      enabledFields.map(({ name, nickname, dtype }, index) => ({
+        name,
+        dtype,
+        title: nickname,
+        isVisible: index < NUM_ENABLED_DEFAULT,
+      })),
+    );
 
-  // Use the first text field as the depiction field - best guess
-  const enabledTextFields = enabledFields.filter((f) => f.dtype === dTypes.TEXT);
-  if (enabledTextFields.length) {
-    setDepictionField(enabledTextFields[0].name);
+    // Use the first text field as the depiction field - best guess
+    const enabledTextFields = enabledFields.filter((f) => f.dtype === dTypes.TEXT);
+    if (enabledTextFields.length) {
+      setDepictionField(enabledTextFields[0].name);
+    }
   }
 });
 
