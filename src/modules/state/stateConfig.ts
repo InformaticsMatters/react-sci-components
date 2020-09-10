@@ -1,3 +1,5 @@
+import DataTierAPI from 'services/DataTierAPI';
+
 export const doNotSerialize = new Set(['molecules', 'protein']);
 export const STATE_KEY = 'poseViewerState';
 
@@ -21,7 +23,6 @@ export const initializeModule = async (moduleName: keyof typeof moduleInitializa
   moduleInitializationStatus[moduleName] = true;
   if (areAllModulesInitialized()) {
     await onAllInit();
-    localStorage.removeItem(STATE_KEY);
   }
 };
 
@@ -29,7 +30,7 @@ const areAllModulesInitialized = () => {
   return Object.values(moduleInitializationStatus).every((b) => b);
 };
 
-export const isBeingStateReloadedFromFile = () => {
+export const isStateLoadingFromFile = () => {
   return localStorage.getItem(STATE_KEY) !== null;
 };
 
@@ -38,7 +39,14 @@ export const subscribeToAllInit = (callback: () => Promise<void>) => {
 };
 
 const onAllInit = async () => {
-  for (let callback of callbackAllModulesInitialised) {
-    await callback();
-  }
+  // Wait until were authenticated before trying to restore modules that use protected APIs
+  const id = setInterval(async () => {
+    if (DataTierAPI.hasToken()) {
+      clearInterval(id);
+      for (let callback of callbackAllModulesInitialised) {
+        await callback();
+      }
+      localStorage.removeItem(STATE_KEY);
+    }
+  }, 100);
 };

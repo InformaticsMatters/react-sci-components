@@ -6,17 +6,17 @@ import { Stage } from 'ngl';
 
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 
+import { useProtein } from '../../modules/protein/protein';
+import { isStateLoadingFromFile } from '../../modules/state/stateConfig';
 import { Colour, useCardActions } from '../cardView/cardActions';
-import { NGL_PARAMS, VIEWS } from './Constants';
-import { removeNglComponents, setOrientation } from './DispatchActions';
+import { NGL_PARAMS, VIEWS } from './constants';
+import { removeNglComponents, setOrientation } from './dispatchActions';
 import {
   initialState as NGL_INITIAL,
+  setFirstTimeShowLigand,
   useNGLLocalState,
-  setfirstTimeShowLigand,
-} from './NGLLocalState';
-import { useProtein } from '../../modules/protein/protein'
-import { showLigands, showProtein } from './RenderingObjects';
-import {isBeingStateReloadedFromFile} from '../../modules/state/stateConfig';
+} from './nglLocalState';
+import { showLigands, showProtein } from './renderingObjects';
 
 export interface NGLMolecule {
   id: number;
@@ -29,7 +29,11 @@ interface ViewListItem {
   stage: any;
 }
 
-const getMoleculeObjects = (molIds: number[], colors: Colour[], molecules: Molecule[]): NGLMolecule[] => {
+const getMoleculeObjects = (
+  molIds: number[],
+  colors: Colour[],
+  molecules: Molecule[],
+): NGLMolecule[] => {
   let i;
   const selectedMols: NGLMolecule[] = [];
   if (molIds && molIds.length > 0 && molecules && molecules.length > 0) {
@@ -44,12 +48,11 @@ const getMoleculeObjects = (molIds: number[], colors: Colour[], molecules: Molec
           mol: currentMol[0],
         };
         selectedMols.push(nglMol);
-      };
-    };
-  };
+      }
+    }
+  }
 
   return selectedMols;
-  
 };
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -72,7 +75,7 @@ interface IProps {
 export const NglView: React.FC<IProps> = memo(({ div_id, width }) => {
   // connect to NGL Stage object
 
-  const { nglOrientations, molsInView, firstTimeShowLigand} = useNGLLocalState();
+  const { nglOrientations, molsInView, firstTimeShowLigand } = useNGLLocalState();
   const { protein } = useProtein();
   const [stage, setStage] = useState<any>(null);
   const [nglViewList, setNglViewList] = useState<ViewListItem[]>([]);
@@ -86,7 +89,7 @@ export const NglView: React.FC<IProps> = memo(({ div_id, width }) => {
         pickingProxy.component.autoView('ligand');
       } else {
         stage.animationControls.move(pickingProxy.position.clone());
-      };
+      }
     }
   };
 
@@ -123,7 +126,7 @@ export const NglView: React.FC<IProps> = memo(({ div_id, width }) => {
   const getNglView = useCallback(
     (id: string) => {
       const filteredList =
-      nglViewList && nglViewList.length > 0 ? nglViewList.filter((ngl) => ngl.id === id) : [];
+        nglViewList && nglViewList.length > 0 ? nglViewList.filter((ngl) => ngl.id === id) : [];
       switch (filteredList.length) {
         case 0:
           return undefined;
@@ -164,7 +167,7 @@ export const NglView: React.FC<IProps> = memo(({ div_id, width }) => {
       if (newStage) {
         window.addEventListener('resize', handleResize);
         newStage.mouseControls.add('clickPick-left', (st: any, pickingProxy: any) =>
-          handleNglViewPick(st, pickingProxy, getNglView)
+          handleNglViewPick(st, pickingProxy, getNglView),
         );
 
         newStage.mouseObserver.signals.scrolled.add(handleOrientationChanged);
@@ -181,7 +184,7 @@ export const NglView: React.FC<IProps> = memo(({ div_id, width }) => {
         window.addEventListener('resize', handleResize);
         window.removeEventListener('resize', handleResize);
         newStage.mouseControls.remove('clickPick-left', (st: any, pickingProxy: any) =>
-          handleNglViewPick(st, pickingProxy, getNglView)
+          handleNglViewPick(st, pickingProxy, getNglView),
         );
         newStage.mouseObserver.signals.scrolled.remove(handleOrientationChanged);
         newStage.mouseObserver.signals.dropped.remove(handleOrientationChanged);
@@ -192,15 +195,10 @@ export const NglView: React.FC<IProps> = memo(({ div_id, width }) => {
   );
 
   useEffect(() => {
-      if (nglOrientations && stage !== null && nglOrientations[div_id] !== undefined) {
-        stage.viewerControls.orient(nglOrientations[div_id].elements);
-      };
-    }, [
-        nglOrientations,
-        stage,
-        div_id,
-      ]
-  );
+    if (nglOrientations && stage !== null && nglOrientations[div_id] !== undefined) {
+      stage.viewerControls.orient(nglOrientations[div_id].elements);
+    }
+  }, [nglOrientations, stage, div_id]);
 
   useEffect(() => {
     const nglViewFromContext = getNglView(div_id);
@@ -241,12 +239,12 @@ export const NglView: React.FC<IProps> = memo(({ div_id, width }) => {
       registerStageEvents(stage, getNglView);
     }
 
-    if (!isBeingStateReloadedFromFile()) {
+    if (!isStateLoadingFromFile()) {
       handleOrientationChanged();
     }
 
-    if ((molsToDisplay && molsToDisplay.length > 0) || isBeingStateReloadedFromFile()) {
-      setfirstTimeShowLigand(false);
+    if ((molsToDisplay && molsToDisplay.length > 0) || isStateLoadingFromFile()) {
+      setFirstTimeShowLigand(false);
     }
 
     return () => {
