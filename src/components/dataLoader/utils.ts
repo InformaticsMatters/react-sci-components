@@ -1,33 +1,38 @@
-import { FieldConfig } from './sources';
+import { Dataset, Project } from 'services/apiTypes';
 
-const getFieldsFromForm = (form: HTMLFormElement, fieldNames: string[]) => {
-  let output: FieldConfig[] = [];
-  fieldNames.forEach((name) => {
-    const min = form?.[`${name}-min`]?.value;
-    const max = form?.[`${name}-max`]?.value;
-    const dtype = form?.[`${name}-dtype`]?.value;
-    const isNumeric = dtype === 'int' || dtype === 'float';
+export const getProject = (projects: Project[], projectId?: string) =>
+  projects.find((project) => project.projectId === projectId);
 
-    const enabled = form?.[`${name}-enabled`]?.checked;
+export const getDataset = (datasets: Dataset[], datasetId?: string) =>
+  datasets.find((dataset) => dataset.datasetId === datasetId);
 
-    enabled &&
-      output.push({
-        name: name,
-        nickname: form?.[`${name}-nickname`]?.value,
+const getFieldFromForm = (form: HTMLFormElement) => (fieldName: string) => {
+  const min = form?.[`${fieldName}-min`]?.value;
+  const max = form?.[`${fieldName}-max`]?.value;
+  const dtype = form?.[`${fieldName}-dtype`]?.value;
+  const isNumeric = dtype === 'int' || dtype === 'float';
+
+  const enabled = form?.[`${fieldName}-enabled`]?.checked;
+
+  return enabled
+    ? {
+        name: fieldName,
+        nickname: form?.[`${fieldName}-nickname`]?.value,
         dtype,
         min: isNumeric && min !== '' ? Number(min) : undefined,
         max: isNumeric && max !== '' ? Number(max) : undefined,
-      });
-  });
-
-  return output;
+      }
+    : null;
 };
 
 export const getDataFromForm = (form: HTMLFormElement, fieldNames: string[]) => {
   const target = form as typeof form & { [key: string]: { value: string } };
 
   const maxRecords = Number(target.maxRecords.value);
-  const configs = getFieldsFromForm(target, fieldNames);
+  const getter = getFieldFromForm(form);
+  const configs = fieldNames
+    .map((fieldName) => getter(fieldName))
+    .filter((config) => config !== null);
 
   return { maxRecords, configs };
 };

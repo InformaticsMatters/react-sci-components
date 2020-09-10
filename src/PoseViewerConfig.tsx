@@ -30,7 +30,7 @@ const PoseViewerConfig: React.FC<IProps> = () => {
 
   return (
     <MultiPage
-      width={'50rem'}
+      width={'52rem'}
       height={'80vh'}
       titles={['PDB Source', 'SDF Sources', 'Scatterplot', 'Card View']}
     >

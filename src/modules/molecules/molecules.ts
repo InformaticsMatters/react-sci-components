@@ -4,10 +4,10 @@ import DataTierAPI from 'services/DataTierAPI';
 
 import {
   dTypes,
-  StatePiece,
+  Source,
   WorkingSourceState,
   workingSourceStore,
-} from '../../components/dataLoader/sources';
+} from '../../components/dataLoader/workingSource';
 import { initializeModule, subscribeToAllInit } from '../state/stateConfig';
 import { resolveState } from '../state/stateResolver';
 
@@ -59,7 +59,7 @@ export const [
   setTotalParsed: (state, totalParsed: number) => ({ ...state, totalParsed }),
 });
 
-let prevSource: StatePiece | null = null;
+let prevSource: Source | null = null;
 
 const loadMolecules = async (workingSources: WorkingSourceState) => {
   const state = workingSources.find((slice) => slice.title === 'sdf')?.state ?? null;

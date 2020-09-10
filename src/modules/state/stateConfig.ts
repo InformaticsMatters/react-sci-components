@@ -10,8 +10,8 @@ const callbackAllModulesInitialised: InitialisationCallback[] = [];
 const moduleInitializationStatus = {
   cardActions: false,
   cardViewConfiguration: false,
-  // sources: false,
   workingSource: false,
+  sourceConfigs: false,
   nglLocalState: false,
   plotConfiguration: false,
   plotSelection: false,

@@ -10,7 +10,7 @@ import {
   Typography,
 } from '@material-ui/core';
 
-import { FieldConfig } from './sources';
+import { FieldConfig } from './workingSource';
 
 interface IProps {
   name: string;
