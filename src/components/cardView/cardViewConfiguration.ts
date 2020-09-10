@@ -1,4 +1,4 @@
-import { dTypes } from 'components/dataLoader/sources';
+import { dTypes } from 'components/dataLoader/workingSource';
 import { useRedux } from 'hooks-for-redux';
 
 import { moleculesStore } from '../../modules/molecules/molecules';

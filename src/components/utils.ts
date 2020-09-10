@@ -1,4 +1,4 @@
-import { dTypes } from './dataLoader/sources';
+import { dTypes } from './dataLoader/workingSource';
 
 type Props = { name: string; title: string; dtype: string };
 

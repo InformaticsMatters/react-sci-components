@@ -27,16 +27,14 @@ export interface FieldConfig {
 export interface Source {
   projectId: string; // Need the project to access the dataset through the API otherwise the user needs editor access to the dataset which isn't guaranteed
   datasetId: string;
-  configName: string;
   maxRecords?: number;
   configs?: FieldConfig[];
 }
 
-export type StatePiece = Omit<Source, 'configName'>;
 
-export type WorkingSourceState = { title: string; state: StatePiece | null }[];
+export type WorkingSourceState = { title: string; state: Source | null }[];
 
-type SetWorkingSourcePayload = { title: string; state: NonNullable<StatePiece> };
+type SetWorkingSourcePayload = { title: string; state: NonNullable<Source> };
 
 export const [useWorkingSource, { setWorkingSource }, workingSourceStore] = useRedux(
   'workingSource',

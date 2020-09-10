@@ -1,4 +1,8 @@
-import { StatePiece, WorkingSourceState, workingSourceStore } from 'components/dataLoader/sources';
+import {
+  Source,
+  WorkingSourceState,
+  workingSourceStore,
+} from 'components/dataLoader/workingSource';
 import { useRedux } from 'hooks-for-redux';
 import isEqual from 'lodash/isEqual';
 import DataTierAPI from 'services/DataTierAPI';
@@ -35,7 +39,7 @@ export const [useProtein, { setProtein, setIsProteinLoading, setErrorMessage }, 
   },
 );
 
-let prevSource: StatePiece | null = null;
+let prevSource: Source | null = null;
 
 const loadProtein = async (workingSources: WorkingSourceState) => {
   const state = workingSources.find((slice) => slice.title === 'pdb')?.state ?? null;

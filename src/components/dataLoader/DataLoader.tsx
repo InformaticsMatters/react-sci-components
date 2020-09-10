@@ -17,9 +17,10 @@ import {
 } from '@material-ui/core';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 
+import { addConfig, SourceConfig, useSourceConfigs } from './configs';
 import FieldConfiguration from './FieldConfiguration';
-import { setWorkingSource, useWorkingSource } from './sources';
-import { getDataFromForm } from './utils';
+import { getDataFromForm, getDataset, getProject } from './utils';
+import { setWorkingSource, useWorkingSource } from './workingSource';
 
 interface IProps {
   title: string;
@@ -53,21 +54,19 @@ const DataLoader: React.FC<IProps> = ({
 }) => {
   const formRef = useRef<HTMLFormElement>(null!);
 
+  const configs = useSourceConfigs();
+  const [selectedConfig, setSelectedConfig] = useState<SourceConfig | null>(null);
+
   const currentSources = useWorkingSource();
-  const currentSource = currentSources.find((slice) => slice.title === title)?.state ?? null;
+  const currentSource =
+    selectedConfig ?? currentSources.find((slice) => slice.title === title)?.state ?? null;
 
   const { isProjectsLoading, projects, projectsError } = useProjects();
   let [currentProject, setCurrentProject] = useState<Project | null>(null);
-  currentProject =
-    currentProject ??
-    projects.find((project) => project.projectId === currentSource?.projectId) ??
-    null;
+  currentProject = currentProject ?? getProject(projects, currentSource?.projectId) ?? null;
   let { isDatasetsLoading, datasets, datasetsError } = useDatasets(currentProject);
   let [currentDataset, setCurrentDataset] = useState<Dataset | null>(null);
-  currentDataset =
-    currentDataset ??
-    datasets.find((dataset) => dataset.datasetId === currentSource?.datasetId) ??
-    null;
+  currentDataset = currentDataset ?? getDataset(datasets, currentSource?.datasetId) ?? null;
   const { isMetadataLoading, metadata, metadataError } = useDatasetMeta(
     currentProject,
     currentDataset,
@@ -75,7 +74,7 @@ const DataLoader: React.FC<IProps> = ({
 
   datasets = datasets.filter(({ type }) => type === fileType);
 
-  const handleLoad = (_: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+  const handleAction = (mode: string) => () => {
     const datasetId = currentDataset?.datasetId;
     const projectId = currentProject?.projectId;
     if (datasetId !== undefined && projectId !== undefined) {
@@ -86,8 +85,12 @@ const DataLoader: React.FC<IProps> = ({
               metadata.map(({ name }) => name),
             )
           : {};
-
-      setWorkingSource({ title, state: { ...formData, projectId, datasetId } });
+      if (mode === 'load') {
+        setWorkingSource({ title, state: { ...formData, projectId, datasetId } });
+      } else if (mode === 'save' && enableConfigs) {
+        const configName = formRef.current['configName'].value as string;
+        configName && addConfig({ datasetId, projectId, configName, ...formData });
+      }
     }
   };
 
@@ -95,7 +98,7 @@ const DataLoader: React.FC<IProps> = ({
     <form
       ref={formRef}
       // update defaultValue of fields when currentSource changes
-      key={`${currentSource?.datasetId}`}
+      key={`${currentSource?.datasetId}-${selectedConfig?.id}`}
     >
       <SourcesWrapper>
         <Autocomplete
@@ -115,6 +118,7 @@ const DataLoader: React.FC<IProps> = ({
             />
           )}
           onChange={(_, newProject) => {
+            setSelectedConfig(null);
             setCurrentDataset(null);
             setCurrentProject(newProject);
           }}
@@ -136,7 +140,10 @@ const DataLoader: React.FC<IProps> = ({
               variant="outlined"
             />
           )}
-          onChange={(_, newDataset) => setCurrentDataset(newDataset)}
+          onChange={(_, newDataset) => {
+            setSelectedConfig(null);
+            setCurrentDataset(newDataset);
+          }}
         />
       </SourcesWrapper>
 
@@ -165,7 +172,7 @@ const DataLoader: React.FC<IProps> = ({
             disabled={currentDataset === null || isMetadataLoading || loading}
             variant="contained"
             color="primary"
-            onClick={handleLoad}
+            onClick={handleAction('load')}
           >
             Load
             {loading && <Progress size={24} />}
@@ -191,6 +198,34 @@ const DataLoader: React.FC<IProps> = ({
                 <FieldConfiguration currentSource={currentSource} metadata={metadata} />
               )}
             </FieldsWrapper>
+
+            <Divider />
+
+            <ConfigSaveFormGroup row>
+              <Autocomplete
+                value={selectedConfig}
+                size="small"
+                freeSolo
+                handleHomeEndKeys
+                options={configs.filter((config) => config.datasetId === currentDataset?.datasetId)}
+                getOptionLabel={(option) => option.configName}
+                onChange={(_, newValue) =>
+                  typeof newValue !== 'string' && newValue !== null && setSelectedConfig(newValue)
+                }
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    name="configName"
+                    variant="outlined"
+                    color="secondary"
+                    placeholder="Config Name"
+                  />
+                )}
+              />
+              <Button variant="outlined" color="primary" onClick={handleAction('save')}>
+                Save
+              </Button>
+            </ConfigSaveFormGroup>
           </>
         )}
       </>
@@ -215,7 +250,7 @@ const SourceRowTwo = styled(FormGroup)`
 `;
 
 const FieldsWrapper = styled.div`
-  height: 50vh;
+  height: calc(80vh - 345px);
   overflow-y: scroll;
   text-align: center;
 `;
@@ -231,4 +266,12 @@ const Progress = styled(CircularProgress)`
   left: 50%;
   margin-top: -12px;
   margin-left: -12px;
+`;
+
+const ConfigSaveFormGroup = styled(FormGroup)`
+  margin-top: ${({ theme }) => theme.spacing(2)}px;
+  > div:first-child {
+    width: 15rem;
+    margin-right: ${({ theme }) => theme.spacing(2)}px;
+  }
 `;
