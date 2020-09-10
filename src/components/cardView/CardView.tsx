@@ -91,7 +91,7 @@ const CardView = ({ width }: IProps) => {
   const gridWidth = width - 2 * theme.spacing(GRID_PADDING); // padding removed
   const numColumns = Math.floor(gridWidth / MIN_CARD_WIDTH);
 
-  let cardWidth;
+  let cardWidth: number;
   if (numColumns > 1) {
     cardWidth = (gridWidth - (numColumns - 1) * GUTTER_SIZE) / numColumns;
   } else {
@@ -101,6 +101,10 @@ const CardView = ({ width }: IProps) => {
   const imageSize = cardWidth - 2 * theme.spacing(2);
   const cardHeight =
     imageSize + enabledFields.length * 22.9 + 2 * theme.spacing(2) + theme.spacing(1);
+
+  const cardStyles = makeStyles({
+    root: { height: cardHeight },
+  })();
 
   return (
     <GridWrapper>
@@ -130,8 +134,9 @@ const CardView = ({ width }: IProps) => {
             );
             const selected = isInNGLViewerIds.includes(id);
             return (
-              <span key={id}>
+              <span key={id} style={{ width: cardWidth, height: cardHeight }}>
                 <MolCard
+                  classes={{ root: cardStyles.root }}
                   smiles={smiles}
                   elevation={selected ? 10 : undefined}
                   bgColor={selected ? theme.palette.grey[100] : undefined}

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 
 import SwipeableViews from 'react-swipeable-views';
+import styled from 'styled-components';
 
 import { AppBar, Tab } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
@@ -28,7 +29,7 @@ interface TabPanelProps {
 // Display of section of configuration
 const TabPanel = ({ children, value, index, ...other }: TabPanelProps) => {
   return (
-    <div
+    <Panel
       role="tabpanel"
       hidden={value !== index}
       id={`configuration-tabpanel-${index}`}
@@ -36,7 +37,7 @@ const TabPanel = ({ children, value, index, ...other }: TabPanelProps) => {
       {...other}
     >
       {children}
-    </div>
+    </Panel>
   );
 };
 
@@ -66,7 +67,10 @@ const MultiPage: React.FC<IProps> = ({ width, height, titles, draggable = true, 
           <Tabs
             value={value}
             indicatorColor="primary"
-            onChange={(_, index) => setValue(index)}
+            onChange={(_, index) => {
+              console.debug('click/touch');
+              return setValue(index);
+            }}
             variant="scrollable"
             scrollButtons="auto"
             aria-label="Configuration for each part of the page"
@@ -86,7 +90,7 @@ const MultiPage: React.FC<IProps> = ({ width, height, titles, draggable = true, 
         </CloseButton>
       </Title>
       <Content dividers id="configuration-content">
-        <SwipeableViews index={value} onChangeIndex={(_, newValue) => setValue(newValue)}>
+        <SwipeableViews index={value} onChangeIndex={(newValue) => setValue(newValue)}>
           {React.Children.map(children, (child, j) => (
             <TabPanel value={value} index={j} key={j}>
               {child}
@@ -99,3 +103,7 @@ const MultiPage: React.FC<IProps> = ({ width, height, titles, draggable = true, 
 };
 
 export default MultiPage;
+
+const Panel = styled.div`
+  height: calc(80vh - 64px);
+`;

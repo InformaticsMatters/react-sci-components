@@ -8,7 +8,7 @@ import SettingsIcon from '@material-ui/icons/Settings';
 
 const MyPaper: React.FC<PaperProps & { handle: string }> = ({ handle, ...paperProps }) => {
   return (
-    <Draggable bounds={'parent'} handle={`#${handle}`} cancel={'[class*="MuiDialogContent-root"]'}>
+    <Draggable bounds={'parent'} handle={`#${handle}`} cancel={'[class*="MuiButtonBase-root"]'}>
       <Paper {...paperProps} />
     </Draggable>
   );

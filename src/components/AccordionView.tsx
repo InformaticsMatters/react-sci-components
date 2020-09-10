@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 
 import styled from 'styled-components';
 
-import { Button, Container as MuiContainer, ContainerProps, Typography } from '@material-ui/core';
+import { Button, Typography } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import useComponentSize from '@rehooks/component-size';
 
@@ -43,7 +43,7 @@ const AccordionView = ({ children, labels }: IProps) => {
   // Need to bind ref to div since container doesn't properly forwardRef to its root
   return (
     <div ref={ref}>
-      <Container disableGutters>
+      <Container>
         {
           React.Children.map(panels, (child, index) => (
             <>
@@ -69,11 +69,7 @@ const AccordionView = ({ children, labels }: IProps) => {
 
 export default AccordionView;
 
-const Container = styled(({ children, ...props }: ContainerProps) => (
-  <MuiContainer maxWidth="xl" {...props}>
-    {children}
-  </MuiContainer>
-))`
+const Container = styled.div`
   display: flex;
   overflow-x: hidden;
 `;
