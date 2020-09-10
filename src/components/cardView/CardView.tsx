@@ -102,6 +102,7 @@ const CardView = ({ width }: IProps) => {
   const cardHeight =
     imageSize + enabledFields.length * 22.9 + 2 * theme.spacing(2) + theme.spacing(1);
 
+  // Need to specify the height and width in the card for the grid to work in safari
   const cardStyles = makeStyles({
     root: { height: cardHeight },
   })();
@@ -162,6 +163,7 @@ const CardView = ({ width }: IProps) => {
                   }}
                 >
                   <CalculationsTable
+                    tableWidth={cardWidth}
                     properties={fieldValues
                       .filter(({ name }) => enabledFields.includes(name))
                       .map(({ name, ...rest }) => ({
