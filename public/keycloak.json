@@ -2,7 +2,7 @@
   "realm": "squonk",
   "auth-server-url": "https://keycloak.informaticsmatters.org/auth/",
   "ssl-required": "external",
-  "resource": "data-ui-staging",
+  "resource": "pose-viewer-staging",
   "public-client": true,
   "confidential-port": 0
 }
