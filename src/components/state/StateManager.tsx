@@ -10,7 +10,7 @@ import PublishRoundedIcon from '@material-ui/icons/PublishRounded';
 
 import DownloadButton from '../downloadButton/DownloadButton';
 
-const STATE_VERSION = '2';
+const STATE_VERSION = '3.0.0';
 
 interface IProps {}
 
