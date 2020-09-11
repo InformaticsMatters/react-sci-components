@@ -67,10 +67,7 @@ const MultiPage: React.FC<IProps> = ({ width, height, titles, draggable = true, 
           <Tabs
             value={value}
             indicatorColor="primary"
-            onChange={(_, index) => {
-              console.debug('click/touch');
-              return setValue(index);
-            }}
+            onChange={(_, index) => setValue(index)}
             variant="scrollable"
             scrollButtons="auto"
             aria-label="Configuration for each part of the page"
