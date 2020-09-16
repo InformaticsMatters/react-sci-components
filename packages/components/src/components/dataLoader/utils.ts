@@ -1,4 +1,4 @@
-import { Dataset, Project } from 'services/apiTypes';
+import { Dataset, Project } from '@squonk/data-tier-services';
 
 export const getProject = (projects: Project[], projectId?: string) =>
   projects.find((project) => project.projectId === projectId);

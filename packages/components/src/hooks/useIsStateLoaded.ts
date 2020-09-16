@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import { STATE_KEY } from 'modules/state/stateConfig';
+import { STATE_KEY } from '../modules/state/stateConfig';
 
 /**
  * Check if state is in localStorage. localStorage is cleared when state

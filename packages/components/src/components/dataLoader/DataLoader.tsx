@@ -1,9 +1,5 @@
 import React, { useRef, useState } from 'react';
 
-import { useDatasetMeta } from 'hooks/useDatasetMeta';
-import { useDatasets } from 'hooks/useDatasets';
-import { useProjects } from 'hooks/useProjects';
-import { AllowedMIMETypes, Dataset, Project } from 'services/apiTypes';
 import styled from 'styled-components';
 
 import {
@@ -17,10 +13,13 @@ import {
 } from '@material-ui/core';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 
+import { useDatasetMeta, useDatasets, useProjects } from '../../hooks';
 import { addConfig, SourceConfig, useSourceConfigs } from './configs';
 import FieldConfiguration from './FieldConfiguration';
 import { getDataFromForm, getDataset, getProject } from './utils';
 import { setWorkingSource, useWorkingSource } from './workingSource';
+
+import type { AllowedMIMETypes, Dataset, Project } from '@squonk/data-tier-services';
 
 interface IProps {
   title: string;

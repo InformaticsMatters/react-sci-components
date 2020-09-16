@@ -1,8 +1,5 @@
-import { plotSelectionStore } from 'components/scatterplot/plotSelection';
 import { useRedux } from 'hooks-for-redux';
 
-import { moleculesStore } from '../../modules/molecules/molecules';
-import { initializeModule, isStateLoadingFromFile } from '../../modules/state/stateConfig';
 import { resolveState } from '../../modules/state/stateResolver';
 
 /**
@@ -75,16 +72,3 @@ export const [
     return { ...rest, isInNGLViewerIds: toggleIdInArray(isInNGLViewerIds, id) };
   },
 });
-
-moleculesStore.subscribe(() => {
-  if (!isStateLoadingFromFile()) {
-    resetCardActions();
-  }
-});
-plotSelectionStore.subscribe(() => {
-  if (!isStateLoadingFromFile()) {
-    resetIdsInNGLViewer();
-  }
-});
-
-initializeModule('cardActions');

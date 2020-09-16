@@ -1,7 +1,6 @@
 import { useCallback } from 'react';
 
-import { Dataset, MIMETypes, Project } from 'services/apiTypes';
-import DataTierAPI from 'services/DataTierAPI';
+import { Dataset, DataTierAPI, MIMETypes, Project } from '@squonk/data-tier-services';
 
 import { usePromise } from './usePromise';
 

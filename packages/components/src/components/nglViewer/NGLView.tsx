@@ -1,11 +1,11 @@
 import React, { memo, useCallback, useEffect, useState } from 'react';
 
 import { throttle } from 'lodash';
-import { Molecule, useMolecules } from 'modules/molecules/molecules';
 import { Stage } from 'ngl';
 
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 
+import { Molecule, useMolecules } from '../../modules/molecules/molecules';
 import { useProtein } from '../../modules/protein/protein';
 import { isStateLoadingFromFile } from '../../modules/state/stateConfig';
 import { Colour, useCardActions } from '../cardView/cardActions';

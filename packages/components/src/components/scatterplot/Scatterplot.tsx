@@ -3,11 +3,11 @@ import React, { useState } from 'react';
 import { Datum } from 'plotly.js';
 import Plot from 'react-plotly.js';
 import styled from 'styled-components';
-import { isNumber } from 'utils';
 
 import { Switch, Tooltip, Typography, useTheme } from '@material-ui/core';
 
 import { FieldMeta, Molecule, useMolecules } from '../../modules/molecules/molecules';
+import { isNumber } from '../../utils';
 import { useScatterplotConfiguration } from './plotConfiguration';
 import { selectPoints, usePlotSelection } from './plotSelection';
 

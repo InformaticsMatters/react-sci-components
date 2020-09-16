@@ -1,8 +1,6 @@
 import { useRedux } from 'hooks-for-redux';
 
-import { initializeModule, isStateLoadingFromFile } from '../../modules/state/stateConfig';
 import { resolveState } from '../../modules/state/stateResolver';
-import { CardActionsState, cardActionsStore } from '../cardView/cardActions';
 import { BACKGROUND_COLOR, NGL_PARAMS } from './constants';
 
 export interface NGLLocalState {
@@ -49,11 +47,3 @@ export const [
     return { ...state, firstTimeShowLigand: firstTime };
   },
 });
-
-cardActionsStore.subscribe((state: CardActionsState) => {
-  if (!isStateLoadingFromFile()) {
-    setMoleculesToView(state.isInNGLViewerIds);
-  }
-});
-
-initializeModule('nglLocalState');

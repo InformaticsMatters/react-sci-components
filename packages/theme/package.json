@@ -19,7 +19,7 @@
   "peerDependencies": {
     "react": ">=16"
   },
-  "name": "theme",
+  "name": "@squonk/mui-theme",
   "author": "Oliver Dudgeon",
   "module": "dist/theme.esm.js",
   "devDependencies": {

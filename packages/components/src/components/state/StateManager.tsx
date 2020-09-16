@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 
-import { useStoreState } from 'hooks/useStoreState';
 import { DropzoneDialog } from 'material-ui-dropzone';
-import { STATE_KEY } from 'modules/state/stateConfig';
-import { filterOutFromState } from 'modules/state/stateResolver';
 
 import { IconButton, Tooltip } from '@material-ui/core';
 import PublishRoundedIcon from '@material-ui/icons/PublishRounded';
 
-import DownloadButton from '../downloadButton/DownloadButton';
+import { useStoreState } from '../../hooks/useStoreState';
+import { STATE_KEY } from '../../modules/state/stateConfig';
+import { filterOutFromState } from '../../modules/state/stateResolver';
+import DownloadButton from '../DownloadButton';
 
 const STATE_VERSION = '3.0.0';
 

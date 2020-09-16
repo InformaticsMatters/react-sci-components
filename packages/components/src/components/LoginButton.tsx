@@ -4,9 +4,9 @@ import styled from 'styled-components';
 
 import { Button, ButtonProps, CircularProgress } from '@material-ui/core';
 import { useKeycloak } from '@react-keycloak/web';
+import { DataTierAPI } from '@squonk/data-tier-services';
 
-import { useCachedKeycloak } from './hooks/useCachedKeycloak';
-import DataTierAPI from './services/DataTierAPI';
+import { useCachedKeycloak } from '../hooks/useCachedKeycloak';
 
 const LoginButton: React.FC<ButtonProps> = (buttonProps) => {
   const { keycloak, initialized } = useKeycloak();

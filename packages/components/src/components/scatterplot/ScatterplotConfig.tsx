@@ -1,10 +1,10 @@
 import React from 'react';
 
-import { FieldMeta } from 'modules/molecules/molecules';
 import styled from 'styled-components';
 
 import { FormControl, InputLabel, MenuItem, Select } from '@material-ui/core';
 
+import { FieldMeta } from '../../modules/molecules/molecules';
 import { getDisplayText } from '../utils';
 import { setConfigurationItem, useScatterplotConfiguration } from './plotConfiguration';
 

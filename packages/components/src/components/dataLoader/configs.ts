@@ -1,7 +1,7 @@
 import { useRedux } from 'hooks-for-redux';
-import { initializeModule } from 'modules/state/stateConfig';
-import { resolveState } from 'modules/state/stateResolver';
 
+import { initializeModule } from '../../modules/state/stateConfig';
+import { resolveState } from '../../modules/state/stateResolver';
 import { Source } from './workingSource';
 
 export interface SourceConfig extends NonNullable<Source> {

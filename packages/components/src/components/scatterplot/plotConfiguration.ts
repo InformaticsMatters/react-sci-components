@@ -1,7 +1,6 @@
 import { useRedux } from 'hooks-for-redux';
 
-import { FieldMeta, moleculesStore } from '../../modules/molecules/molecules';
-import { initializeModule, isStateLoadingFromFile } from '../../modules/state/stateConfig';
+import { FieldMeta } from '../../modules/molecules/molecules';
 import { resolveState } from '../../modules/state/stateResolver';
 
 type ConfigOptions = 'xprop' | 'yprop' | 'colour' | 'size';
@@ -43,11 +42,3 @@ export const [
     [name]: value,
   }),
 });
-
-moleculesStore.subscribe(({ fields }) => {
-  if (!isStateLoadingFromFile()) {
-    resetWithNewFields(fields);
-  }
-});
-
-initializeModule('plotConfiguration');
