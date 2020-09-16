@@ -43,6 +43,9 @@
 				"regex": "^[.]",
 				"orderLevel": 30
 			}
+		],
+		"cSpell.words": [
+			"keycloak"
 		]
 	},
 	"cSpell.words": [

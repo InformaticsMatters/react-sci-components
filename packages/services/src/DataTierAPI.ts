@@ -98,4 +98,4 @@ class DataTierAPI extends APIService {
   }
 }
 
-export default new DataTierAPI(false, false);
+export default new DataTierAPI();

@@ -3,7 +3,6 @@
  */
 import axios from 'axios';
 
-import appSettings from '../appSettings';
 import { AllowedMediaTypes, PostDatasetArgs } from './apiTypes';
 
 enum Endpoints {
@@ -14,15 +13,29 @@ enum Endpoints {
 
 type QueryParam = string | number | boolean;
 
+const PROXY_URI = 'https://cors-anywhere.herokuapp.com/';
+
 export class APIService {
   protected token?: string;
-  protected url: string;
 
-  constructor(protected mock: boolean = false, useProxy: boolean = false) {
+  constructor(
+    protected mock: boolean = false,
+    useProxy: boolean = false,
+    protected uri: string = 'https://data.informaticsmatters.org',
+  ) {
     if (useProxy) {
-      this.url = 'https://cors-anywhere.herokuapp.com/' + appSettings.DATA_TIER_SERVER;
-    } else {
-      this.url = appSettings.DATA_TIER_SERVER;
+      this.uri = PROXY_URI + uri;
+    }
+  }
+
+  /**
+   * setURI replaces the uri that requests are made to
+   * @param uri the new uri
+   * @param useProxy whether to prepend a proxy to prevent CORS issues
+   */
+  public setURI(uri: string, useProxy?: boolean) {
+    if (useProxy) {
+      this.uri = PROXY_URI + uri;
     }
   }
 
@@ -49,7 +62,7 @@ export class APIService {
   }
 
   /**
-   * hasToken check whether service has a token
+   * hasToken check whether service has a token'https://cors-anywhere.herokuapp.com/'
    */
   hasToken() {
     return this.token !== undefined;
@@ -74,7 +87,7 @@ export class APIService {
       return this.getPromiseMockData('GET/project');
     }
 
-    const response = await axios.get(`${this.url}/${Endpoints.PROJECT}`, {
+    const response = await axios.get(`${this.uri}/${Endpoints.PROJECT}`, {
       headers: this.getAuthHeaders(),
     });
     return response.data;
@@ -88,14 +101,14 @@ export class APIService {
       return this.getPromiseMockData('GET/project/project_id');
     }
 
-    const response = await axios.get(`${this.url}/${Endpoints.PROJECT}/${projectId}`, {
+    const response = await axios.get(`${this.uri}/${Endpoints.PROJECT}/${projectId}`, {
       headers: this.getAuthHeaders(),
     });
     return response.data;
   }
 
   protected async _postNewProject(name: string) {
-    const response = await axios.post(`${this.url}/${Endpoints.PROJECT}`, `name=${name}`, {
+    const response = await axios.post(`${this.uri}/${Endpoints.PROJECT}`, `name=${name}`, {
       headers: this.getAuthHeaders(),
     });
     return response.data;
@@ -109,7 +122,7 @@ export class APIService {
       return this.getPromiseMockData('GET/dataset');
     }
 
-    const response = await axios.get(`${this.url}/${Endpoints.DATASET}`, {
+    const response = await axios.get(`${this.uri}/${Endpoints.DATASET}`, {
       headers: this.getAuthHeaders(),
     });
     return response.data;
@@ -138,7 +151,7 @@ export class APIService {
     datasetId: string,
     mediaType?: AllowedMediaTypes,
   ) {
-    const url = `${this.url}/${Endpoints.PROJECT}/${projectId}/${
+    const url = `${this.uri}/${Endpoints.PROJECT}/${projectId}/${
       Endpoints.DATASET
     }/${datasetId}?${this.encodeParams({ format: mediaType })}`;
 
@@ -156,7 +169,7 @@ export class APIService {
     const formData = new FormData();
     Object.entries(args).forEach(([key, value]) => formData.append(key, value));
 
-    const response = await axios.post(`${this.url}/${Endpoints.DATASET}`, formData, {
+    const response = await axios.post(`${this.uri}/${Endpoints.DATASET}`, formData, {
       headers: this.getAuthHeaders(),
     });
     return response.data;
