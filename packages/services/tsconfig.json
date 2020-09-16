@@ -1,0 +1,33 @@
+{
+  "include": [
+    "src",
+    "types"
+  ],
+  "compilerOptions": {
+    "module": "esnext",
+    "target": "ES5",
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
+    "importHelpers": true,
+    "declaration": true,
+    "sourceMap": true,
+    "rootDir": "./src",
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "moduleResolution": "node",
+    "jsx": "react",
+    "esModuleInterop": true,
+    "downlevelIteration": true,
+    "allowSyntheticDefaultImports": true,
+  },
+  "typeRoots": [
+    "src/types",
+    "node_modules/@types"
+  ]
+}
