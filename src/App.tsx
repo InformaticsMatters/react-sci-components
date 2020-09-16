@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 import './App.css';
 
 import Keycloak, { KeycloakError, KeycloakInitOptions } from 'keycloak-js';
 import styled from 'styled-components';
 
-import { Divider as MuiDivider } from '@material-ui/core';
-import { KeycloakEvent, KeycloakProvider, KeycloakTokens } from '@react-keycloak/web';
+import { ButtonGroup, Divider as MuiDivider } from '@material-ui/core';
+import { KeycloakEvent, KeycloakProvider, KeycloakTokens, useKeycloak } from '@react-keycloak/web';
 
 import AccordionView from './components/AccordionView';
 import CardView from './components/cardView/CardView';
@@ -14,32 +14,40 @@ import Loader from './components/Loader';
 import { NglView } from './components/nglViewer/NGLView';
 import ScatterPlot from './components/scatterplot/Scatterplot';
 import StateManagement from './components/state/StateManager';
+import { KeycloakCache, useCachedKeycloak } from './hooks/useCachedKeycloak';
 import { useIsStateLoaded } from './hooks/useIsStateLoaded';
+import LoginButton from './LoginButton';
 import PoseViewerConfig from './PoseViewerConfig';
 import DataTierAPI from './services/DataTierAPI';
 import Theme from './theme';
 
 // Auth
-const keycloak = Keycloak('./keycloak.json'); // TODO: make the subpath programmatic
+const keycloak = Keycloak('./keycloak.json');
+
+const serialisedCache = localStorage.getItem('keycloak-cache');
+const tokens =
+  serialisedCache !== null ? (JSON.parse(serialisedCache) as KeycloakCache).tokens : {};
 
 const keycloakProviderInitConfig: KeycloakInitOptions = {
-  onLoad: 'login-required',
-  checkLoginIframe: false, // Without this reload of browser will prevent auto login
+  onLoad: 'check-sso',
+  silentCheckSsoRedirectUri: window.location.origin + '/silent-check-sso.html',
+  ...tokens,
 };
 
 const App = () => {
   // State to trigger rerender when tokens change
-  const [, setToken] = useState<KeycloakTokens | null>(null);
   const isLoadingFromJSON = useIsStateLoaded();
+  const [keycloakCache, setKeycloakCache] = useCachedKeycloak();
+  keycloakCache.tokens?.token && DataTierAPI.setToken(keycloakCache.tokens.token);
 
   const onKeycloakEvent = (event: KeycloakEvent, error: KeycloakError | undefined) => {
-    // console.log('onKeycloakEvent', event, error);
+    console.log(event, error);
   };
 
   const onKeycloakTokens = (tokens: KeycloakTokens) => {
-    // console.log('onKeycloakTokens', tokens);
+    console.log('onKeycloakTokens', tokens);
     DataTierAPI.setToken(tokens.token);
-    setToken(tokens);
+    setKeycloakCache({ tokens, authenticated: true });
   };
 
   return (
@@ -49,8 +57,6 @@ const App = () => {
         initConfig={keycloakProviderInitConfig}
         onEvent={onKeycloakEvent}
         onTokens={onKeycloakTokens}
-        isLoadingCheck={(keycloak) => !!keycloak.authenticated && !DataTierAPI.getToken()}
-        LoadingComponent={<Loader open reason={'Authenticating...'} />}
       >
         <>
           <Loader open={isLoadingFromJSON} reason="Loading..." />
@@ -72,10 +78,16 @@ const App = () => {
 export default App;
 
 const FirstPanel = ({ width }: { width: number }) => {
-  // Need to ensure a token exists before rendering the pose viewer otherwise it will cause a 401
+  const [keycloak, initialized] = useKeycloak();
+  if (initialized && !keycloak.authenticated) {
+    keycloak.login();
+  }
   return (
     <Column>
-      {DataTierAPI.hasToken() && <PoseViewerConfig />}
+      <ButtonGroup>
+        <LoginButton />
+        <PoseViewerConfig />
+      </ButtonGroup>
       <StateManagement />
       <Divider />
       <ScatterPlot width={width} />

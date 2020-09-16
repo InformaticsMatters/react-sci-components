@@ -260,6 +260,7 @@ const Divider = styled(MuiDivider)`
   margin-bottom: ${({ theme }) => theme.spacing(1)}px;
 `;
 
+// TODO: Make reusable @ref LoginButton.tsx
 const Progress = styled(CircularProgress)`
   position: absolute;
   top: 50%;

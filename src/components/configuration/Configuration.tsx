@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import Draggable from 'react-draggable';
 import styled from 'styled-components';
 
-import { Button, Dialog, Paper as MuiPaper, PaperProps } from '@material-ui/core';
+import { Button, ButtonProps, Dialog, Paper as MuiPaper, PaperProps } from '@material-ui/core';
 import SettingsIcon from '@material-ui/icons/Settings';
 
 const MyPaper: React.FC<PaperProps & { handle: string }> = ({ handle, ...paperProps }) => {
@@ -16,6 +16,7 @@ const MyPaper: React.FC<PaperProps & { handle: string }> = ({ handle, ...paperPr
 
 interface IProps {
   ModalOpenIcon?: React.ReactNode;
+  buttonProps?: ButtonProps;
   draggable?: boolean;
   open?: boolean;
   onOpen?: () => void;
@@ -35,10 +36,11 @@ interface IProps {
  *
  * @param children are rendered in the model content
  */
-const Configuration: React.FC<IProps> = ({
+const Configuration: React.FC<IProps & ButtonProps> = ({
   children,
   width,
   height,
+  buttonProps,
   open: propOpen,
   onOpen: propOnOpen,
   onClose: propOnClose,
@@ -56,8 +58,8 @@ const Configuration: React.FC<IProps> = ({
       <Button
         onClick={handleOpen}
         variant="contained"
-        color="secondary"
         startIcon={ModalOpenIcon ?? <SettingsIcon />}
+        {...buttonProps}
       >
         Configuration
       </Button>

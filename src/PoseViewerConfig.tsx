@@ -3,7 +3,7 @@ import React from 'react';
 import { useProtein } from 'modules/protein/protein';
 import { MIMETypes } from 'services/apiTypes';
 
-import { Typography } from '@material-ui/core';
+import { ButtonProps, Typography } from '@material-ui/core';
 
 import CardViewConfig from './components/cardView/CardViewConfig';
 import MultiPage from './components/configuration/MultiPage';
@@ -17,7 +17,7 @@ interface IProps {}
  * Configuration modal for the Pose Viewer Mini App
  * This is a hard-coded example of a mini-app
  */
-const PoseViewerConfig: React.FC<IProps> = () => {
+const PoseViewerConfig = ({ ...buttonProps }: IProps & ButtonProps) => {
   // Card View / Scatterplot / DataLoader
   const {
     molecules,
@@ -33,6 +33,7 @@ const PoseViewerConfig: React.FC<IProps> = () => {
       width={'52rem'}
       height={'80vh'}
       titles={['PDB Source', 'SDF Sources', 'Scatterplot', 'Card View']}
+      buttonProps={buttonProps}
     >
       {/* PDB */}
       <DataLoader

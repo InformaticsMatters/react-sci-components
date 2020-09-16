@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import SwipeableViews from 'react-swipeable-views';
 import styled from 'styled-components';
 
-import { AppBar, Tab } from '@material-ui/core';
+import { AppBar, ButtonProps, Tab } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 
 import { CloseButton, Content, Tabs, Title } from './components';
@@ -15,8 +15,8 @@ interface IProps {
   width: number | string;
   height: number | string;
   titles: string[];
+  buttonProps: ButtonProps;
   draggable?: boolean;
-  children: React.ReactNode;
 }
 
 interface TabPanelProps {
@@ -48,7 +48,14 @@ const TabPanel = ({ children, value, index, ...other }: TabPanelProps) => {
  *
  * @param children the content of each panel. This is mapped over with React.Children.map
  */
-const MultiPage: React.FC<IProps> = ({ width, height, titles, draggable = true, children }) => {
+const MultiPage: React.FC<IProps> = ({
+  width,
+  height,
+  titles,
+  draggable = true,
+  children,
+  buttonProps,
+}) => {
   const [value, setValue] = useState(0);
 
   const [open, setOpen] = useState(false);
@@ -61,16 +68,14 @@ const MultiPage: React.FC<IProps> = ({ width, height, titles, draggable = true, 
       open={open}
       onOpen={() => setOpen(true)}
       onClose={() => setOpen(false)}
+      buttonProps={buttonProps}
     >
       <Title id="configuration-title">
         <AppBar color="default">
           <Tabs
             value={value}
             indicatorColor="primary"
-            onChange={(_, index) => {
-              console.debug('click/touch');
-              return setValue(index);
-            }}
+            onChange={(_, index) => setValue(index)}
             variant="scrollable"
             scrollButtons="auto"
             aria-label="Configuration for each part of the page"
