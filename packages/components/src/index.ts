@@ -1,31 +1,20 @@
 // cardView
-export { default as CardView } from './components/cardView/CardView';
-export { default as CardViewConfig } from './components/cardView/CardViewConfig';
-export * from './components/cardView/cardActions';
-export * from './components/cardView/cardViewConfiguration';
+export * from './components/cardView';
 
 // configuration
-export { default as Configuration } from './components/configuration/Configuration';
-export { default as MultiPage } from './components/configuration/MultiPage';
-export { default as SinglePage } from './components/configuration/SinglePage';
+export * from './components/configuration';
 
 // dataLoader
-export { default as DataLoader } from './components/dataLoader/DataLoader';
-export * from './components/dataLoader/workingSource';
-export * from './components/dataLoader/configs';
+export * from './components/dataLoader';
 
 // nglViewer
-export { NglView } from './components/nglViewer/NGLView';
-export * from './components/nglViewer/nglLocalState';
+export * from './components/nglViewer';
 
 // scatterplot
-export { default as Scatterplot } from './components/scatterplot/Scatterplot';
-export * from './components/scatterplot/plotConfiguration';
-export * from './components/scatterplot/plotSelection';
-export { default as ScatterplotConfig } from './components/scatterplot/ScatterplotConfig';
+export * from './components/scatterplot';
 
 // state
-export { default as StateManager } from './components/state/StateManager';
+export * from './components/state';
 
 // downloadButton
 export { default as DownloadButton } from './components/DownloadButton';

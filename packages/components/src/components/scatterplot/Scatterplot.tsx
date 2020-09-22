@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 
 import { Datum } from 'plotly.js';
-import Plot from 'react-plotly.js';
+import Plotly from 'plotly.js-basic-dist';
+import createPlotlyComponent from 'react-plotly.js/factory';
 import styled from 'styled-components';
 
 import { Switch, Tooltip, Typography, useTheme } from '@material-ui/core';
@@ -11,13 +12,17 @@ import { isNumber } from '../../utils';
 import { useScatterplotConfiguration } from './plotConfiguration';
 import { selectPoints, usePlotSelection } from './plotSelection';
 
+const Plot = createPlotlyComponent(Plotly);
+
 // Utils
 
 const getPropArrayFromMolecules = (molecules: Molecule[], prop: string | null) => {
   if (prop === 'id') {
     return molecules.map((molecule) => molecule.id);
   } else {
-    return molecules.map((molecule) => molecule.fields.find((field) => field.name === prop)?.value);
+    return molecules.map(
+      (molecule) => molecule.fields.find((field) => field.name === prop)?.value ?? null,
+    );
   }
 };
 
