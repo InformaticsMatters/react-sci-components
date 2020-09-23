@@ -14,7 +14,7 @@
     "build": "tsdx build",
     "test": "tsdx test --passWithNoTests",
     "lint": "tsdx lint",
-    "prepare": "tsdx build"
+    "prepare": "tsdx build --unsafe-perm"
   },
   "name": "@squonk/react-sci-components",
   "module": "dist/components.esm.js",
