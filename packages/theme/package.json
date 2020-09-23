@@ -14,7 +14,7 @@
     "build": "tsdx build",
     "test": "tsdx test --passWithNoTests",
     "lint": "tsdx lint",
-    "prepare": "tsdx build --unsafe-perm"
+    "prepare": "tsdx build"
   },
   "peerDependencies": {
     "react": ">=16"
