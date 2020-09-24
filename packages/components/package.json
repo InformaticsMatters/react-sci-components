@@ -96,7 +96,7 @@
   },
   "dependencies": {
     "lodash": "^4.17.20",
-    "lodash-es": "^4.17.15",
+    "lodash-es": "^4.17.15"
   },
   "gitHead": "365c2cd4f21442be3b2030572c4c2303511c720d"
 }
