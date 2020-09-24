@@ -1,6 +1,8 @@
 {
-  "name": "root",
-  "private": true,
+  "license": "Apache 2.0",
+  "name": "react-sci-components",
+  "description": "A monorepo of packages for scientific data analysis (specifically biochemistry) for javascript/react.",
+  "private": false,
   "devDependencies": {
     "lerna": "^3.22.1",
     "prettier": "^2.1.2"

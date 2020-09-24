@@ -1,5 +1,22 @@
 {
+  "license": "Apache 2.0",
   "version": "0.1.0",
+  "contributors": [
+    "Oliver Dudgeon <oliverdudgeon@gmail.com>",
+    "Tim Dudgeon <tdudgeon@informaticsmatters.com> (https://informaticsmatters.com)",
+    "Boris Kovar <boris.kovar@m2ms.sk>"
+  ],
+  "repository": "github:InformaticsMatters/react-sci-components",
+  "bugs": "https://github.com/InformaticsMatters/react-sci-components/issues",
+  "homepage": "https://github.com/InformaticsMatters/react-sci-components/",
+  "keywords": [
+    "react",
+    "data",
+    "analysis",
+    "computational",
+    "chemistry",
+    "biochemistry"
+  ],
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
   "files": [
