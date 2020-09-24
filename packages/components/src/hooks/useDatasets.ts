@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 
-import { DataTierAPI, Project } from '@squonk/data-tier-services';
+import { DataTierAPI, Project } from '@squonk/data-tier-client';
 
 import { usePromise } from './usePromise';
 

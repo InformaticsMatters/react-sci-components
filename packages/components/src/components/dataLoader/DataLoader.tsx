@@ -19,7 +19,7 @@ import FieldConfiguration from './FieldConfiguration';
 import { getDataFromForm, getDataset, getProject } from './utils';
 import { setWorkingSource, useWorkingSource } from './workingSource';
 
-import type { AllowedMIMETypes, Dataset, Project } from '@squonk/data-tier-services';
+import type { AllowedMIMETypes, Dataset, Project } from '@squonk/data-tier-client';
 
 interface IProps {
   title: string;

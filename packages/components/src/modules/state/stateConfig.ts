@@ -1,4 +1,4 @@
-import { DataTierAPI } from '@squonk/data-tier-services';
+import { DataTierAPI } from '@squonk/data-tier-client';
 
 export const doNotSerialize = new Set(['molecules', 'protein']);
 export const STATE_KEY = 'poseViewerState';
