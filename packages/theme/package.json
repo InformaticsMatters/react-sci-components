@@ -1,5 +1,6 @@
 {
   "license": "Apache-2.0",
+  "private": false,
   "version": "0.1.3",
   "contributors": [
     "Oliver Dudgeon <odudgeon@informaticsmatters.com>",
@@ -51,5 +52,6 @@
   "dependencies": {
     "@material-ui/core": "^4.10.0",
     "styled-components": "^5.2.0"
-  }
+  },
+  "gitHead": "365c2cd4f21442be3b2030572c4c2303511c720d"
 }

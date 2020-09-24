@@ -1,5 +1,6 @@
 {
   "license": "Apache-2.0",
+  "private": false,
   "version": "0.1.4",
   "contributors": [
     "Oliver Dudgeon <odudgeon@informaticsmatters.com>",
@@ -97,5 +98,5 @@
     "tslib": "^2.0.1",
     "typescript": "~4.0.3"
   },
-  "gitHead": "e9038053c9e2958bbaeb35c00d0637f161e5f307"
+  "gitHead": "365c2cd4f21442be3b2030572c4c2303511c720d"
 }
