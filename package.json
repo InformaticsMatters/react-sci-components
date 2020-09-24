@@ -1,5 +1,5 @@
 {
-  "license": "Apache 2.0",
+  "license": "Apache-2.0",
   "name": "react-sci-components",
   "description": "A monorepo of packages for scientific data analysis (specifically biochemistry) for javascript/react.",
   "private": false,
