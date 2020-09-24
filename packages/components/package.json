@@ -45,8 +45,6 @@
     "@squonk/data-tier-client": "0.1.4",
     "hooks-for-redux": "^1.2.2",
     "keycloak-js": "^11.0.2",
-    "lodash": "^4.17.20",
-    "lodash-es": "^4.17.15",
     "material-ui-color": "^0.4.6",
     "material-ui-dropzone": "^3.5.0",
     "ngl": "^0.10.4",
@@ -78,8 +76,6 @@
     "@types/styled-components": "^5.1.3",
     "hooks-for-redux": "^1.2.2",
     "keycloak-js": "^11.0.2",
-    "lodash": "^4.17.20",
-    "lodash-es": "^4.17.15",
     "material-ui-color": "^0.4.6",
     "material-ui-dropzone": "^3.5.0",
     "ngl": "^0.10.4",
@@ -97,6 +93,10 @@
     "tsdx": "^0.14.0",
     "tslib": "^2.0.1",
     "typescript": "~4.0.3"
+  },
+  "dependencies": {
+    "lodash": "^4.17.20",
+    "lodash-es": "^4.17.15",
   },
   "gitHead": "365c2cd4f21442be3b2030572c4c2303511c720d"
 }
