@@ -1,85 +1,10 @@
 {
-  "name": "pose-viewer",
-  "version": "0.0.0",
+  "license": "Apache 2.0",
+  "name": "react-sci-components",
+  "description": "A monorepo of packages for scientific data analysis (specifically biochemistry) for javascript/react.",
   "private": false,
-  "dependencies": {
-    "@material-ui/core": "^4.11.0",
-    "@material-ui/icons": "^4.9.1",
-    "@material-ui/lab": "^4.0.0-alpha.56",
-    "@react-keycloak/web": "^2.1.4",
-    "@rehooks/component-size": "^1.0.3",
-    "@testing-library/jest-dom": "^4.2.4",
-    "@testing-library/react": "^9.3.2",
-    "@testing-library/user-event": "^7.1.2",
-    "@types/lodash": "^4.14.157",
-    "@types/pako": "^1.0.1",
-    "@types/plotly.js": "^1.50.15",
-    "@types/react": "^16.9.41",
-    "@types/react-dom": "^16.9.8",
-    "@types/react-plotly.js": "^2.2.4",
-    "@types/react-swipeable-views": "^0.13.0",
-    "@types/styled-components": "^5.1.1",
-    "@types/webpack-env": "^1.15.2",
-    "axios": "^0.20.0",
-    "cross-env": "^7.0.2",
-    "hooks-for-redux": "^1.2.2",
-    "http": "0.0.1-security",
-    "keycloak-js": "^11.0.2",
-    "lodash": "^4.17.19",
-    "material-components-web": "^6.0.0",
-    "material-ui-color": "^0.4.4",
-    "material-ui-dropzone": "^3.4.0",
-    "ngl": "^0.10.4",
-    "pako": "^1.0.11",
-    "plotly.js": "^1.54.6",
-    "react": "^16.13.1",
-    "react-dom": "^16.13.1",
-    "react-draggable": "^4.4.3",
-    "react-plotly": "^1.0.0",
-    "react-plotly.js": "^2.4.0",
-    "react-scripts": "3.4.1",
-    "react-smooth-dnd": "^0.11.1",
-    "react-stonecutter": "^0.3.10",
-    "react-storage-hooks": "^4.0.1",
-    "react-swipeable-views": "^0.13.9",
-    "redux-devtools-extension": "^2.13.8",
-    "remotedev-server": "^0.3.1",
-    "reselect": "^4.0.0",
-    "resize-observer-polyfill": "^1.5.1",
-    "styled-components": "^5.1.1",
-    "typescript": "3.8.3"
-  },
-  "resolutions": {
-    "styled-components": "^5"
-  },
-  "scripts": {
-    "start": "BROWSER=none react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
-  },
-  "eslintConfig": {
-    "extends": "react-app"
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  },
   "devDependencies": {
-    "@babel/core": "^7.10.3",
-    "@babel/plugin-proposal-object-rest-spread": "^7.10.3",
-    "@babel/preset-env": "^7.10.3",
-    "autoprefixer": "^9.8.2",
-    "babel-loader": "^8.1.0",
-    "postcss-loader": "^3.0.0",
-    "remote-redux-devtools": "^0.5.16"
+    "lerna": "^3.22.1",
+    "prettier": "^2.1.2"
   }
 }

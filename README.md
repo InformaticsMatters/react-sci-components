@@ -1,22 +1,27 @@
 # React components for scientific applications
 
-[![Build Status](https://travis-ci.com/InformaticsMatters/react-sci-components.svg?branch=master)](https://travis-ci.com/InformaticsMatters/react-sci-components)
-![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/InformaticsMatters/react-sci-components)
-
 This repository is a collection of re-usable React components that can be used
 to rapidly create what we term **mini-apps**, simple applications that are
 designed with a specific purpose in mind. The initial domain of interest is
 primarily computational chemistry and cheminformatics.
 
+The repo contains three packages:
+
+- The reusable scientific _components_
+- _Services_ to access the Data-Tier Api
+- The InformaticsMatters/Squonk _theme_
+
+## Components
+
 The initial components are in the early design phase and will appear here soon.
 
 We anticipate these categories of component:
 
-* Charting using [Plotly]
-* 3D molecular viewer using [NGL Viewer]
-* Chemical sketcher using [JSME] (and maybe other sketchers)
-* Molecule card view
-* Molecular spreadsheet
+- Charting using [Plotly]
+- 3D molecular viewer using [NGL Viewer]
+- Chemical sketcher using [JSME] (and maybe other sketchers)
+- Molecule card view
+- Molecular spreadsheet
 
 Some of these components are inspired and partly derived from the [Fragalysis]
 and [Fragnet Search] applications, and most likely will be re-incorporated
@@ -28,38 +33,21 @@ This repo will contain:
 2. Documentation and examples for using each component
 3. Examples of how to combine components
 
-## Building
+## Data-Tier Api
 
-The application is distributed as a container image, normally built
-automatically by Travis. To understand how to build the app refer
-to the project's `.travis.yml`. Essentially it's a docker build command
-like: -
+This is an implementation of the [data-tier-api].
 
-    $ docker build -t informaticsmatters/im-mini-apps:latest .
+A basic implementation of the api endpoints is exposed (`ApiService`) but this is not meant to be used directly. Extend this class and make use of the methods exposed. A more idiomatic API is exposed in the `DataTierApi` singleton. This is also a good example of how the `ApiService` is intended to be implemented.
 
-## Deployment
+## Theme
 
-Container images are automatically deployed from Travis using Job Templates
-on our AWX server. The Job Templates are launched using scripts from our
-[Trigger AWX] project.
+This is simply a Mui 4.x theme which is provided to `styled-components` and exposed as a single `Theme` provider component. This is optional and is only used on IM/Squonk branded apps.
 
-## Application versioning
-
-The application version (defined in `package.json`) is automatically set from
-within the Dockerfile. If the `tag` build argument is not defined the version
-of the application is `0.0.0`.
-
-The CI/CD process in Travis sets the tag to the prevailing git tag.
-So, to build and push version `1.0.0` tag the repository with `1.0.0`. 
-
->   As a consequence you **MUST NOT** adjust the version line in the
-    package.json file.
-
-# Example mini-apps
+## Example mini-apps
 
 Our first mini-app is nearly ready.
 
-## Pose viewer
+### Pose viewer
 
 This allows a SDF file with docking poses and scores to be effectively analysed. The expectation is to be easily able to
 explore 10's of thousands of poses selecting those to examine in detail using a combination of scores in the SDF file.
@@ -71,18 +59,30 @@ There are 4 main re-usable components:
 
 1. A small component that allows to define how to process the input SDF file.
 2. A scatter plot component that allows the scores in the SDF file to be visualised and to select molecules of
-interest.
+   interest.
 3. A card view component that shows the molecules selected from the scatter plot as 2D structures along with their
-properties (scores)
+   properties (scores)
 4. A re-usable NGL viewer component that allows to view the 3D poses of the molecules selected from the card view to be
-viewed in the context of the protein binding site.
+   viewed in the context of the protein binding site.
 
+## Building
+
+This monorepo uses lerna to manage packages. Each package is currently bootstrapped with [tsdx].
+
+The following commands are available:
+
+- `yarn install` to install dependencies
+- `yarn start` to watch for changes and built to the `dist` directory.
+- `yarn build` to do a one-off build to the `dist` directory
+- `yarn test` to run any tests that have been created
 
 ---
 
-[Plotly]: https://plotly.com/javascript/
-[NGL Viewer]: http://nglviewer.org/
-[JSME]: https://peter-ertl.com/jsme/
+[plotly]: https://plotly.com/javascript/
+[ngl viewer]: http://nglviewer.org/
+[jsme]: https://peter-ertl.com/jsme/
 [fragalysis]: https://fragalysis.diamond.ac.uk/
 [fragnet-search]: https://fragnet.informaticsmatters.com/
 [trigger awx]: https://github.com/InformaticsMatters/trigger-awx
+[data-tier-api]: https://data.informaticsmatters.org/
+[tsdx]: https://tsdx.io/
