@@ -1,6 +1,6 @@
 {
   "license": "Apache 2.0",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "contributors": [
     "Oliver Dudgeon <oliverdudgeon@gmail.com>",
     "Tim Dudgeon <tdudgeon@informaticsmatters.com> (https://informaticsmatters.com)"
@@ -32,7 +32,6 @@
     "lint": "tsdx lint",
     "prepare": "tsdx build"
   },
-  "peerDependencies": {},
   "name": "@squonk/data-tier-client",
   "module": "dist/services.esm.js",
   "devDependencies": {
