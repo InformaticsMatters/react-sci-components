@@ -6,7 +6,7 @@ import { resolveState } from '../state/stateResolver';
 export interface Field {
   name: string;
   nickname?: string;
-  value: string | number;
+  value: string | number | null;
 }
 
 export interface Molecule {

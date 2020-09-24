@@ -166,8 +166,9 @@ const CardView = ({ width }: IProps) => {
                     tableWidth={cardWidth}
                     properties={fieldValues
                       .filter(({ name }) => enabledFields.includes(name))
-                      .map(({ name, ...rest }) => ({
-                        ...rest,
+                      .map(({ name, nickname, value }) => ({
+                        nickname,
+                        value: value ?? '',
                         name: moleculesFields.find((f) => f.name === name)?.nickname ?? name,
                       }))}
                     fontSize={'0.6rem'}
