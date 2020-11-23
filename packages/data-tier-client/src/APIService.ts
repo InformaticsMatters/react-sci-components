@@ -1,6 +1,3 @@
-/**
- * ! VERSION 1.0.1
- */
 import axios from 'axios';
 
 import { AllowedMediaTypes, PostDatasetArgs } from './apiTypes';
@@ -36,6 +33,8 @@ export class APIService {
   public setURI(uri: string, useProxy?: boolean) {
     if (useProxy) {
       this.uri = PROXY_URI + uri;
+    } else {
+      this.uri = uri;
     }
   }
 

@@ -1,5 +1,3 @@
-// ! VERSION 1.2.1
-
 import { APIService } from './APIService';
 import { AddNewDatasetArgs, Dataset, IMMolecule, Project } from './apiTypes';
 

@@ -1,5 +1,3 @@
-// ! VERSION 1.1.1
-
 export interface Project {
   editors: string[];
   name: string;
