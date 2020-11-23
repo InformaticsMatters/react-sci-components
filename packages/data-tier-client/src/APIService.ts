@@ -21,7 +21,7 @@ export class APIService {
   constructor(
     protected mock: boolean = false,
     useProxy: boolean = false,
-    protected uri: string = 'https://data.informaticsmatters.org',
+    protected uri: string = 'https://data.informaticsmatters.org/data',
   ) {
     if (useProxy) {
       this.uri = PROXY_URI + uri;
