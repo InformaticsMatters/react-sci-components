@@ -7,6 +7,7 @@ import {
   MenuItem,
   Select,
   TextField,
+  Tooltip,
   Typography,
 } from '@material-ui/core';
 
@@ -39,9 +40,11 @@ const FieldConfigInputs = ({ name, type, config }: IProps) => {
         checked={!!enabled}
         onChange={() => setEnabled(!enabled)}
       />
-      <Typography align="left" noWrap>
-        {name}
-      </Typography>
+      <Tooltip title={name} arrow>
+        <Typography align="left" noWrap>
+          {name}
+        </Typography>
+      </Tooltip>
       <TextField
         name={`${name}-nickname`}
         size="small"
