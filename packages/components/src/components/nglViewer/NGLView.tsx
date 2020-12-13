@@ -61,7 +61,6 @@ const useStyles = makeStyles((theme: Theme) =>
       backgroundColor: theme.palette.background.paper,
       borderRadius: theme.spacing(1) / 2,
       boxShadow: 'none',
-      marginBottom: theme.spacing(1),
     },
   }),
 );
@@ -278,7 +277,7 @@ export const NglView: React.FC<IProps> = memo(({ div_id, width }) => {
       style={{
         //height: `calc(${height || '600px'} - ${theme.spacing(1)}px)`
         width: '100%',
-        height: '100%',
+        height: 'calc(100% - 4px)',
       }}
     />
   );
