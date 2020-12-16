@@ -67,6 +67,10 @@ export const showLigands = (stage: any, molsInView: NGLMolecule[], centerOn: boo
   }
 };
 
+/**
+ * Add interactions between the protein and molecules
+ */
+
 type Coordinate = [number, number, number];
 
 const INTERACTION_FIELDS = [
@@ -87,11 +91,9 @@ const INTERACTION_COLOURS: { [key: string]: Coordinate } = {
   HalogenBond: [0.0, 0.0, 1.0], // blue
 };
 
-const addInteractions = (
-  stage: any,
-  name: string,
-  interData: Readonly<[string, string, Coordinate, Coordinate]>[],
-) => {
+type InteractionDatum = Readonly<[string, string, Coordinate, Coordinate]>;
+
+const addInteractions = (stage: any, name: string, interData: InteractionDatum[]) => {
   const size = 0.5;
   const shape = new Shape(name, { disableImpostor: true, radialSegments: 10 });
 
@@ -102,14 +104,18 @@ const addInteractions = (
   shapeComp.addRepresentation('buffer', { opacity: 0.5, wireframe: false });
 };
 
+const CANON_MATCHER = /\w+,/g; // To access the first "word" of the interaction string
+// To access the coordinates ~ [1.2, -1.2, 0.56]
+const COORDINATE_MATCHER = /\[(-?\d+.\d+), (-?\d+.\d+), (-?\d+.\d+)\]/g;
+
 const parseInteractionValue = (value: string) => {
   return (
     value
       .split(/\n/)
       .map((v) => {
         // Get the coordinates parts of the value
-        const canon = v.match(/\w+,/g);
-        const coords = v.match(/\[(-?\d+.\d+), (-?\d+.\d+), (-?\d+.\d+)\]/g);
+        const canon = v.match(CANON_MATCHER);
+        const coords = v.match(COORDINATE_MATCHER);
 
         return [coords, canon] as const;
       })
@@ -140,6 +146,6 @@ const showInteraction = ({ mol }: NGLMolecule, stage: any) => {
     .forEach((interaction) => addInteractions(stage, 'some_name', interaction));
 };
 
-export const showInteractions = (stage: any, molsInView: NGLMolecule[], centerOn: boolean) => {
+export const showInteractions = (stage: any, molsInView: NGLMolecule[]) => {
   molsInView.forEach((mol) => showInteraction(mol, stage));
 };
