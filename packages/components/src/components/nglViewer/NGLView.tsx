@@ -16,7 +16,7 @@ import {
   setFirstTimeShowLigand,
   useNGLLocalState,
 } from './nglLocalState';
-import { showLigands, showProtein } from './renderingObjects';
+import { showInteractions, showLigands, showProtein } from './renderingObjects';
 
 export interface NGLMolecule {
   id: number;
@@ -223,6 +223,7 @@ export const NglView: React.FC<IProps> = memo(({ div_id, width }) => {
       showProtein(newStage, protein.definition, firstTimeShowLigand);
       molsToDisplay = getMoleculeObjects(molsInView, colours, molecules);
       showLigands(newStage, molsToDisplay, firstTimeShowLigand);
+      showInteractions(newStage, molsToDisplay, false);
     } else if (stage == null && nglViewFromContext && nglViewFromContext.stage) {
       registerStageEvents(nglViewFromContext.stage, getNglView);
       setStage(nglViewFromContext.stage);
@@ -230,12 +231,14 @@ export const NglView: React.FC<IProps> = memo(({ div_id, width }) => {
       showProtein(nglViewFromContext.stage, protein.definition, firstTimeShowLigand);
       molsToDisplay = getMoleculeObjects(molsInView, colours, molecules);
       showLigands(nglViewFromContext.stage, molsToDisplay, firstTimeShowLigand);
+      showInteractions(nglViewFromContext.stage, molsToDisplay, false);
     } else if (stage) {
       removeNglComponents(stage);
       showProtein(stage, protein.definition, firstTimeShowLigand);
       molsToDisplay = getMoleculeObjects(molsInView, colours, molecules);
       showLigands(stage, molsToDisplay, firstTimeShowLigand);
       registerStageEvents(stage, getNglView);
+      showInteractions(stage, molsToDisplay, false);
     }
 
     if (!isStateLoadingFromFile()) {
