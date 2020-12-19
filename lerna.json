@@ -1,6 +1,8 @@
 {
   "packages": [
-    "packages/*"
+    "packages/components",
+    "packages/data-tier-client",
+    "packages/theme"
   ],
   "npmClient": "yarn",
   "version": "independent"
