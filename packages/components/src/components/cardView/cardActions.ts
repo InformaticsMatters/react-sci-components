@@ -42,7 +42,15 @@ export const getColour = (id: number, colours: Colour[]) => {
 
 export const [
   useCardActions,
-  { resetCardActions, setColours, clearColours, toggleSelected, deselectAllWithoutColour },
+  {
+    resetCardActions,
+    setColours,
+    clearColours,
+    disableCards,
+    toggleSelected,
+    deselectAllWithoutColour,
+    retainColours,
+  },
   cardActionsStore,
 ] = useRedux('cardActions', resolveState('cardActions', initialState), {
   /**
@@ -64,40 +72,52 @@ export const [
     const p = [payload].flat();
 
     p.forEach(({ id, colour }) => {
-      const c = colours.find((colourObj) => colourObj.id === id);
-
-      // TODO: I think this can be cleaned up and just use the contents of the else condition
-      // as in both cases the new value is added to the end of the array
-      if (c === undefined) {
-        // Add new colour
-        colours = [...colours, { id, colour }];
-      } else {
-        // Remove colour when it's already but add it back to the end
-        colours = [...colours.filter(({ id: id_ }) => id_ !== id), { id, colour }];
-      }
+      // Remove colour when it's already but add it back to the end
+      // When the id is "new" is it just appended as the filter has no effect
+      colours = [...colours.filter(({ id: id_ }) => id_ !== id), { id, colour }];
     });
 
     return { colours, ...rest };
   },
   /**
    * Remove passed id(s) from the `selectedIds` section of state
+   * When the payload is `undefined` all colours are removed
    *
    * @param prevState previous value of state
-   * @param payload id (or array of) to be injected to the `selectedIds` in the state
+   * @param payload colours of this id (or array of) to be removed from state
    */
-  clearColours: ({ colours, ...rest }, payload: number | number[]) => {
-    // Convert union payload into array parse-able by one algorithm
-    const ids = [payload].flat();
+  clearColours: ({ colours, ...rest }, payload?: number | number[]) => {
+    if (payload !== undefined) {
+      // Convert union payload into array parse-able by one algorithm
+      const ids = [payload].flat();
 
-    return {
-      ...rest,
-      colours: colours.filter(({ id }) => ids.includes(id)),
-    };
+      return {
+        ...rest,
+        colours: colours.filter(({ id }) => !ids.includes(id)),
+      };
+    } else {
+      return { ...rest, colours: [] };
+    }
   },
 
-  // TODO: implement these reducers
-  // enableCard: (state, payload: number | number[]) => {},
-  // disableCard: (state, payload: number | number[]) => {},
+  // TODO: implement this reducer
+  // enableCards: (state, payload: number | number[]) => {},
+
+  /**
+   * Unselect cards with the given id(s)
+   * If the payload is undefined, all cards are unselected
+   *
+   * @param state previous value of state
+   * @param payload id (or array of) removed from the selected cards array
+   */
+  disableCards: ({ selectedIds, ...rest }, payload?: number | number[]) => {
+    if (payload !== undefined) {
+      const ids = [payload].flat();
+      return { selectedIds: selectedIds.filter((id) => !ids.includes(id)), ...rest };
+    } else {
+      return { selectedIds: [], ...rest };
+    }
+  },
 
   /**
    * Toggles the selected state of a given `id`
@@ -106,11 +126,13 @@ export const [
    * @param id id of card to toggle its selection
    */
   toggleSelected: ({ selectedIds, ...rest }, id: number) => {
+    // TODO: need to make this work for array of ids too
     return { ...rest, selectedIds: toggleIdInArray(selectedIds, id) };
   },
 
   /**
    * Remove ids from `selectedIds` if the id isn't paired with a colour
+   *
    * @param prevState previous value of state
    */
   deselectAllWithoutColour: ({ selectedIds, colours }) => {
@@ -120,5 +142,17 @@ export const [
       colours,
       selectedIds: selectedIds.filter((id) => ids.includes(id)),
     };
+  },
+
+  /**
+   * Remove all colours except for the id(s) provided
+   *
+   * @param state previous value of state
+   * @param payload id (or array of) of card(s) that should be kept if a colour is set
+   */
+  retainColours: ({ colours, ...rest }, payload: number | number[]) => {
+    const ids = [payload].flat();
+
+    return { ...rest, colours: colours.filter(({ id }) => ids.includes(id)) };
   },
 });
