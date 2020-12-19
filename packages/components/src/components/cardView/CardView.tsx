@@ -11,9 +11,9 @@ import { usePlotSelection } from '../scatterplot/plotSelection';
 import CalculationsTable from './CalculationsTable';
 import {
   CardActionsState,
-  clearColour,
-  setColour,
-  toggleIsInNGLViewer,
+  clearColours,
+  setColours,
+  toggleSelected,
   useCardActions,
 } from './cardActions';
 import { useCardViewConfiguration } from './cardViewConfiguration';
@@ -76,7 +76,7 @@ const CardView = ({ width }: IProps) => {
 
   const selectedMoleculesIds = usePlotSelection();
   const actions = useCardActions();
-  const { isInNGLViewerIds, colours } = actions;
+  const { selectedIds, colours } = actions;
   const { fields, fieldForDepiction } = useCardViewConfiguration();
 
   const enabledFields = fields.filter((field) => field.isVisible).map((field) => field.name);
@@ -133,7 +133,7 @@ const CardView = ({ width }: IProps) => {
                 fields.findIndex((f) => f.name === a.name) -
                 fields.findIndex((f) => f.name === b.name),
             );
-            const selected = isInNGLViewerIds.includes(id);
+            const selected = selectedIds.includes(id);
             return (
               <span key={id} style={{ width: cardWidth, height: cardHeight }}>
                 <MolCard
@@ -143,7 +143,7 @@ const CardView = ({ width }: IProps) => {
                   bgColor={selected ? theme.palette.grey[100] : undefined}
                   depictWidth={imageSize}
                   depictHeight={imageSize}
-                  onClick={() => toggleIsInNGLViewer(id)}
+                  onClick={() => toggleSelected(id)}
                   actionsProps={{ className: classes.actionsRoot }}
                   actions={(hover) => {
                     const colour = colours.find((c) => c.id === id);
@@ -154,8 +154,8 @@ const CardView = ({ width }: IProps) => {
                             iconColour={colour?.colour}
                             enabled={!!hover}
                             colours={palette}
-                            setColour={(colour) => setColour({ id, colour })}
-                            clearColour={() => clearColour(id)}
+                            setColour={(colour) => setColours({ id, colour })}
+                            clearColour={() => clearColours(id)}
                           />
                         </span>
                       </Grow>

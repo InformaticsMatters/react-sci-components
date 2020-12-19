@@ -6,23 +6,23 @@ import { resolveState } from '../../modules/state/stateResolver';
  * Redux store to manage the card state.
  *
  * Each card can be:
- * * made sticky
- * * coloured for use in the NGL viewer
- * * can be toggled for view in the NGL viewer
+ * * given a colour
+ * * can be selected
  */
+
 // Types
 
 export type Colour = { id: number; colour: string };
 
 export interface CardActionsState {
-  isInNGLViewerIds: number[];
+  selectedIds: number[];
   colours: Colour[];
 }
 
 type SetColourPayload = { id: number; colour: string };
 
 const initialState: CardActionsState = {
-  isInNGLViewerIds: [],
+  selectedIds: [],
   colours: [],
 };
 
@@ -42,33 +42,83 @@ export const getColour = (id: number, colours: Colour[]) => {
 
 export const [
   useCardActions,
-  { resetCardActions, resetIdsInNGLViewer, clearColour, setColour, toggleIsInNGLViewer },
+  { resetCardActions, setColours, clearColours, toggleSelected, deselectAllWithoutColour },
   cardActionsStore,
 ] = useRedux('cardActions', resolveState('cardActions', initialState), {
+  /**
+   * Sets card actions state slice back to the initial value
+   *
+   * State becomes `{ selectedIds: [], colours: [] }`
+   */
   resetCardActions: () => initialState,
-  resetIdsInNGLViewer: ({ isInNGLViewerIds, colours }) => {
-    const ids = colours.map((c) => c.id);
+
+  /**
+   * Merge the passed id-colour pair(s) into the `colours` state.
+   * New ids are appended, old ids are shifted to the end of the array
+   *
+   * @param prevState previous value of state
+   * @param payload id-colour pair (or array of) to be injected into the state
+   */
+  setColours: ({ colours, ...rest }, payload: SetColourPayload | SetColourPayload[]) => {
+    // Convert union payload into array parse-able by one algorithm
+    const p = [payload].flat();
+
+    p.forEach(({ id, colour }) => {
+      const c = colours.find((colourObj) => colourObj.id === id);
+
+      // TODO: I think this can be cleaned up and just use the contents of the else condition
+      // as in both cases the new value is added to the end of the array
+      if (c === undefined) {
+        // Add new colour
+        colours = [...colours, { id, colour }];
+      } else {
+        // Remove colour when it's already but add it back to the end
+        colours = [...colours.filter(({ id: id_ }) => id_ !== id), { id, colour }];
+      }
+    });
+
+    return { colours, ...rest };
+  },
+  /**
+   * Remove passed id(s) from the `selectedIds` section of state
+   *
+   * @param prevState previous value of state
+   * @param payload id (or array of) to be injected to the `selectedIds` in the state
+   */
+  clearColours: ({ colours, ...rest }, payload: number | number[]) => {
+    // Convert union payload into array parse-able by one algorithm
+    const ids = [payload].flat();
+
     return {
-      colours: colours,
-      isInNGLViewerIds: isInNGLViewerIds.filter((id) => ids.includes(id)),
+      ...rest,
+      colours: colours.filter(({ id }) => ids.includes(id)),
     };
   },
-  clearColour: ({ colours, ...rest }, id: number) => ({
-    ...rest,
-    colours: colours.filter((c) => c.id !== id),
-  }),
-  setColour: ({ colours, ...rest }, { id, colour }: SetColourPayload) => {
-    const c = colours.find((colourObj) => colourObj.id === id);
-    if (c === undefined) {
-      return { ...rest, colours: [...colours, { id, colour }] };
-    } else {
-      return {
-        ...rest,
-        colours: [...colours.filter(({ id: id_ }) => id_ !== id), { id, colour }],
-      };
-    }
+
+  // TODO: implement these reducers
+  // enableCard: (state, payload: number | number[]) => {},
+  // disableCard: (state, payload: number | number[]) => {},
+
+  /**
+   * Toggles the selected state of a given `id`
+   *
+   * @param prevState previous value of state
+   * @param id id of card to toggle its selection
+   */
+  toggleSelected: ({ selectedIds, ...rest }, id: number) => {
+    return { ...rest, selectedIds: toggleIdInArray(selectedIds, id) };
   },
-  toggleIsInNGLViewer: ({ isInNGLViewerIds, ...rest }, id: number) => {
-    return { ...rest, isInNGLViewerIds: toggleIdInArray(isInNGLViewerIds, id) };
+
+  /**
+   * Remove ids from `selectedIds` if the id isn't paired with a colour
+   * @param prevState previous value of state
+   */
+  deselectAllWithoutColour: ({ selectedIds, colours }) => {
+    // Preserve "pinned" (coloured) cards between selections
+    const ids = colours.map((c) => c.id);
+    return {
+      colours,
+      selectedIds: selectedIds.filter((id) => ids.includes(id)),
+    };
   },
 });

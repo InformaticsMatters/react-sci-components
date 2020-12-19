@@ -12,7 +12,7 @@ import {
   Typography,
 } from '@material-ui/core';
 
-import DraggableList from '../../components/DraggableList';
+import DraggableList from '../DraggableList';
 import { getDisplayText } from '../utils';
 import {
   moveFieldPosition,
