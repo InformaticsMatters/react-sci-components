@@ -143,7 +143,7 @@ const showInteraction = ({ mol }: NGLMolecule, stage: any) => {
         (v) => [name.substring(0, name.indexOf('Interaction')), ...v] as const,
       );
     })
-    .forEach((interaction) => addInteractions(stage, 'some_name', interaction));
+    .forEach((interaction) => addInteractions(stage, String(mol.id), interaction));
 };
 
 export const showInteractions = (stage: any, molsInView: NGLMolecule[]) => {
