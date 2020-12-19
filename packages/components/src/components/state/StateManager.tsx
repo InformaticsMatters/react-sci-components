@@ -10,7 +10,7 @@ import { STATE_KEY } from '../../modules/state/stateConfig';
 import { filterOutFromState } from '../../modules/state/stateResolver';
 import DownloadButton from '../DownloadButton';
 
-const STATE_VERSION = '3.0.0';
+const STATE_VERSION = '4.0.0';
 
 interface IProps {}
 
