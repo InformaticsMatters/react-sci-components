@@ -76,6 +76,31 @@ The following commands are available:
 - `yarn build` to do a one-off build to the `dist` directory
 - `yarn test` to run any tests that have been created
 
+## Development Alongside the mini-apps
+
+Currently the best way to develop apps alongside the component library, `squonk-theme` and `data-tier-client` is to
+
+1. Clone the `react-sci-components` repo,
+2. Clone the app into the `/packages` directory,
+3. Run `lerna link` in the root of `react-sci-components`
+4. In terminal(s) run `yarn start` inside of the package(s) that are going to be developed
+
+Optionally, ensure the app packages in your VSCode workspace are listed first as VSCode current [doesn't handle subrepos that well](https://github.com/microsoft/vscode/issues/37947). For example:
+
+```json
+"folders": [
+    {
+        "path": "packages/pose-viewer"
+    },
+    {
+        "path": "packages/fragnet-ui"
+    },
+    {
+        "path": "."
+    },
+],
+```
+
 ---
 
 [plotly]: https://plotly.com/javascript/
