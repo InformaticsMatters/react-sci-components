@@ -1,11 +1,14 @@
 {
 	"folders": [
 		{
-			"path": "."
+			"path": "packages/pose-viewer"
 		},
 		{
-			"path": "packages/pose-viewer"
-		}
+			"path": "packages/fragnet-ui"
+		},
+		{
+			"path": "."
+		},
 	],
 	"settings": {
 		"editor.tabSize": 2,
@@ -58,7 +61,46 @@
 			"swipeable",
 			"transpiled",
 			"tsdx",
-			"tslib"
+			"tslib",
+			"Bluered",
+			"Dropzone",
+			"Molfile",
+			"Popover",
+			"Relayout",
+			"Spikelines",
+			"Swipeable",
+			"colorbar",
+			"colorscale",
+			"colouraxis",
+			"customdata",
+			"depictmcs",
+			"devtools",
+			"dragmode",
+			"dtype",
+			"fragnet",
+			"hovermode",
+			"keycloak",
+			"minmax",
+			"molblock",
+			"moleculespath",
+			"mols",
+			"openchemlib",
+			"pako",
+			"plotly",
+			"proxyurl",
+			"remotedev",
+			"repr",
+			"resp",
+			"reversescale",
+			"scatterplot",
+			"sizeaxis",
+			"ungzip",
+			"xaxis",
+			"xlabel",
+			"xprop",
+			"yaxis",
+			"ylabel",
+			"yprop"
 		],
 		"files.exclude": {
 			"**/.git": true,
@@ -68,46 +110,5 @@
 			"**/.DS_Store": true,
 			"**/node_modules": true
 		}
-	},
-	"cSpell.words": [
-		"Bluered",
-		"Dropzone",
-		"Molfile",
-		"Popover",
-		"Relayout",
-		"Spikelines",
-		"Swipeable",
-		"colorbar",
-		"colorscale",
-		"colouraxis",
-		"customdata",
-		"depictmcs",
-		"devtools",
-		"dragmode",
-		"dtype",
-		"fragnet",
-		"hovermode",
-		"keycloak",
-		"minmax",
-		"molblock",
-		"moleculespath",
-		"mols",
-		"openchemlib",
-		"pako",
-		"plotly",
-		"proxyurl",
-		"remotedev",
-		"repr",
-		"resp",
-		"reversescale",
-		"scatterplot",
-		"sizeaxis",
-		"ungzip",
-		"xaxis",
-		"xlabel",
-		"xprop",
-		"yaxis",
-		"ylabel",
-		"yprop"
-	],
+	}
 }
