@@ -18,7 +18,7 @@ export const Content = styled(DialogContent)`
 export const CloseButton = styled(IconButton)`
   z-index: ${({ theme }) => theme.zIndex.appBar + 1};
   position: absolute;
-  right: ${({ theme }) => theme.spacing(1)}px;
+  right: ${({ theme }) => theme.spacing(1)}px;u
   top: 0;
   color: ${({ theme }) => theme.palette.grey[800]};
 `;

@@ -69,9 +69,9 @@ interface IProps {
 
 const ScatterPlot = ({ width, colourBar = false }: IProps) => {
   const theme = useTheme();
-  let { molecules, fields } = useMolecules();
+  const { molecules, fields } = useMolecules();
 
-  let { xprop, yprop, size, colour } = useScatterplotConfiguration();
+  const { xprop, yprop, size, colour } = useScatterplotConfiguration();
   const selection = usePlotSelection();
 
   const selectedPoints = selection.map((id) => molecules.findIndex((m) => m.id === id));

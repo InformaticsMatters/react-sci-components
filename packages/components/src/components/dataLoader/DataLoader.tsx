@@ -85,7 +85,10 @@ const DataLoader: React.FC<IProps> = ({
             )
           : {};
       if (mode === 'load') {
-        setWorkingSource({ title, state: { ...formData, projectId, datasetId } });
+        setWorkingSource({
+          title,
+          state: { ...formData, projectId, datasetId },
+        });
       } else if (mode === 'save' && enableConfigs) {
         const configName = formRef.current['configName'].value as string;
         configName && addConfig({ datasetId, projectId, configName, ...formData });

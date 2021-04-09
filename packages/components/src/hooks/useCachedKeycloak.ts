@@ -4,7 +4,10 @@ import { useStorageState } from 'react-storage-hooks';
 
 import { KeycloakTokens, useKeycloak } from '@react-keycloak/web';
 
-export type KeycloakCache = { authenticated: boolean | undefined; tokens: Partial<KeycloakTokens> };
+export type KeycloakCache = {
+  authenticated: boolean | undefined;
+  tokens: Partial<KeycloakTokens>;
+};
 
 export const useCachedKeycloak = () => {
   const { keycloak, initialized } = useKeycloak();

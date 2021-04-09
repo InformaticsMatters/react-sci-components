@@ -17,7 +17,10 @@ interface IProps {}
 const StateManagement: React.FC<IProps> = () => {
   const state = useStoreState();
 
-  const dump = JSON.stringify({ __version__: STATE_VERSION, ...filterOutFromState(state) });
+  const dump = JSON.stringify({
+    __version__: STATE_VERSION,
+    ...filterOutFromState(state),
+  });
 
   const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
 

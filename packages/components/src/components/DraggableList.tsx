@@ -34,7 +34,7 @@ const DraggableList = ({
         lockAxis="y"
         onDrop={(event) => moveFieldPosition(event)}
       >
-        {fields.map(({name, title}, index) => (
+        {fields.map(({ name, title }, index) => (
           <Draggable key={index}>
             <ListItem dense button onClick={() => toggleCheckbox(name)}>
               {showCheckboxes && (

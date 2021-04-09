@@ -1,25 +1,17 @@
 {
 	"folders": [
-		{
-			"path": "packages/pose-viewer"
-		},
-		{
-			"path": "packages/fragnet-ui"
-		},
+		// {
+		// 	"path": "packages/pose-viewer"
+		// },
+		// {
+		// 	"path": "packages/fragnet-ui"
+		// },
 		{
 			"path": "."
 		},
 	],
 	"settings": {
 		"editor.tabSize": 2,
-		"prettier.semi": true,
-		"prettier.arrowParens": "always",
-		"prettier.bracketSpacing": true,
-		"prettier.printWidth": 100,
-		"prettier.singleQuote": true,
-		"prettier.tabWidth": 2,
-		"prettier.trailingComma": "all",
-		"prettier.packageManager": "yarn",
 		"typescript.tsdk": "react-sci-components/node_modules/typescript/lib",
 		"importSorter.generalConfiguration.sortOnBeforeSave": true,
 		"importSorter.importStringConfiguration.maximumNumberOfImportExpressionsPerLine.type": "newLineEachExpressionAfterCountLimit",

@@ -43,7 +43,7 @@ const onAllInit = async () => {
   const id = setInterval(async () => {
     if (DataTierAPI.hasToken()) {
       clearInterval(id);
-      for (let callback of callbackAllModulesInitialised) {
+      for (const callback of callbackAllModulesInitialised) {
         await callback();
       }
       localStorage.removeItem(STATE_KEY);

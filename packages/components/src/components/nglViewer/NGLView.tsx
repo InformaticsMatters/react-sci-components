@@ -97,7 +97,7 @@ export const NglView: React.FC<IProps> = memo(({ div_id, width }) => {
       if (nglViewList.filter((ngl) => ngl.id === id).length > 0) {
         console.log(new Error(`Cannot register NGL View with used ID! ${id}`));
       } else {
-        let extendedList = nglViewList;
+        const extendedList = nglViewList;
         extendedList.push({ id, stage });
         setNglViewList(extendedList);
       }

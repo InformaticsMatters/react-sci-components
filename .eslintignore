@@ -1,0 +1,9 @@
+# https://eslint.org/docs/user-guide/configuring/ignoring-code
+
+**/dist/**
+**/build/**
+**/node_modules/**
+**/out/*
+**/.next/*
+
+packages/data-manager-client/src/orval/*

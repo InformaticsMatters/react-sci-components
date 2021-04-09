@@ -113,7 +113,10 @@ export const [
   disableCards: ({ selectedIds, ...rest }, payload?: number | number[]) => {
     if (payload !== undefined) {
       const ids = [payload].flat();
-      return { selectedIds: selectedIds.filter((id) => !ids.includes(id)), ...rest };
+      return {
+        selectedIds: selectedIds.filter((id) => !ids.includes(id)),
+        ...rest,
+      };
     } else {
       return { selectedIds: [], ...rest };
     }

@@ -24,7 +24,10 @@ export const [
   proteinStore,
 ] = useRedux('protein', resolveState('protein', initialState), {
   setProtein: (state, protein: Protein) => ({ ...state, protein }),
-  setIsProteinLoading: (state, isProteinLoading: boolean) => ({ ...state, isProteinLoading }),
+  setIsProteinLoading: (state, isProteinLoading: boolean) => ({
+    ...state,
+    isProteinLoading,
+  }),
   setProteinErrorMessage: (state, proteinErrorMessage: string | null) => ({
     ...state,
     proteinErrorMessage,

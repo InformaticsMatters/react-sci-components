@@ -51,7 +51,10 @@ const CardViewConfig = ({ title }: IProps) => {
       const fixedRemovedIndex = fields.indexOf(removedField);
       const fixedAddedIndex = fields.indexOf(addedField);
 
-      moveFieldPosition({ removedIndex: fixedRemovedIndex, addedIndex: fixedAddedIndex });
+      moveFieldPosition({
+        removedIndex: fixedRemovedIndex,
+        addedIndex: fixedAddedIndex,
+      });
     }
   };
 

@@ -47,7 +47,7 @@ const Configuration: React.FC<IProps & ButtonProps> = ({
   ModalOpenIcon,
   draggable = true,
 }) => {
-  let [stateOpen, setStateOpen] = useState(false);
+  const [stateOpen, setStateOpen] = useState(false);
 
   const open = propOpen ?? stateOpen;
   const handleOpen = propOnOpen ?? (() => setStateOpen(true));

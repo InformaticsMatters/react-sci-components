@@ -92,7 +92,10 @@ const VerticalButton = withStyles((theme) => ({
   },
 }))(Button);
 
-const AccordionColumn = styled.section<{ visible: boolean; columnWidth: number }>`
+const AccordionColumn = styled.section<{
+  visible: boolean;
+  columnWidth: number;
+}>`
   height: 100vh;
   visibility: ${({ visible }) => (visible ? 'visible' : 'hidden')};
   width: ${({ visible, columnWidth }) => (visible ? columnWidth : 0)}px;

@@ -44,8 +44,14 @@ export const [
   { mergeNewMoleculesState, setIsMoleculesLoading, setMoleculesErrorMessage, setTotalParsed },
   moleculesStore,
 ] = useRedux('molecules', resolveState('molecules', initialState), {
-  mergeNewMoleculesState: (state, newState: Partial<MoleculesState>) => ({ ...state, ...newState }),
-  setIsMoleculesLoading: (state, isMoleculesLoading: boolean) => ({ ...state, isMoleculesLoading }),
+  mergeNewMoleculesState: (state, newState: Partial<MoleculesState>) => ({
+    ...state,
+    ...newState,
+  }),
+  setIsMoleculesLoading: (state, isMoleculesLoading: boolean) => ({
+    ...state,
+    isMoleculesLoading,
+  }),
   setMoleculesErrorMessage: (state, moleculesErrorMessage: string | null) => ({
     ...state,
     moleculesErrorMessage,

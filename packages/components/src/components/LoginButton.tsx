@@ -30,7 +30,7 @@ const LoginButton: React.FC<ButtonProps> = (buttonProps) => {
       onClick={!isAuthenticated ? authLogin : authLogout}
       {...buttonProps}
     >
-      {!!isAuthenticated ? 'logout' : 'login'}
+      {isAuthenticated ? 'logout' : 'login'}
       {!initialized && <Progress size={24} />}
     </Button>
   );

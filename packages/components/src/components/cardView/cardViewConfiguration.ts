@@ -38,7 +38,10 @@ export const [
    * @param configuration previous state
    * @param fields the new fields
    */
-  setFields: (configuration, fields: CField[]) => ({ ...configuration, fields }),
+  setFields: (configuration, fields: CField[]) => ({
+    ...configuration,
+    fields,
+  }),
   /**
    * @param configuration previous value of state
    * @param fieldName `.name` property of `Field` that is to be enabled

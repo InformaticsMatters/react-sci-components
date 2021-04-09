@@ -1,16 +1,9 @@
 {
-  "include": [
-    "src",
-    "types"
-  ],
+  "include": ["src", "types"],
   "compilerOptions": {
     "module": "esnext",
     "target": "ES5",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "importHelpers": true,
     "declaration": true,
     "sourceMap": true,
@@ -21,10 +14,7 @@
     "jsx": "react",
     "esModuleInterop": true,
     "downlevelIteration": true,
-    "allowSyntheticDefaultImports": true,
+    "allowSyntheticDefaultImports": true
   },
-  "typeRoots": [
-    "src/types",
-    "node_modules/@types"
-  ]
+  "typeRoots": ["src/types", "node_modules/@types"]
 }

@@ -34,7 +34,7 @@ export const showProtein = (stage: any, protein: string, centerOn: boolean) => {
 };
 
 const showLigand = (stage: any, molecule: NGLMolecule, centerOn: boolean) => {
-  let stringBlob = new Blob([molecule.mol.molFile], { type: 'text/plain' });
+  const stringBlob = new Blob([molecule.mol.molFile], { type: 'text/plain' });
   return stage.loadFile(stringBlob, { name: molecule.mol.id, ext: 'sdf' }).then((comp: any) => {
     const reprArray = createRepresentationsArray([
       createRepresentationStructure(MOL_REPRESENTATION.licorice, {
@@ -97,7 +97,7 @@ const addInteractions = (stage: any, name: string, interData: InteractionDatum[]
   const size = 0.5;
   const shape = new Shape(name, { disableImpostor: true, radialSegments: 10 });
 
-  for (let [type, canon, pos1, pos2] of interData) {
+  for (const [type, canon, pos1, pos2] of interData) {
     shape.addCylinder(pos1, pos2, INTERACTION_COLOURS[type], size, canon);
   }
   const shapeComp = stage.addComponentFromObject(shape);

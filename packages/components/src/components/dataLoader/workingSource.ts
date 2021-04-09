@@ -31,7 +31,6 @@ export interface Source {
   configs?: FieldConfig[];
 }
 
-
 export type WorkingSourceState = { title: string; state: Source | null }[];
 
 type SetWorkingSourcePayload = { title: string; state: NonNullable<Source> };
