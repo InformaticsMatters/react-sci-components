@@ -3,6 +3,9 @@
   "version": "0.0.1-alpha.1",
   "license": "Apache-2.0",
   "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
   "contributors": [
     "Oliver Dudgeon <odudgeon@informaticsmatters.com>",
     "Tim Dudgeon <tdudgeon@informaticsmatters.com> (https://informaticsmatters.com)"
@@ -43,5 +46,6 @@
   },
   "dependencies": {
     "axios": "^0.21.1"
-  }
+  },
+  "gitHead": "f75c8ea8753c4bb223af245067368c3768191735"
 }
