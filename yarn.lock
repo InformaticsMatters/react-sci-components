@@ -8634,10 +8634,10 @@ ora@^4.0.3:
     strip-ansi "^6.0.0"
     wcwidth "^1.0.1"
 
-orval@5.0.0-alpha.5:
-  version "5.0.0-alpha.5"
-  resolved "https://registry.yarnpkg.com/orval/-/orval-5.0.0-alpha.5.tgz#1847e40411c211435853cdae79ed308968315de5"
-  integrity sha512-k14Ks4RMitGYe1g3XBy/HTh9OMvkIcq2IZxGqf92sGoyKORcFbGZm4WKXZ6pP4h/BRr5srqCjvm/kyOkv2Q06A==
+orval@5.0.0-alpha.6:
+  version "5.0.0-alpha.6"
+  resolved "https://registry.yarnpkg.com/orval/-/orval-5.0.0-alpha.6.tgz#d8a0f015421bf6b81752f3993db3b222c9f80cbb"
+  integrity sha512-Qc85gOkKgOSxuFfoA/zLyHJR/LaC5kRLSFiu2eJC69cWbkaCu4WIO533o+iZ0102tfaOKxs19zd2ToBOMmIEVw==
   dependencies:
     "@apidevtools/swagger-parser" "^10.0.2"
     axios "^0.21.0"
@@ -8650,6 +8650,7 @@ orval@5.0.0-alpha.5:
     lodash "^4.17.15"
     openapi3-ts "^2.0.0"
     swagger2openapi "^7.0.4"
+    upath "^2.0.1"
     url "^0.11.0"
     yamljs "^0.3.0"
 
