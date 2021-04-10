@@ -103,7 +103,9 @@
 			"**/node_modules": true
 		},
 		"conventionalCommits.scopes": [
-			"orval"
+			"orval",
+			"release",
+			"editor"
 		]
 	}
 }
