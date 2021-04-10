@@ -1,7 +1,8 @@
 {
+  "name": "@squonk/data-manager-client",
+  "version": "0.0.1-alpha.0",
   "license": "Apache-2.0",
   "private": false,
-  "version": "0.0.1-alpha.0",
   "contributors": [
     "Oliver Dudgeon <odudgeon@informaticsmatters.com>",
     "Tim Dudgeon <tdudgeon@informaticsmatters.com> (https://informaticsmatters.com)"
@@ -22,7 +23,6 @@
     "start": "orval --config ./orval.config.js && tsdx watch",
     "build": "orval --config ./orval.config.js && tsdx build"
   },
-  "name": "data-manager-client",
   "author": "Oliver Dudgeon",
   "module": "dist/data-manager-client.esm.js",
   "devDependencies": {
