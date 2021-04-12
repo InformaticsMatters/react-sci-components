@@ -1,5 +1,7 @@
 {
-  "packages": ["packages/components", "packages/data-manager-client", "packages/theme"],
+  "packages": [
+    "packages/*"
+  ],
   "version": "independent",
   "npmClient": "yarn",
   "useWorkspaces": true

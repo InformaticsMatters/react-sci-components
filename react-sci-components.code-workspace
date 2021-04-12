@@ -1,5 +1,8 @@
 {
 	"folders": [
+		{
+			"path": "packages/data-manager-ui"
+		},
 		// {
 		// 	"path": "packages/pose-viewer"
 		// },
@@ -105,7 +108,8 @@
 		"conventionalCommits.scopes": [
 			"orval",
 			"release",
-			"editor"
+			"editor",
+			"auth"
 		]
 	}
 }

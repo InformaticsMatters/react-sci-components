@@ -3,6 +3,8 @@ export * from './orval/dataset';
 export * from './orval/label';
 export * from './orval/project';
 export * from './orval/task';
+export * from './orval/application';
+export * from './orval/instance';
 
 // Request instance and methods to change the baseUrl and auth token
 export * from './custom-instance';

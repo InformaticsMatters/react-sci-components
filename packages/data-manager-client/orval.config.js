@@ -1,4 +1,4 @@
-const mapping = {
+const translations = {
   'app.api_dataset.get': 'getAvailableDatasets',
   'app.api_dataset.post': 'uploadDataset',
   'app.api_dataset.delete': 'deleteDataset',
@@ -16,6 +16,12 @@ const mapping = {
   'app.api_project.delete_file': 'removeDatasetFromProject',
   'app.api_project.get_file': 'downloadDatasetFromProject',
   'app.api_task.get': 'getTask',
+  'app.api_application.get': 'getApplications',
+  'app.api_application.get_application': 'getApplication',
+  'app.api_instance.get': 'getInstances',
+  'app.api_instance.post': 'addInstance',
+  'app.api_instance.delete': 'terminateInstance',
+  'app.api_instance.get_instance': 'getInstance',
 };
 
 module.exports = {
@@ -28,7 +34,9 @@ module.exports = {
           for (const value of Object.values(obj.paths)) {
             for (const defn of Object.values(value)) {
               const { operationId } = defn;
-              defn.operationId = mapping[operationId];
+              if (translations[operationId]) {
+                defn.operationId = translations[operationId];
+              }
             }
           }
           return obj;

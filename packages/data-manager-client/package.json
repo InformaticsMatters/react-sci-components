@@ -24,7 +24,8 @@
   },
   "scripts": {
     "start": "orval --config ./orval.config.js && tsdx watch",
-    "build": "orval --config ./orval.config.js && tsdx build"
+    "build": "orval --config ./orval.config.js && tsdx build",
+    "orval": "orval --config ./orval.config.js"
   },
   "author": "Oliver Dudgeon",
   "module": "dist/data-manager-client.esm.js",
