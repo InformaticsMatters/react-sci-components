@@ -109,7 +109,8 @@
 			"orval",
 			"release",
 			"editor",
-			"auth"
+			"auth",
+			"experimentation"
 		]
 	}
 }
