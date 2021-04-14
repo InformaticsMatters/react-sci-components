@@ -34,7 +34,8 @@
     "prepare": "tsdx build"
   },
   "peerDependencies": {
-    "react": ">=16"
+    "react": ">=16",
+    "styled-components": "^5.2.0"
   },
   "name": "@squonk/mui-theme",
   "module": "dist/theme.esm.js",
@@ -47,11 +48,11 @@
     "react-dom": "^16.13.1",
     "tsdx": "^0.14.0",
     "tslib": "^2.0.1",
-    "typescript": "^4.0.3"
+    "typescript": "^4.0.3",
+    "styled-components": "^5.2.0"
   },
   "dependencies": {
-    "@material-ui/core": "^4.10.0",
-    "styled-components": "^5.2.0"
+    "@material-ui/core": "^4.10.0"
   },
   "gitHead": "365c2cd4f21442be3b2030572c4c2303511c720d"
 }

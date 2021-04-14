@@ -41,24 +41,39 @@ const palette = {
     disabled: 'rgba(0, 0, 0, 0.38)',
     hint: 'rgba(0, 0, 0, 0.38)',
   },
-  overrides: {
-    MuiInput: {
-      input: {
-        fontSize: '0.5rem',
-        padding: '6 4.5 6 4.5',
-      },
+};
+
+const family = ['"Open Sans"', 'Verdana', 'Geneva', 'Tahoma', 'sans-serif'].join(', ');
+
+const overrides = {
+  MuiInput: {
+    input: {
+      fontSize: '0.5rem',
+      padding: '6 4.5 6 4.5',
     },
   },
 };
 
-export const theme = createMuiTheme({ palette });
+const typography = {
+  fontFamily: family,
+};
 
-const Theme: React.FC = ({ children }) => (
-  <StylesProvider injectFirst>
-    <MuiThemeProvider theme={theme}>
+export const theme = createMuiTheme({ palette, overrides, typography });
+
+export const MuiTheme: React.FC = ({ children }) => {
+  return (
+    <StylesProvider injectFirst>
+      <MuiThemeProvider theme={theme}>{children}</MuiThemeProvider>
+    </StylesProvider>
+  );
+};
+
+export const Theme: React.FC = ({ children }) => {
+  return (
+    <MuiTheme>
       <ThemeProvider theme={theme}>{children}</ThemeProvider>
-    </MuiThemeProvider>
-  </StylesProvider>
-);
+    </MuiTheme>
+  );
+};
 
 export default Theme;
