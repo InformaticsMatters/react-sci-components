@@ -105,5 +105,14 @@
 			"**/.DS_Store": true,
 			"**/node_modules": true
 		},
+		"conventionalCommits.scopes": [
+			"orval",
+			"release",
+			"editor",
+			"auth",
+			"experimentation",
+			"theme",
+			"monorepo"
+		],
 	}
 }
