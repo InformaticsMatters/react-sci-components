@@ -114,7 +114,8 @@
 			"theme",
 			"monorepo",
 			"fonts",
-			"emotion"
+			"emotion",
+			"components"
 		],
 	}
 }
