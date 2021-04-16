@@ -113,7 +113,8 @@
 			"experimentation",
 			"theme",
 			"monorepo",
-			"fonts"
+			"fonts",
+			"emotion"
 		],
 	}
 }
