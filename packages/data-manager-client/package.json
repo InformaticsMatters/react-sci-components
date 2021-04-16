@@ -34,7 +34,7 @@
     "faker": "^5.5.2",
     "msw": "^0.28.1",
     "openapi-types": "^8.0.0",
-    "orval": "5.0.0-alpha.8",
+    "orval": "5.0.0-alpha.6",
     "react-query": "^3.13.5",
     "tsdx": "^0.14.1",
     "tslib": "^2.2.0",
