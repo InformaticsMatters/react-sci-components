@@ -1,1 +1,2 @@
-export { default as Theme, theme, MuiTheme } from './Theme';
+export { theme, MuiTheme } from './Theme';
+export { default as Theme } from './StyledComponentsTheme';

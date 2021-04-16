@@ -1,7 +1,5 @@
 import React from 'react';
 
-import { ThemeProvider } from 'styled-components';
-
 import {
   createMuiTheme,
   StylesProvider,
@@ -56,6 +54,11 @@ export const theme = createMuiTheme({
     //     padding: '6 4.5 6 4.5',
     //   },
     // },
+    MuiPopover: {
+      paper: {
+        padding: 8,
+      },
+    },
     MuiAppBar: {
       root: {
         boxShadow: shadows[1],
@@ -103,13 +106,3 @@ export const MuiTheme: React.FC = ({ children }) => {
     </StylesProvider>
   );
 };
-
-export const Theme: React.FC = ({ children }) => {
-  return (
-    <MuiTheme>
-      <ThemeProvider theme={theme}>{children}</ThemeProvider>
-    </MuiTheme>
-  );
-};
-
-export default Theme;
