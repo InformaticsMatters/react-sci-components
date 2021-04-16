@@ -112,7 +112,8 @@
 			"auth",
 			"experimentation",
 			"theme",
-			"monorepo"
+			"monorepo",
+			"fonts"
 		],
 	}
 }
