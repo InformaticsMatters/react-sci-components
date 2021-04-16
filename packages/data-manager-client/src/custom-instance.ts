@@ -30,7 +30,7 @@ export const customInstance = <T>(config: AxiosRequestConfig): Promise<T> => {
   const source = Axios.CancelToken.source();
 
   // Rewrite 'data' of all POST requests to multipart form-data
-  // Could this be problematic if data needs to be used for both the body and forming the path?
+  // ? Could this be problematic if data needs to be used for both the body and forming the path?
   if (config.method?.toLowerCase() === 'post') {
     const formData = new FormData();
     for (const key of Object.keys(config.data)) {
