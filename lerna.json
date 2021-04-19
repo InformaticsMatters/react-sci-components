@@ -1,8 +1,6 @@
 {
   "packages": [
-    "packages/components",
-    "packages/data-manager-client",
-    "packages/theme"
+    "packages/*"
   ],
   "version": "independent",
   "npmClient": "yarn",
