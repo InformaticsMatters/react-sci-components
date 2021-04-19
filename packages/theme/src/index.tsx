@@ -48,12 +48,6 @@ export const theme = createMuiTheme({
     },
   },
   overrides: {
-    // MuiInput: {
-    //   input: {
-    //     fontSize: '0.5rem',
-    //     padding: '6 4.5 6 4.5',
-    //   },
-    // },
     MuiPopover: {
       paper: {
         padding: 8,
