@@ -115,7 +115,8 @@
 			"monorepo",
 			"fonts",
 			"emotion",
-			"components"
+			"components",
+			"deps"
 		],
 	}
 }
