@@ -1,12 +1,14 @@
 const translations = {
   'app.api_application.get': 'getApplications',
-  'app.api_application.get_application': '',
+  'app.api_application.get_application': 'getApplication',
   'app.api_dataset.get': 'getAvailableDatasets',
   'app.api_dataset.post': 'uploadDataset',
   'app.api_dataset.delete': 'deleteDataset',
   'app.api_dataset.get_dataset': 'downloadDataset',
   'app.api_dataset.delete_editor': 'removeEditorFromDataset',
   'app.api_dataset.put_editor': 'addEditorToDataset',
+  'app.api_file.delete': 'deleteFile',
+  'app.api_file.get': 'getFile',
   'app.api_instance.get': 'getInstances',
   'app.api_instance.post': 'addInstance',
   'app.api_instance.delete': 'terminateInstance',
@@ -18,8 +20,6 @@ const translations = {
   'app.api_project.put_dataset': 'addDatasetToProject',
   'app.api_project.delete_editor': 'removeEditorFromProject',
   'app.api_project.put_editor': 'addEditorToProject',
-  'app.api_project.delete_file': 'removeDatasetFromProject',
-  'app.api_project.get_file': 'downloadDatasetFromProject',
   'app.api_task.get': 'getTasks',
   'app.api_task.get_task': 'getTask',
   'app.api_type.get': 'getTypes',
@@ -32,6 +32,8 @@ module.exports = (obj) => {
       // console.log(operationId);
       if (translations[operationId]) {
         defn.operationId = translations[operationId];
+      } else {
+        console.log(operationId);
       }
     }
   }
