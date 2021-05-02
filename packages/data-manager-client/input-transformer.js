@@ -7,6 +7,7 @@ const translations = {
   'app.api_dataset.get_dataset': 'downloadDataset',
   'app.api_dataset.delete_editor': 'removeEditorFromDataset',
   'app.api_dataset.put_editor': 'addEditorToDataset',
+  'app.api_file.post': 'attachFile',
   'app.api_file.delete': 'deleteFile',
   'app.api_file.get': 'getFile',
   'app.api_instance.get': 'getInstances',
@@ -17,7 +18,6 @@ const translations = {
   'app.api_project.post': 'addNewProject',
   'app.api_project.delete': 'deleteProject',
   'app.api_project.get_project': 'getProject',
-  'app.api_project.put_dataset': 'addDatasetToProject',
   'app.api_project.delete_editor': 'removeEditorFromProject',
   'app.api_project.put_editor': 'addEditorToProject',
   'app.api_task.get': 'getTasks',
@@ -33,7 +33,7 @@ module.exports = (obj) => {
       if (translations[operationId]) {
         defn.operationId = translations[operationId];
       } else {
-        console.log(operationId);
+        console.warn(`Missing OperationId Rename: ${operationId}`);
       }
     }
   }
