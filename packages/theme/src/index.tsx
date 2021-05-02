@@ -46,6 +46,12 @@ export const theme = createMuiTheme({
       disabled: 'rgba(0, 0, 0, 0.38)',
       hint: 'rgba(0, 0, 0, 0.38)',
     },
+    success: {
+      light: '#5efc82',
+      main: '#00c853',
+      dark: '#009624',
+      contrastText: '#fff',
+    },
   },
   overrides: {
     MuiPopover: {
