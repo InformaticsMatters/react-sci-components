@@ -11,7 +11,7 @@ const translations = {
   'app.api_file.delete': 'deleteFile',
   'app.api_file.get': 'getFile',
   'app.api_instance.get': 'getInstances',
-  'app.api_instance.post': 'addInstance',
+  'app.api_instance.post': 'createInstance',
   'app.api_instance.delete': 'terminateInstance',
   'app.api_instance.get_instance': 'getInstance',
   'app.api_project.get': 'getAvailableProjects',
