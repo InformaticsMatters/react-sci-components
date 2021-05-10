@@ -116,7 +116,8 @@
 			"fonts",
 			"emotion",
 			"components",
-			"deps"
+			"deps",
+			"env-vars"
 		],
 	}
 }
