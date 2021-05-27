@@ -30,12 +30,12 @@
   "author": "Oliver Dudgeon",
   "module": "dist/data-manager-client.esm.js",
   "devDependencies": {
-    "@types/faker": "^5.5.1",
-    "faker": "^5.5.2",
-    "msw": "^0.28.1",
-    "openapi-types": "^8.0.0",
-    "orval": "5.0.0-alpha.11",
-    "react-query": "^3.13.5",
+    "@types/faker": "^5.5.5",
+    "faker": "^5.5.3",
+    "msw": "^0.29.0",
+    "openapi-types": "^9.0.0",
+    "orval": "5.4.2",
+    "react-query": "^3.16.0",
     "tsdx": "^0.14.1",
     "tslib": "^2.2.0",
     "typescript": "^4.2.4"

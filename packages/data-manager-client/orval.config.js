@@ -18,6 +18,9 @@ module.exports = {
           path: './src/custom-instance.ts',
           name: 'customInstance',
         },
+        query: {
+          useQuery: true,
+        },
       },
     },
   },
