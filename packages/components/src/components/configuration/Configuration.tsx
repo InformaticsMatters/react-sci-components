@@ -8,7 +8,7 @@ import SettingsIcon from '@material-ui/icons/Settings';
 
 const MyPaper: React.FC<PaperProps & { handle: string }> = ({ handle, ...paperProps }) => {
   return (
-    <Draggable bounds={'parent'} handle={`#${handle}`} cancel={'[class*="MuiButtonBase-root"]'}>
+    <Draggable bounds={'parent'} cancel={'[class*="MuiButtonBase-root"]'} handle={`#${handle}`}>
       <Paper {...paperProps} />
     </Draggable>
   );
@@ -56,21 +56,21 @@ const Configuration: React.FC<IProps & ButtonProps> = ({
   return (
     <>
       <Button
-        onClick={handleOpen}
-        variant="contained"
         startIcon={ModalOpenIcon ?? <SettingsIcon />}
+        variant="contained"
+        onClick={handleOpen}
         {...buttonProps}
       >
         Configuration
       </Button>
       <Dialog
-        aria-labelledby="configuration-title"
         aria-describedby="configuration-content"
-        open={open}
-        onClose={handleClose}
+        aria-labelledby="configuration-title"
         maxWidth="lg"
+        open={open}
         PaperComponent={draggable ? (MyPaper as any) : undefined}
         PaperProps={{ style: { width, height }, handle: 'configuration-title' } as any}
+        onClose={handleClose}
       >
         {children}
       </Dialog>

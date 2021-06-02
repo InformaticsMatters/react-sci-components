@@ -48,9 +48,9 @@ const AccordionView = ({ children, labels }: IProps) => {
           React.Children.map(panels, (child, index) => (
             <>
               <VerticalButton
+                fullWidth
                 disabled={numPanelsOpen === 1 && open[index]}
                 onClick={createHandleChange(index)}
-                fullWidth
               >
                 <Typography noWrap variant="body2">
                   {labels[index]}

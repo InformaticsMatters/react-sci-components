@@ -26,7 +26,7 @@ const StateManagement: React.FC<IProps> = () => {
 
   return (
     <>
-      <DownloadButton filename={'name.json'} dump={dump} tooltip={'Download State as json'} />
+      <DownloadButton dump={dump} filename={'name.json'} tooltip={'Download State as json'} />
       <Tooltip arrow title="Upload saved state">
         <IconButton aria-label="upload json state" onClick={() => setUploadDialogOpen(true)}>
           <PublishRoundedIcon />
@@ -34,16 +34,16 @@ const StateManagement: React.FC<IProps> = () => {
       </Tooltip>
       <DropzoneDialog
         filesLimit={1}
+        open={uploadDialogOpen}
+        onClose={() => {
+          setUploadDialogOpen(false);
+        }}
         onSave={async (files: File[]) => {
           const txt = await files[0].text();
           localStorage.setItem(STATE_KEY, txt);
           window.location.reload();
           setUploadDialogOpen(false);
         }}
-        onClose={() => {
-          setUploadDialogOpen(false);
-        }}
-        open={uploadDialogOpen}
       />
     </>
   );

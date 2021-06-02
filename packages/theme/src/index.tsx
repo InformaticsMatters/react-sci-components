@@ -1,9 +1,9 @@
 import React from 'react';
 
 import {
-  createMuiTheme,
-  StylesProvider,
   ThemeProvider as MuiThemeProvider,
+  StylesProvider,
+  createMuiTheme,
 } from '@material-ui/core/styles';
 import createBreakpoints from '@material-ui/core/styles/createBreakpoints';
 import shadows from '@material-ui/core/styles/shadows';

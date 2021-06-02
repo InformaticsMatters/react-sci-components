@@ -36,10 +36,10 @@ const ColourPicker = ({ enabled, colours, iconColour, setColour, clearColour }: 
         <PaletteIcon htmlColor={iconColour} />
       </IconButton>
       <Popper
+        transition
+        anchorEl={anchorEl}
         id={id}
         open={!!anchorEl && enabled}
-        anchorEl={anchorEl}
-        transition
         style={{ zIndex: 3 }}
       >
         {({ TransitionProps }) => (
@@ -54,7 +54,7 @@ const ColourPicker = ({ enabled, colours, iconColour, setColour, clearColour }: 
                     setColour(colour);
                   }}
                 >
-                  <ColorButton tooltip={tooltip} color={colour} />
+                  <ColorButton color={colour} tooltip={tooltip} />
                 </span>
               ))}
               {clearColour && (
@@ -65,7 +65,7 @@ const ColourPicker = ({ enabled, colours, iconColour, setColour, clearColour }: 
                     e.stopPropagation();
                   }}
                 >
-                  <ColorButton tooltip="Remove Colour" color={''} />
+                  <ColorButton color={''} tooltip="Remove Colour" />
                 </span>
               )}
             </PickerPaper>

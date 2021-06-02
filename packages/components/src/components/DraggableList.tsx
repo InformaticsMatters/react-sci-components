@@ -36,14 +36,14 @@ const DraggableList = ({
       >
         {fields.map(({ name, title }, index) => (
           <Draggable key={index}>
-            <ListItem dense button onClick={() => toggleCheckbox(name)}>
+            <ListItem button dense onClick={() => toggleCheckbox(name)}>
               {showCheckboxes && (
                 <ListItemIcon>
                   <Checkbox
-                    edge="start"
+                    disableRipple
                     checked={checked[index]}
                     // tabIndex={-1}
-                    disableRipple
+                    edge="start"
                   />
                 </ListItemIcon>
               )}

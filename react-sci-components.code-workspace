@@ -117,7 +117,8 @@
 			"emotion",
 			"components",
 			"deps",
-			"env-vars"
+			"env-vars",
+			"husky"
 		],
 	}
 }

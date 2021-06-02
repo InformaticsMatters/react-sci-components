@@ -26,6 +26,17 @@
     "@typescript-eslint/no-explicit-any": 0,
     "@typescript-eslint/explicit-module-boundary-types": 0,
     "react/prop-types": 0,
+    "react/jsx-sort-props": [
+      "error",
+      {
+        "callbacksLast": true,
+        "shorthandFirst": true,
+        "shorthandLast": false,
+        "ignoreCase": true,
+        "noSortAlphabetically": false,
+        "reservedFirst": false
+      }
+    ],
     "@typescript-eslint/ban-types": "warn",
     "prefer-const": "warn",
     "@typescript-eslint/no-empty-function": 0,
@@ -39,6 +50,21 @@
         "arrowParens": "always",
         "bracketSpacing": true,
         "tabWidth": 2
+      }
+    ],
+    "sort-imports": [
+      "warn",
+      {
+        "ignoreCase": false,
+        "ignoreDeclarationSort": false,
+        "ignoreMemberSort": false,
+        "memberSyntaxSortOrder": [
+          "none",
+          "all",
+          "multiple",
+          "single"
+        ],
+        "allowSeparatedGroups": true
       }
     ]
   },

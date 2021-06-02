@@ -5,16 +5,16 @@ import styled from 'styled-components';
 import {
   Button,
   CircularProgress,
-  Divider as MuiDivider,
   FormGroup,
   LinearProgress,
+  Divider as MuiDivider,
   TextField,
   Typography,
 } from '@material-ui/core';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 
 import { useDatasetMeta, useDatasets, useProjects } from '../../hooks';
-import { addConfig, SourceConfig, useSourceConfigs } from './configs';
+import { SourceConfig, addConfig, useSourceConfigs } from './configs';
 import FieldConfiguration from './FieldConfiguration';
 import { getDataFromForm, getDataset, getProject } from './utils';
 import { setWorkingSource, useWorkingSource } from './workingSource';
@@ -98,27 +98,27 @@ const DataLoader: React.FC<IProps> = ({
 
   return (
     <form
-      ref={formRef}
-      // update defaultValue of fields when currentSource changes
       key={`${currentSource?.datasetId}-${selectedConfig?.id}`}
+      // update defaultValue of fields when currentSource changes
+      ref={formRef}
     >
       <SourcesWrapper>
         <Autocomplete
-          value={currentProject}
+          fullWidth
+          getOptionLabel={(option) => option.name}
           id="project-selection"
           loading={isProjectsLoading}
           options={projects}
-          getOptionLabel={(option) => option.name}
-          fullWidth
           renderInput={(params) => (
             <TextField
               color="secondary"
               {...params}
-              label={projectsError || 'Select project'}
               error={!!projectsError}
+              label={projectsError || 'Select project'}
               variant="outlined"
             />
           )}
+          value={currentProject}
           onChange={(_, newProject) => {
             setSelectedConfig(null);
             setCurrentDataset(null);
@@ -127,21 +127,21 @@ const DataLoader: React.FC<IProps> = ({
         />
 
         <Autocomplete
-          value={currentDataset}
+          fullWidth
+          getOptionLabel={(option) => option.name}
           id="dataset-selection"
           loading={isDatasetsLoading}
           options={datasets}
-          getOptionLabel={(option) => option.name}
-          fullWidth
           renderInput={(params) => (
             <TextField
               color="secondary"
               {...params}
-              label={datasetsError || 'Select dataset'}
               error={!!datasetsError}
+              label={datasetsError || 'Select dataset'}
               variant="outlined"
             />
           )}
+          value={currentDataset}
           onChange={(_, newDataset) => {
             setSelectedConfig(null);
             setCurrentDataset(newDataset);
@@ -154,14 +154,14 @@ const DataLoader: React.FC<IProps> = ({
           {enableConfigs && (
             <>
               <TextField
-                name="maxRecords"
-                inputProps={{ min: 0, step: 100 }}
-                type="number"
-                label="Max. Records"
-                variant="outlined"
-                size="small"
                 color="secondary"
                 defaultValue={currentSource?.maxRecords ?? 500}
+                inputProps={{ min: 0, step: 100 }}
+                label="Max. Records"
+                name="maxRecords"
+                size="small"
+                type="number"
+                variant="outlined"
               />
               {totalParsed !== undefined && moleculesKept !== undefined && (
                 <Typography>
@@ -171,9 +171,9 @@ const DataLoader: React.FC<IProps> = ({
             </>
           )}
           <Button
+            color="primary"
             disabled={currentDataset === null || isMetadataLoading || loading}
             variant="contained"
-            color="primary"
             onClick={handleAction('load')}
           >
             Load
@@ -205,26 +205,26 @@ const DataLoader: React.FC<IProps> = ({
 
             <ConfigSaveFormGroup row>
               <Autocomplete
-                value={selectedConfig}
-                size="small"
                 freeSolo
                 handleHomeEndKeys
-                options={configs.filter((config) => config.datasetId === currentDataset?.datasetId)}
                 getOptionLabel={(option) => option.configName}
-                onChange={(_, newValue) =>
-                  typeof newValue !== 'string' && newValue !== null && setSelectedConfig(newValue)
-                }
+                options={configs.filter((config) => config.datasetId === currentDataset?.datasetId)}
                 renderInput={(params) => (
                   <TextField
                     {...params}
-                    name="configName"
-                    variant="outlined"
                     color="secondary"
+                    name="configName"
                     placeholder="Config Name"
+                    variant="outlined"
                   />
                 )}
+                size="small"
+                value={selectedConfig}
+                onChange={(_, newValue) =>
+                  typeof newValue !== 'string' && newValue !== null && setSelectedConfig(newValue)
+                }
               />
-              <Button variant="outlined" color="primary" onClick={handleAction('save')}>
+              <Button color="primary" variant="outlined" onClick={handleAction('save')}>
                 Save
               </Button>
             </ConfigSaveFormGroup>

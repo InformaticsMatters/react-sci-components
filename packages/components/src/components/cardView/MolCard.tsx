@@ -2,7 +2,7 @@ import React, { Children, useState } from 'react';
 
 import styled from 'styled-components';
 
-import { Card as MuiCard, CardActions, CardContent, CardProps } from '@material-ui/core';
+import { CardActions, CardContent, CardProps, Card as MuiCard } from '@material-ui/core';
 
 import DepictMolecule from './DepictMolecule';
 
@@ -41,17 +41,17 @@ const MolCard = ({
     <Card
       {...cardProps}
       style={{ backgroundColor: bgColor }}
+      onClick={onClick}
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
-      onClick={onClick}
     >
       <CardContent>
         <DepictMolecule
+          height={depictHeight}
+          mcs={depictmcs}
           noStereo={depictNoStereo}
           smiles={smiles}
           width={depictWidth}
-          height={depictHeight}
-          mcs={depictmcs}
         />
         {Children.only(children)}
       </CardContent>

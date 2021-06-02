@@ -3,7 +3,7 @@ import React, { memo, useCallback, useEffect, useState } from 'react';
 import { throttle } from 'lodash';
 import { Stage } from 'ngl';
 
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
+import { Theme, createStyles, makeStyles } from '@material-ui/core/styles';
 
 import { Molecule, useMolecules } from '../../modules/molecules/molecules';
 import { useProtein } from '../../modules/protein/protein';
@@ -275,8 +275,8 @@ export const NglView: React.FC<IProps> = memo(({ div_id, width }) => {
 
   return (
     <div
-      id={div_id}
       className={div_id === VIEWS.MAJOR_VIEW ? classes.paper : undefined}
+      id={div_id}
       style={{
         //height: `calc(${height || '600px'} - ${theme.spacing(1)}px)`
         width: '100%',

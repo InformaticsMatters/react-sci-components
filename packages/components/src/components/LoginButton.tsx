@@ -24,9 +24,9 @@ const LoginButton: React.FC<ButtonProps> = (buttonProps) => {
 
   return (
     <Button
+      color="default"
       disabled={!initialized}
       variant="outlined"
-      color="default"
       onClick={!isAuthenticated ? authLogin : authLogout}
       {...buttonProps}
     >

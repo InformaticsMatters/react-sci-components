@@ -32,14 +32,14 @@ const CalculationsTable = ({
 
             return (
               <TableRow key={index}>
-                <CellTh tableWidth={tableWidth} fontSize={fontSize} component="th">
+                <CellTh component="th" fontSize={fontSize} tableWidth={tableWidth}>
                   <Tooltip arrow title={displayName}>
                     <span>{displayName}</span>
                   </Tooltip>
                 </CellTh>
-                <CellTd fontSize={fontSize} align="left">
+                <CellTd align="left" fontSize={fontSize}>
                   <Tooltip arrow title={value}>
-                    <CellText fontSize={fontSize} noWrap>
+                    <CellText noWrap fontSize={fontSize}>
                       {value}
                     </CellText>
                   </Tooltip>

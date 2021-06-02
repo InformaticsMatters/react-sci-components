@@ -21,7 +21,7 @@ const FieldConfiguration = ({ currentSource, metadata }: IProps) => {
             currentSource === null
               ? null
               : currentSource.configs?.find((field) => field.name === name);
-          return <FieldConfigInputs key={index} name={name} type={type} config={config} />;
+          return <FieldConfigInputs config={config} key={index} name={name} type={type} />;
         })}
       </FieldSet>
     );

@@ -36,22 +36,22 @@ const FieldConfigInputs = ({ name, type, config }: IProps) => {
   return (
     <>
       <Checkbox
-        name={`${name}-enabled`}
         checked={!!enabled}
+        name={`${name}-enabled`}
         onChange={() => setEnabled(!enabled)}
       />
-      <Tooltip title={name} arrow>
-        <Typography align="left" noWrap>
+      <Tooltip arrow title={name}>
+        <Typography noWrap align="left">
           {name}
         </Typography>
       </Tooltip>
       <TextField
+        color="secondary"
+        defaultValue={config?.nickname}
+        label="Rename Field"
         name={`${name}-nickname`}
         size="small"
         variant="outlined"
-        color="secondary"
-        label="Rename Field"
-        defaultValue={config?.nickname}
       />
       {/* <FormControl size="small" variant="outlined">
       <InputLabel color="secondary" id={`rank-${name}`}>
@@ -62,16 +62,16 @@ const FieldConfigInputs = ({ name, type, config }: IProps) => {
         <MenuItem value="desc">DESC</MenuItem>
       </Select>
     </FormControl> */}
-      <FormControl size="small" variant="outlined" color="secondary">
+      <FormControl color="secondary" size="small" variant="outlined">
         <InputLabel color="secondary" id={`dtype-${name}`}>
           dtype
         </InputLabel>
         <Select
-          onChange={handleDtypeChange}
-          name={`${name}-dtype`}
-          labelId={`dtype-${name}`}
           defaultValue={config?.dtype ?? type ?? 'text'}
           label="Rank"
+          labelId={`dtype-${name}`}
+          name={`${name}-dtype`}
+          onChange={handleDtypeChange}
         >
           <MenuItem value="float">float</MenuItem>
           <MenuItem value="int">int</MenuItem>
@@ -86,24 +86,24 @@ const FieldConfigInputs = ({ name, type, config }: IProps) => {
     </FormControl> */}
       {/* <NumericField color="secondary" label="Default" /> */}
       <TextField
+        color="secondary"
+        defaultValue={config?.min}
         disabled={!isNumeric}
+        label="min"
         name={`${name}-min`}
         size="small"
-        variant="outlined"
-        color="secondary"
-        label="min"
         type="number"
-        defaultValue={config?.min}
+        variant="outlined"
       />
       <TextField
+        color="secondary"
+        defaultValue={config?.max}
         disabled={!isNumeric}
+        label="max"
         name={`${name}-max`}
         size="small"
-        variant="outlined"
-        color="secondary"
-        label="max"
         type="number"
-        defaultValue={config?.max}
+        variant="outlined"
       />
     </>
   );

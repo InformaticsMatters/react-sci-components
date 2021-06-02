@@ -96,6 +96,15 @@ const ScatterPlot = ({ width, colourBar = false }: IProps) => {
   return (
     <>
       <Plot
+        config={{
+          modeBarButtonsToRemove: [
+            'resetScale2d',
+            'hoverClosestCartesian',
+            'hoverCompareCartesian',
+            'toImage',
+            'toggleSpikelines',
+          ],
+        }}
         data={[
           {
             x: xaxis,
@@ -121,15 +130,7 @@ const ScatterPlot = ({ width, colourBar = false }: IProps) => {
           xaxis: { title: xlabel },
           yaxis: { title: ylabel },
         }}
-        config={{
-          modeBarButtonsToRemove: [
-            'resetScale2d',
-            'hoverClosestCartesian',
-            'hoverCompareCartesian',
-            'toImage',
-            'toggleSpikelines',
-          ],
-        }}
+        onDeselect={() => selectPoints([])}
         onSelected={(event) => {
           // @types is wrong here, we need `?.` as points can be undefined (double click event)
           const points = event?.points;
@@ -140,7 +141,6 @@ const ScatterPlot = ({ width, colourBar = false }: IProps) => {
               points.map((p) => (p as typeof p & { customdata: Datum }).customdata) as number[],
             );
         }}
-        onDeselect={() => selectPoints([])}
       />
       {!!colour && (
         <ColourLabel>

@@ -3,8 +3,8 @@ import { Shape } from 'ngl';
 import { MOL_REPRESENTATION } from './constants';
 import {
   assignRepresentationArrayToComp,
-  createRepresentationsArray,
   createRepresentationStructure,
+  createRepresentationsArray,
 } from './generatingObjects';
 import { NGLMolecule } from './NGLView';
 

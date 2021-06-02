@@ -30,10 +30,10 @@ interface TabPanelProps {
 const TabPanel = ({ children, value, index, ...other }: TabPanelProps) => {
   return (
     <Panel
-      role="tabpanel"
+      aria-labelledby={`configuration-tab-${index}`}
       hidden={value !== index}
       id={`configuration-tabpanel-${index}`}
-      aria-labelledby={`configuration-tab-${index}`}
+      role="tabpanel"
       {...other}
     >
       {children}
@@ -62,30 +62,30 @@ const MultiPage: React.FC<IProps> = ({
 
   return (
     <Configuration
+      buttonProps={buttonProps}
       draggable={draggable}
-      width={width}
       height={height}
       open={open}
-      onOpen={() => setOpen(true)}
+      width={width}
       onClose={() => setOpen(false)}
-      buttonProps={buttonProps}
+      onOpen={() => setOpen(true)}
     >
       <Title id="configuration-title">
         <AppBar color="default">
           <Tabs
-            value={value}
-            indicatorColor="primary"
-            onChange={(_, index) => setValue(index)}
-            variant="scrollable"
-            scrollButtons="auto"
             aria-label="Configuration for each part of the page"
+            indicatorColor="primary"
+            scrollButtons="auto"
+            value={value}
+            variant="scrollable"
+            onChange={(_, index) => setValue(index)}
           >
             {titles.map((title, i) => (
               <Tab
-                id={`configuration-tab-${i}`}
                 aria-controls={`configuration-tabpanel-${i}`}
-                label={title}
+                id={`configuration-tab-${i}`}
                 key={i}
+                label={title}
               />
             ))}
           </Tabs>
@@ -97,7 +97,7 @@ const MultiPage: React.FC<IProps> = ({
       <Content dividers id="configuration-content">
         <SwipeableViews index={value} onChangeIndex={(newValue) => setValue(newValue)}>
           {React.Children.map(children, (child, j) => (
-            <TabPanel value={value} index={j} key={j}>
+            <TabPanel index={j} key={j} value={value}>
               {child}
             </TabPanel>
           ))}

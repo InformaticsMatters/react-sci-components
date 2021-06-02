@@ -61,7 +61,7 @@ const CardViewConfig = ({ title }: IProps) => {
   return (
     <>
       <DepictionFieldWrapper>
-        <Typography variant="h6" display="inline">
+        <Typography display="inline" variant="h6">
           Depiction Field
         </Typography>
         <FormControl>
@@ -83,16 +83,16 @@ const CardViewConfig = ({ title }: IProps) => {
         <Tooltip arrow title={'Toggle visibility of disabled fields'}>
           <Checkbox checked={showHidden} onClick={() => setShowHidden(!showHidden)} />
         </Tooltip>
-        <Typography variant="subtitle1" display="inline">
+        <Typography display="inline" variant="subtitle1">
           <strong>Hidden Field Visibility</strong>
         </Typography>
       </ListHeader>
       <DraggableList
+        checked={displayFields.map(({ name }) => enabledFields.includes(name))}
         fields={displayFields.map(({ title, name, dtype }) => ({
           name,
           title: getDisplayText({ title, name, dtype }),
         }))}
-        checked={displayFields.map(({ name }) => enabledFields.includes(name))}
         moveFieldPosition={handleMoveFieldPosition}
         toggleCheckbox={(selectedTitle) => {
           const name = displayFields.find(({ title: t }) => t === selectedTitle)?.name;

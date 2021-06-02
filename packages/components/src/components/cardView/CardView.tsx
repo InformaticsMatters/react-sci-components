@@ -4,7 +4,7 @@ import { CSSGrid, enterExitStyle } from 'react-stonecutter';
 import styled from 'styled-components';
 
 import { Button, Grow } from '@material-ui/core';
-import { createStyles, makeStyles, Theme, useTheme } from '@material-ui/core/styles';
+import { Theme, createStyles, makeStyles, useTheme } from '@material-ui/core/styles';
 
 import { Molecule, useMolecules } from '../../modules/molecules/molecules';
 import { usePlotSelection } from '../scatterplot/plotSelection';
@@ -110,15 +110,15 @@ const CardView = ({ width }: IProps) => {
   return (
     <GridWrapper>
       <Grid
-        duration={200}
         columns={numColumns}
-        itemHeight={cardHeight}
         columnWidth={cardWidth}
-        gutterWidth={GUTTER_SIZE}
-        gutterHeight={GUTTER_SIZE}
+        duration={200}
         enter={enter}
         entered={entered}
         exit={exit}
+        gutterHeight={GUTTER_SIZE}
+        gutterWidth={GUTTER_SIZE}
+        itemHeight={cardHeight}
       >
         {displayMolecules
           .sort(moleculeSorter(actions))
@@ -137,33 +137,33 @@ const CardView = ({ width }: IProps) => {
             return (
               <span key={id} style={{ width: cardWidth, height: cardHeight }}>
                 <MolCard
-                  classes={{ root: cardStyles.root }}
-                  smiles={smiles}
-                  elevation={selected ? 10 : undefined}
-                  bgColor={selected ? theme.palette.grey[100] : undefined}
-                  depictWidth={imageSize}
-                  depictHeight={imageSize}
-                  onClick={() => toggleSelected(id)}
-                  actionsProps={{ className: classes.actionsRoot }}
                   actions={(hover) => {
                     const colour = colours.find((c) => c.id === id);
                     return (
                       <Grow in={hover || colour !== undefined}>
                         <span>
                           <ColourPicker
-                            iconColour={colour?.colour}
-                            enabled={!!hover}
-                            colours={palette}
-                            setColour={(colour) => setColours({ id, colour })}
                             clearColour={() => clearColours(id)}
+                            colours={palette}
+                            enabled={!!hover}
+                            iconColour={colour?.colour}
+                            setColour={(colour) => setColours({ id, colour })}
                           />
                         </span>
                       </Grow>
                     );
                   }}
+                  actionsProps={{ className: classes.actionsRoot }}
+                  bgColor={selected ? theme.palette.grey[100] : undefined}
+                  classes={{ root: cardStyles.root }}
+                  depictHeight={imageSize}
+                  depictWidth={imageSize}
+                  elevation={selected ? 10 : undefined}
+                  smiles={smiles}
+                  onClick={() => toggleSelected(id)}
                 >
                   <CalculationsTable
-                    tableWidth={cardWidth}
+                    fontSize={'0.6rem'}
                     properties={fieldValues
                       .filter(({ name }) => enabledFields.includes(name))
                       .map(({ name, nickname, value }) => ({
@@ -171,7 +171,7 @@ const CardView = ({ width }: IProps) => {
                         value: value ?? '',
                         name: moleculesFields.find((f) => f.name === name)?.nickname ?? name,
                       }))}
-                    fontSize={'0.6rem'}
+                    tableWidth={cardWidth}
                   />
                 </MolCard>
               </span>
@@ -179,7 +179,7 @@ const CardView = ({ width }: IProps) => {
           })}
       </Grid>
       {!!(CARDS_PER_PAGE * loadMoreCount < selectedMoleculesIds.length) && (
-        <Button variant="text" color="default" onClick={() => setLoadMoreCount(loadMoreCount + 1)}>
+        <Button color="default" variant="text" onClick={() => setLoadMoreCount(loadMoreCount + 1)}>
           Load More
         </Button>
       )}

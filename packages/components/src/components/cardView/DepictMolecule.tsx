@@ -50,11 +50,11 @@ const DepictMolecule = (props: Readonly<IProps>) => {
 
   return (
     <Image
-      loading="lazy"
-      width={width}
-      height={height}
-      src={smiles && `${fragnet_server}${depict_route}?${searchParams.join('&')}`}
       alt={smiles || 'invalid smiles'}
+      height={height}
+      loading="lazy"
+      src={smiles && `${fragnet_server}${depict_route}?${searchParams.join('&')}`}
+      width={width}
     />
   );
 };
