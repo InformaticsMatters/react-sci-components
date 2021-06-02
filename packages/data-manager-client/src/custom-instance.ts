@@ -26,7 +26,7 @@ export const setBaseUrl = (baseUrl: string) => {
   AXIOS_INSTANCE.defaults.baseURL = baseUrl;
 };
 
-export const customInstance = <T>(config: AxiosRequestConfig): Promise<T> => {
+export const customInstance = <TReturn>(config: AxiosRequestConfig): Promise<TReturn> => {
   const source = Axios.CancelToken.source();
 
   // Rewrite 'data' of all POST requests to multipart form-data
@@ -34,7 +34,7 @@ export const customInstance = <T>(config: AxiosRequestConfig): Promise<T> => {
   const method = config.method?.toLowerCase();
   if (method === 'post' || method === 'put') {
     const formData = new FormData();
-    for (const key of Object.keys(config.data)) {
+    for (const key of Object.keys(config.data ?? {})) {
       formData.append(key, config.data[key]);
     }
 
