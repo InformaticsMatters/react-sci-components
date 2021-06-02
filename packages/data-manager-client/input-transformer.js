@@ -14,6 +14,8 @@ const translations = {
   'app.api_instance.post': 'createInstance',
   'app.api_instance.delete': 'terminateInstance',
   'app.api_instance.get_instance': 'getInstance',
+  'app.api_job.get': 'getJobs',
+  'app.api_job.get_job': 'getJob',
   'app.api_project.get': 'getAvailableProjects',
   'app.api_project.post': 'addNewProject',
   'app.api_project.delete': 'deleteProject',
@@ -26,6 +28,7 @@ const translations = {
 };
 
 module.exports = (obj) => {
+  let counter = 0;
   for (const value of Object.values(obj.paths)) {
     for (const defn of Object.values(value)) {
       const { operationId } = defn;
@@ -33,8 +36,9 @@ module.exports = (obj) => {
       if (translations[operationId]) {
         defn.operationId = translations[operationId];
       } else {
-        console.warn(`Missing OperationId Rename: ${operationId}`);
+        console.warn(`${counter} Missing OperationId Rename: ${operationId}`);
       }
+      counter++;
     }
   }
   return obj;

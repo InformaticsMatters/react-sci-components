@@ -10,6 +10,7 @@
     "Oliver Dudgeon <odudgeon@informaticsmatters.com>",
     "Tim Dudgeon <tdudgeon@informaticsmatters.com> (https://informaticsmatters.com)"
   ],
+  "author": "Oliver Dudgeon",
   "repository": "github:InformaticsMatters/react-sci-components",
   "bugs": "https://github.com/InformaticsMatters/react-sci-components/issues",
   "homepage": "https://github.com/InformaticsMatters/react-sci-components/",
@@ -27,18 +28,17 @@
     "build": "orval --config ./orval.config.js && tsdx build",
     "orval": "orval --config ./orval.config.js"
   },
-  "author": "Oliver Dudgeon",
   "module": "dist/data-manager-client.esm.js",
   "devDependencies": {
-    "@types/faker": "^5.5.5",
+    "@types/faker": "^5.5.6",
     "faker": "^5.5.3",
     "msw": "^0.29.0",
-    "openapi-types": "^9.0.0",
-    "orval": "5.4.2",
+    "openapi-types": "^9.0.3",
+    "orval": "5.4.4",
     "react-query": "^3.16.0",
     "tsdx": "^0.14.1",
     "tslib": "^2.2.0",
-    "typescript": "^4.2.4"
+    "typescript": "^4.3.2"
   },
   "peerDependencies": {
     "faker": "^5.5.2",
