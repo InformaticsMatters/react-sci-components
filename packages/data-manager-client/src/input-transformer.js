@@ -28,6 +28,16 @@ const translations = {
 };
 
 module.exports = (obj) => {
+  // Make all types required so that the models are not all optional `field?: type`
+  // This assumes every *should* be required which they may not
+  const schemas = obj.components.schemas;
+
+  for (const schema of Object.values(schemas)) {
+    schema.required = Object.keys(schema.properties);
+  }
+
+  // Transform the operation Ids from python/Flask routes to semantically named functions in userland
+  // TODO: Replace the hard-coded values by putting these names as an extension field in the Open API spec
   let counter = 0;
   for (const value of Object.values(obj.paths)) {
     for (const defn of Object.values(value)) {

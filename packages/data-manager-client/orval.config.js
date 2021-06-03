@@ -4,7 +4,7 @@ module.exports = {
       // validation: true,
       target: 'https://squonk.informaticsmatters.org/data-manager-api/openapi.json',
       override: {
-        transformer: './input-transformer.js',
+        transformer: './src/input-transformer.js',
       },
     },
     output: {
