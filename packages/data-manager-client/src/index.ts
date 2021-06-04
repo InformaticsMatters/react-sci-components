@@ -7,6 +7,7 @@ export * from './orval/instance';
 export * from './orval/type';
 export * from './orval/file';
 export * from './orval/model';
+export * from './orval/job';
 
 // Request instance and methods to change the baseUrl and auth token
 export * from './custom-instance';
