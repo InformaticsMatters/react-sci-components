@@ -66,11 +66,11 @@ export const theme = createMuiTheme({
     },
     MuiToolbar: {
       root: {
-        minHeight: 60,
+        minHeight: 80,
       },
       regular: {
         [breakpoints.up('xs')]: {
-          minHeight: 60,
+          minHeight: 80,
         },
       },
     },
@@ -96,6 +96,11 @@ export const theme = createMuiTheme({
   },
   typography: {
     fontFamily: family,
+  },
+  props: {
+    MuiTextField: {
+      variant: 'outlined',
+    },
   },
 });
 
