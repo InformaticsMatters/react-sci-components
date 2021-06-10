@@ -30,6 +30,8 @@ const translations = {
 module.exports = (obj) => {
   // Make all types required so that the models are not all optional `field?: type`
   // This assumes every *should* be required which they may not
+  // Note that the conexion seems to be removing required fields from the public API.
+  // We need to move this to source the source open-api yaml.
   const schemas = obj.components.schemas;
 
   for (const schema of Object.values(schemas)) {
