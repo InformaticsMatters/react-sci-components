@@ -35,9 +35,9 @@ export const theme = createMuiTheme({
       contrastText: '#fff',
     },
     error: {
-      light: '#e57373',
-      main: '#f44336',
-      dark: '#d32f2f',
+      light: '#e1a436',
+      main: '#cc7013',
+      dark: '#c15b0f',
       contrastText: '#fff',
     },
     text: {
@@ -99,8 +99,15 @@ export const theme = createMuiTheme({
   },
   props: {
     MuiTextField: {
-      variant: 'outlined',
+      // variant: 'outlined',
       size: 'small',
+    },
+    MuiButton: {
+      disableRipple: true,
+      disableFocusRipple: true,
+    },
+    MuiTooltip: {
+      arrow: true,
     },
   },
 });
