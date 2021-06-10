@@ -99,7 +99,7 @@ export const theme = createMuiTheme({
   },
   props: {
     MuiTextField: {
-      // variant: 'outlined',
+      variant: 'outlined',
       size: 'small',
     },
     MuiButton: {
