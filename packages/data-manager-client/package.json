@@ -34,10 +34,10 @@
     "faker": "^5.5.3",
     "msw": "^0.29.0",
     "openapi-types": "^9.0.3",
-    "orval": "5.4.4",
-    "react-query": "^3.16.0",
+    "orval": "5.4.7",
+    "react-query": "^3.17.0",
     "tsdx": "^0.14.1",
-    "tslib": "^2.2.0",
+    "tslib": "^2.3.0",
     "typescript": "^4.3.2"
   },
   "peerDependencies": {

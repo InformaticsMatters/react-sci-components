@@ -2,6 +2,7 @@ const translations = {
   'app.api_application.get': 'getApplications',
   'app.api_application.get_application': 'getApplication',
   'app.api_dataset.get': 'getAvailableDatasets',
+  'app.api_dataset.put': 'createDatasetFromProjectFile',
   'app.api_dataset.post': 'uploadDataset',
   'app.api_dataset.delete': 'deleteDataset',
   'app.api_dataset.get_dataset': 'downloadDataset',
@@ -10,6 +11,7 @@ const translations = {
   'app.api_file.post': 'attachFile',
   'app.api_file.delete': 'deleteFile',
   'app.api_file.get': 'getFile',
+  'app.api_file.get_file': 'downloadFile',
   'app.api_instance.get': 'getInstances',
   'app.api_instance.post': 'createInstance',
   'app.api_instance.delete': 'terminateInstance',
@@ -40,10 +42,12 @@ module.exports = (obj) => {
 
   // Transform the operation Ids from python/Flask routes to semantically named functions in userland
   // TODO: Replace the hard-coded values by putting these names as an extension field in the Open API spec
+  const Ids = new Set();
   let counter = 0;
   for (const value of Object.values(obj.paths)) {
     for (const defn of Object.values(value)) {
       const { operationId } = defn;
+      Ids.add(operationId);
       // console.log(operationId);
       if (translations[operationId]) {
         defn.operationId = translations[operationId];
@@ -53,5 +57,20 @@ module.exports = (obj) => {
       counter++;
     }
   }
+
+  const extraTranslations = difference(new Set(Object.keys(translations)), Ids);
+  if ([...extraTranslations].length) {
+    console.log('Extra Translations:');
+    console.log(extraTranslations);
+  }
   return obj;
 };
+
+// Set difference
+function difference(setA, setB) {
+  const _difference = new Set(setA);
+  for (const elem of setB) {
+    _difference.delete(elem);
+  }
+  return _difference;
+}
