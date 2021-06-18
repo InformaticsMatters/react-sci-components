@@ -42,12 +42,12 @@ module.exports = (obj) => {
 
   // Transform the operation Ids from python/Flask routes to semantically named functions in userland
   // TODO: Replace the hard-coded values by putting these names as an extension field in the Open API spec
-  const Ids = new Set();
+  const opIds = new Set();
   let counter = 0;
   for (const value of Object.values(obj.paths)) {
     for (const defn of Object.values(value)) {
       const { operationId } = defn;
-      Ids.add(operationId);
+      opIds.add(operationId);
       // console.log(operationId);
       if (translations[operationId]) {
         defn.operationId = translations[operationId];
@@ -58,7 +58,7 @@ module.exports = (obj) => {
     }
   }
 
-  const extraTranslations = difference(new Set(Object.keys(translations)), Ids);
+  const extraTranslations = difference(new Set(Object.keys(translations)), opIds);
   if ([...extraTranslations].length) {
     console.log('Extra Translations:');
     console.log(extraTranslations);
