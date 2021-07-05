@@ -1,7 +1,2 @@
-# https://eslint.org/docs/user-guide/configuring/ignoring-code
-
-**/dist/**
-**/build/**
-**/node_modules/**
-**/out/*
-**/.next/*
+dist
+node_modules

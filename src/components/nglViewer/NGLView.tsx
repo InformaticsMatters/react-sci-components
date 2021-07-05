@@ -3,7 +3,7 @@ import React, { memo, useCallback, useEffect, useState } from 'react';
 import { throttle } from 'lodash';
 import { Stage } from 'ngl';
 
-import { Theme, createStyles, makeStyles } from '@material-ui/core/styles';
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 
 import { Molecule, useMolecules } from '../../modules/molecules/molecules';
 import { useProtein } from '../../modules/protein/protein';
@@ -133,7 +133,7 @@ export const NglView: React.FC<IProps> = memo(({ div_id, width }) => {
           return filteredList[0];
         default:
           console.log(new Error('Cannot found NGL View with given ID!'));
-          break;
+          return undefined;
       }
     },
     [nglViewList],
