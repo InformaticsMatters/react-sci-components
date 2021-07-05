@@ -2,15 +2,18 @@
   "name": "@squonk/react-sci-components",
   "version": "1.0.0-dev.1",
   "description": "Library of scientific components for use in Squonk Mini-Apps",
-  "main": "dist/index.cjs",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
   "repository": "git@github.com:InformaticsMatters/react-sci-components.git",
-  "author": "Oliver Dudgeon <22367286+OliverDudgeon@users.noreply.github.com>",
   "license": "Apache-2.0",
   "private": false,
   "scripts": {
     "build": "tsup",
     "start": "tsup --watch",
-    "type-check": "tsc --pretty --noEmit"
+    "type-check": "tsc --pretty --noEmit",
+    "release": "release-it",
+    "prepublish": "tsup"
   },
   "devDependencies": {
     "@material-ui/core": "^4.11.3",
@@ -46,6 +49,7 @@
     "react-stonecutter": "^0.3.10",
     "react-storage-hooks": "^4.0.1",
     "react-swipeable-views": "^0.13.9",
+    "release-it": "^14.10.0",
     "resize-observer-polyfill": "^1.5.1",
     "styled-components": "^5.2.3",
     "tslib": "^2.3.0",
@@ -79,5 +83,13 @@
   "dependencies": {
     "lodash": "^4.17.21",
     "lodash-es": "^4.17.21"
+  },
+  "release-it": {
+    "git": {
+      "commitMessage": "chore: release v${version}"
+    },
+    "github": {
+      "release": true
+    }
   }
 }
