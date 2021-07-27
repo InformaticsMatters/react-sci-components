@@ -1871,10 +1871,10 @@ hoist-non-react-statics@^3.0.0, hoist-non-react-statics@^3.3.0, hoist-non-react-
   dependencies:
     react-is "^16.7.0"
 
-hooks-for-redux@^1.2.2:
-  version "1.3.1"
-  resolved "https://registry.yarnpkg.com/hooks-for-redux/-/hooks-for-redux-1.3.1.tgz#04e78394cde6181ddef45d34ae2a4ec916befe16"
-  integrity sha512-l5rG9DKORrgwKv5AyR/yVpEXX1MO5bm99jbq3dwK9c/IWZeeg7goLs7MOCxGLCt5ZKthXg8IXDKYwLUBVw9cLg==
+hooks-for-redux@^2.0.3:
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/hooks-for-redux/-/hooks-for-redux-2.0.3.tgz#30eb130e66a00bf4efa10c197ce48a37c02715a2"
+  integrity sha512-MRnlMcDGT+UBfFGPuu9FWTXfDV9mbbMw+TWBTjJbHFeqTJWnae7oqXJOJyZedAxV5hq6U/G0cO9BYys3Fi5juw==
   dependencies:
     "@types/react-redux" "^7.1.5"
     react-redux "^7.1.1"
