@@ -399,24 +399,21 @@
   dependencies:
     "@octokit/openapi-types" "^9.1.1"
 
-"@react-keycloak/core@^2.2.1":
-  version "2.2.1"
-  resolved "https://registry.yarnpkg.com/@react-keycloak/core/-/core-2.2.1.tgz#c09fbf8e22f6e2646781f59a1cfa2f4411911c63"
-  integrity sha512-MKoawiLMamhCrcEQ79svZZV8lw+ojkcz4LMGeCzHULlZB8sTDY3uBg7S8NxhpdPdyAjQoQ5ExKL4Il75OBIamg==
+"@react-keycloak/core@^3.2.0":
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/@react-keycloak/core/-/core-3.2.0.tgz#e46f1951b0d7873f7f2fcd73dd0c270cb0b18db8"
+  integrity sha512-1yzU7gQzs+6E1v6hGqxy0Q+kpMHg9sEcke2yxZR29WoU8KNE8E50xS6UbI8N7rWsgyYw8r9W1cUPCOF48MYjzw==
   dependencies:
-    "@babel/runtime" "^7.9.0"
-    prop-types "^15.7.2"
-    react-fast-compare "^3.0.1"
+    react-fast-compare "^3.2.0"
 
-"@react-keycloak/web@2.1.4":
-  version "2.1.4"
-  resolved "https://registry.yarnpkg.com/@react-keycloak/web/-/web-2.1.4.tgz#bdd6836748b5f8165fc79deeb8f6ba2cc631085c"
-  integrity sha512-HZry6/UIeStGc2reqYhRFAkmVGCb4fQfOdOK2bJ6RCatN5uuJ+sDu5w5L97JtGNirTqP2eKsTUM3Dx1EvgJ4ng==
+"@react-keycloak/web@3.4.0":
+  version "3.4.0"
+  resolved "https://registry.yarnpkg.com/@react-keycloak/web/-/web-3.4.0.tgz#725d96fab8e5fa47faff9615cc08574e5dff2222"
+  integrity sha512-yKKSCyqBtn7dt+VckYOW1IM5NW999pPkxDZOXqJ6dfXPXstYhOQCkTZqh8l7UL14PkpsoaHDh7hSJH8whah01g==
   dependencies:
     "@babel/runtime" "^7.9.0"
-    "@react-keycloak/core" "^2.2.1"
+    "@react-keycloak/core" "^3.2.0"
     hoist-non-react-statics "^3.3.2"
-    prop-types "^15.7.2"
 
 "@rehooks/component-size@^1.0.3":
   version "1.0.3"
@@ -3023,7 +3020,7 @@ react-event-listener@^0.6.0:
     prop-types "^15.6.0"
     warning "^4.0.1"
 
-react-fast-compare@^3.0.1:
+react-fast-compare@^3.2.0:
   version "3.2.0"
   resolved "https://registry.yarnpkg.com/react-fast-compare/-/react-fast-compare-3.2.0.tgz#641a9da81b6a6320f270e89724fb45a0b39e43bb"
   integrity sha512-rtGImPZ0YyLrscKI9xTpV8psd6I8VAtjKCzQDlzyDvqJA8XOW78TXYQwNRNd8g8JZnDu8q9Fu/1v4HPAVwVdHA==
