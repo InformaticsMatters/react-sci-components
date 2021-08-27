@@ -2860,9 +2860,9 @@ pirates@^4.0.1:
     node-modules-regexp "^1.0.0"
 
 plotly.js-basic-dist@^2.3.0:
-  version "2.3.0"
-  resolved "https://registry.yarnpkg.com/plotly.js-basic-dist/-/plotly.js-basic-dist-2.3.0.tgz#f69e3ff1812d28c11b928044b72fb6622303bcc8"
-  integrity sha512-aJ1KGZNp7CcmSBrJR+L8h+KoEvpc3SYrwUk8QXcXftHt5QFKy4Z+gnmVjgWZA1mSAFCtocdnJaxidL/72VHnVQ==
+  version "2.4.0"
+  resolved "https://registry.yarnpkg.com/plotly.js-basic-dist/-/plotly.js-basic-dist-2.4.0.tgz#6471712298922f93b80cc8a0fa944977e52fa401"
+  integrity sha512-jMzL66gcJcEaKgaDFs9qTjUZJZasVc7cfTbJSn53YYbI3oWwBakQ05GEZR5bdS78xmwPx3NbVInNs1zS8pINFw==
 
 popper.js@1.16.1-lts:
   version "1.16.1-lts"
