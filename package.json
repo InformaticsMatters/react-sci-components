@@ -18,7 +18,7 @@
     "start": "tsup --watch",
     "setup": "node setup-entrypoints.js && cp package.json dist",
     "type-check": "tsc --pretty --noEmit",
-    "release": "release-it"
+    "release": "npx release-it"
   },
   "devDependencies": {
     "@material-ui/core": "^4.12.3",
