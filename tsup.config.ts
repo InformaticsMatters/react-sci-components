@@ -7,5 +7,6 @@ export const tsup: Options = {
   sourcemap: true,
   clean: true,
   format: ['esm', 'cjs'],
-  entryPoints: ['src/index.ts'],
+  entryPoints: ['src/index.ts', 'src/ProjectFilePicker/index.ts'],
+  onSuccess: 'npm run setup',
 };
