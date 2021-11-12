@@ -2,7 +2,7 @@
 
 import fs from 'fs';
 
-const PACKAGES = ['ProjectFilePicker'];
+const PACKAGES = ['FileSelector', 'CenterLoader'];
 
 try {
   PACKAGES.forEach((name) => {

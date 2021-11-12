@@ -91,20 +91,7 @@
     "**/node_modules": true
   },
   "conventionalCommits.scopes": [
-    "orval",
-    "release",
-    "editor",
-    "auth",
-    "experimentation",
-    "theme",
-    "monorepo",
-    "fonts",
-    "emotion",
-    "components",
-    "deps",
-    "env-vars",
-    "husky",
-    "tsup"
+    "file-picker"
   ],
   "git.ignoreLimitWarning": true,
 }
