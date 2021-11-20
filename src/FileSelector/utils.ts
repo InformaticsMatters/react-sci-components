@@ -1,13 +1,4 @@
 /**
- * Determines whether an item is currently selected
- * @param value the current selection value
- * @param fullPath the path of the item to check
- * @returns whether the item is currently selected
- */
-export const getChecked = (value: string[] | string | undefined, fullPath: string): boolean =>
-  !!(fullPath === value || (typeof value !== 'string' && value?.includes(fullPath)));
-
-/**
  * Gets the root relative path to the file or directory
  * @param breadcrumbs array of directory names
  * @param path file name or directory

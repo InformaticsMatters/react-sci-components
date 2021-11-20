@@ -1,7 +1,6 @@
 type ProjectId = string;
 export type NoUndefProjectId = NonNullable<ProjectId>;
 export type FileOrDirectory = 'file' | 'directory';
-export type Selection = string[] | string | undefined;
 
 export type SavedFile = {
   path: string;
@@ -11,17 +10,18 @@ export type SavedFile = {
 
 export interface SharedProps {
   /**
-   * Array of currently selected files.
-   */
-  selectedFiles: SavedFile[];
-  /**
    * Whether the input is for a file or directory. This filters the options.
    */
   targetType: FileOrDirectory;
   /**
-   * File MimeTypes by which files are filtered.
+   * File MimeTypes by which files are filtered. Files that have no mime-type are not filtered here.
+   * Use extensions to be more specific.
    */
-  mimeTypes?: string[];
+  mimeTypes: string[];
+  /**
+   * File extensions by which files are filtered.
+   */
+  extensions: string[];
   /**
    * Whether more than one file can be selected.
    */
@@ -31,11 +31,11 @@ export interface SharedProps {
    */
   projectId: NoUndefProjectId;
   /**
-   * Selected file path or paths
+   * Array of currently selected files.
    */
-  value?: string | string[];
+  value: SavedFile[];
   /**
    * Called when a file selection is made.
    */
-  onSelect: (selection: Selection) => void;
+  onSelect: (selection: SavedFile[]) => void;
 }

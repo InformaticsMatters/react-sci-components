@@ -8,8 +8,8 @@ import { CenterLoader } from '../CenterLoader';
 import { FileListItem } from './FileListItem';
 import { PathBreadcrumbs } from './PathBreadcrumbs';
 import { ScrollList } from './ScrollList';
-import type { FileOrDirectory, SharedProps } from './types';
-import { getChecked, getFullPath, getNewValue } from './utils';
+import type { SavedFile, SharedProps } from './types';
+import { getFullPath } from './utils';
 
 /**
  * Navigable list of files in the project volume in a list format with options to select files or
@@ -22,6 +22,7 @@ export const AllFilesList = ({
   onSelect,
   multiple,
   mimeTypes,
+  extensions,
 }: SharedProps) => {
   const [breadcrumbs, setBreadcrumbs] = useState<string[]>([]);
   const subPath = '/' + breadcrumbs.join('/');
@@ -32,38 +33,8 @@ export const AllFilesList = ({
   });
 
   const files =
-    data?.files.filter((file) => !file.mime_type || mimeTypes?.includes(file.mime_type)) ?? [];
-  const dirs = data?.paths ?? [];
-
-  const handleSelect = (fullPath: string) => (checked: boolean) =>
-    onSelect(getNewValue(fullPath, checked, multiple, value));
-
-  const items = [
-    ...dirs.map((path) => {
-      const fullPath = getFullPath(breadcrumbs, path);
-      const type: FileOrDirectory = 'directory';
-      return {
-        fullPath,
-        key: fullPath,
-        mimeType: undefined,
-        title: path,
-        type,
-        onClick: () => setBreadcrumbs([...breadcrumbs, path]),
-        onSelect: targetType.startsWith('dir') ? handleSelect(fullPath) : undefined,
-      };
-    }),
-    ...files.map((file) => {
-      const fullPath = getFullPath(breadcrumbs, file.file_name);
-      const type: FileOrDirectory = 'file';
-      return {
-        fullPath,
-        mimeType: file.mime_type,
-        title: file.file_name,
-        type,
-        onSelect: handleSelect(fullPath),
-      };
-    }),
-  ];
+    data?.files.filter((file) => extensions.some((ext) => file.file_name.endsWith(ext))) ?? [];
+  const dirs = (data?.paths ?? []).map((path): SavedFile => ({ path, type: 'directory' }));
 
   if (isLoading) {
     return (
@@ -74,7 +45,7 @@ export const AllFilesList = ({
     );
   }
 
-  if (items.length === 0) {
+  if (files.length === 0 && dirs.length === 0) {
     return (
       <>
         <PathBreadcrumbs breadcrumbs={breadcrumbs} setBreadcrumbs={setBreadcrumbs} />
@@ -89,15 +60,43 @@ export const AllFilesList = ({
     <>
       <PathBreadcrumbs breadcrumbs={breadcrumbs} setBreadcrumbs={setBreadcrumbs} />
       <ScrollList dense>
-        {items
-          .filter((item) => (targetType.startsWith('dir') ? item.type === 'directory' : true))
-          .map((item) => (
+        {dirs.map(({ path }) => {
+          const fullPath = getFullPath(breadcrumbs, path);
+          return (
             <FileListItem
-              key={item.fullPath}
-              {...item}
-              checked={getChecked(value, item.fullPath)}
+              checked={!!value.find((savedFile) => savedFile.path === fullPath)}
+              fullPath={fullPath}
+              key={path}
+              title={path}
+              type="directory"
+              onClick={() => setBreadcrumbs([...breadcrumbs, path])}
             />
-          ))}
+          );
+        })}
+        {(targetType === 'file' ? files : []).map((file) => {
+          const fullPath = getFullPath(breadcrumbs, file.file_name);
+          const handleSelect = (): void => {
+            const savedFile: SavedFile = { path: fullPath, type: 'file', mimeType: file.mime_type };
+            let payload: SavedFile[];
+            if (multiple) {
+              payload = [...value.filter((f) => f.path === fullPath), savedFile];
+            } else {
+              payload = [savedFile];
+            }
+            return onSelect(payload);
+          };
+          return (
+            <FileListItem
+              checked={!!value.find((savedFile) => savedFile.path === fullPath)}
+              fullPath={fullPath}
+              key={file.file_name}
+              title={file.file_name}
+              type="file"
+              onClick={handleSelect}
+              onSelect={handleSelect}
+            />
+          );
+        })}
       </ScrollList>
     </>
   );

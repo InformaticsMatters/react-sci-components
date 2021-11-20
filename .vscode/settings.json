@@ -1,35 +1,6 @@
 {
   "editor.tabSize": 2,
   "typescript.tsdk": "react-sci-components/node_modules/typescript/lib",
-  "importSorter.generalConfiguration.sortOnBeforeSave": true,
-  "importSorter.importStringConfiguration.maximumNumberOfImportExpressionsPerLine.type": "newLineEachExpressionAfterCountLimit",
-  "importSorter.importStringConfiguration.tabSize": 2,
-  "importSorter.importStringConfiguration.trailingComma": "multiLine",
-  "importSorter.sortConfiguration.removeUnusedImports": true,
-  "importSorter.sortConfiguration.customOrderingRules.rules": [
-    {
-      "regex": "^react(-dom)?$",
-      "orderLevel": 1
-    },
-    {
-      "type": "importMember",
-      "regex": "^$",
-      "orderLevel": 5,
-      "disableSort": true
-    },
-    {
-      "regex": "^[^.@]",
-      "orderLevel": 10
-    },
-    {
-      "regex": "^[@]",
-      "orderLevel": 15
-    },
-    {
-      "regex": "^[.]",
-      "orderLevel": 30
-    }
-  ],
   "cSpell.words": [
     "draggable",
     "dropzone",
@@ -82,16 +53,7 @@
     "ylabel",
     "yprop"
   ],
-  "files.exclude": {
-    "**/.git": true,
-    "**/.svn": true,
-    "**/.hg": true,
-    "**/CVS": true,
-    "**/.DS_Store": true,
-    "**/node_modules": true
-  },
   "conventionalCommits.scopes": [
     "file-picker"
   ],
-  "git.ignoreLimitWarning": true,
 }
