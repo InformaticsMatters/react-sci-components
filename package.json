@@ -3,7 +3,7 @@
   "main": "./index.cjs",
   "module": "./index.js",
   "types": "./index.d.ts",
-  "version": "2.0.0-dev.2",
+  "version": "2.0.0-dev.3",
   "description": "Library of scientific components for use in Squonk Web Apps",
   "type": "module",
   "repository": "git@github.com:InformaticsMatters/react-sci-components.git",
