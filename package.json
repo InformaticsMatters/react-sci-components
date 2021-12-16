@@ -8,7 +8,7 @@
     "module": "./dist/index.js",
     "types": "./dist/index.d.ts"
   },
-  "version": "2.0.0-dev.12",
+  "version": "2.0.0-dev.13",
   "repository": "git@github.com:InformaticsMatters/react-sci-components.git",
   "license": "Apache-2.0",
   "private": false,
