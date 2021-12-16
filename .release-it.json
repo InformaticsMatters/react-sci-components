@@ -6,9 +6,6 @@
     "release": true
   },
   "npm": {
-    "publish": true,
-    "publishArgs": [
-      "--npm.pnpm"
-    ]
+    "publish": true
   }
 }
