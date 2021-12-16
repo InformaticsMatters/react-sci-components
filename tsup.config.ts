@@ -9,5 +9,5 @@ export const tsup: Options = {
   clean: true,
   format: ['esm'],
   entryPoints: ['src/index.ts', 'src/FileSelector/index.ts', 'src/CenterLoader/index.tsx'],
-  onSuccess: 'npm run setup',
+  // onSuccess: 'npm run setup',
 };
