@@ -6,6 +6,9 @@
     "release": true
   },
   "npm": {
-    "publish": true
+    "publish": true,
+    "publishArgs": [
+      "--no-git-checks"
+    ]
   }
 }

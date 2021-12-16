@@ -18,7 +18,7 @@
     "start": "tsup --watch",
     "setup": "node setup-entrypoints.js && cp package.json dist",
     "type-check": "tsc --pretty --noEmit",
-    "release": "pnpm dlx release-it --npm.pnpm"
+    "release": "pnpm dlx release-it@15.0.0-esm.3 --npm.pnpm"
   },
   "devDependencies": {
     "@emotion/react": "^11.7.0",
