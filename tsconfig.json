@@ -20,12 +20,13 @@
   },
   "exclude": [
     "node_modules",
-    "cypress",
     "dist"
   ],
   "include": [
-    "./src/*.ts",
+    "**/*.ts",
     "./src/*.tsx",
-    "src/FileSelector/FavouriteButton.tsx"
+    "**/.*.js",
+    "**/*.js",
+    "**/.*.cjs",
   ]
 }

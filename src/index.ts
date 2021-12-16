@@ -1,2 +1,2 @@
-export { CenterLoader } from './CenterLoader';
-export { FileSelector } from './FileSelector';
+export * from './CenterLoader';
+export * from './FileSelector';
