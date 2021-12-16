@@ -8,7 +8,7 @@
     "module": "./dist/index.js",
     "types": "./dist/index.d.ts"
   },
-  "version": "2.0.0-dev.13",
+  "version": "2.0.0-dev.14",
   "repository": "git@github.com:InformaticsMatters/react-sci-components.git",
   "license": "Apache-2.0",
   "private": false,
@@ -17,8 +17,7 @@
     "build": "tsup",
     "start": "tsup --watch",
     "setup": "node setup-entrypoints.js && cp package.json dist",
-    "type-check": "tsc --pretty --noEmit",
-    "release": "pnpm dlx release-it@15.0.0-esm.3 --npm.pnpm"
+    "type-check": "tsc --pretty --noEmit"
   },
   "devDependencies": {
     "@emotion/react": "^11.7.0",
