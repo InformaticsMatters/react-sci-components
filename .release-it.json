@@ -6,7 +6,6 @@
     "release": true
   },
   "npm": {
-    "publish": true,
-    "publishPath": "./dist"
+    "publish": true
   }
 }
