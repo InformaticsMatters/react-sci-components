@@ -32,7 +32,7 @@ devDependencies:
   '@material-ui/icons': 4.11.2_f70bac6576f9b9b57b8e0afbfb28e421
   '@material-ui/lab': 4.0.0-alpha.60_f70bac6576f9b9b57b8e0afbfb28e421
   '@squonk/data-manager-client': 0.6.9-rc.1_axios@0.24.0+react-query@3.34.2
-  '@squonk/eslint-config': link:../eslint-config
+  '@squonk/eslint-config': 0.2.0_a7cbf792a24a3f5d91ed6915619a8e38
   '@types/react': 17.0.37
   '@typescript-eslint/eslint-plugin': 5.6.0_0d0cecf582ba45923647a091322795b0
   '@typescript-eslint/parser': 5.6.0_eslint@8.4.1+typescript@4.5.3
@@ -336,6 +336,32 @@ packages:
     dependencies:
       axios: 0.24.0
       react-query: 3.34.2_react-dom@17.0.2+react@17.0.2
+    dev: true
+
+  /@squonk/eslint-config/0.2.0_a7cbf792a24a3f5d91ed6915619a8e38:
+    resolution: {integrity: sha512-qwZ2/yAixD+yr6FPFKKg7s4fQpxtGyXI2120jUWVdbj34W3LsrHcywAAxNNToPq0kkucjpvLTFVJOGDtjFn/HA==}
+    peerDependencies:
+      '@typescript-eslint/eslint-plugin': ^5.6.0
+      '@typescript-eslint/parser': ^5.6.0
+      eslint: ^8.4.1
+      eslint-config-prettier: ^8.3.0
+      eslint-plugin-prettier: ^4.0.0
+      eslint-plugin-react: ^7.27.1
+      eslint-plugin-react-hooks: ^4.3.0
+      eslint-plugin-simple-import-sort: ^7.0.0
+      eslint-plugin-unused-imports: ^2.0.0
+      prettier: ^2.5.1
+    dependencies:
+      '@typescript-eslint/eslint-plugin': 5.6.0_0d0cecf582ba45923647a091322795b0
+      '@typescript-eslint/parser': 5.6.0_eslint@8.4.1+typescript@4.5.3
+      eslint: 8.4.1
+      eslint-config-prettier: 8.3.0_eslint@8.4.1
+      eslint-plugin-prettier: 4.0.0_90bd2ba582f6d1348d73031482d782e2
+      eslint-plugin-react: 7.27.1_eslint@8.4.1
+      eslint-plugin-react-hooks: 4.3.0_eslint@8.4.1
+      eslint-plugin-simple-import-sort: 7.0.0_eslint@8.4.1
+      eslint-plugin-unused-imports: 2.0.0_31ad65a5a34b638b5d345ca6f0359d48
+      prettier: 2.5.1
     dev: true
 
   /@types/json-schema/7.0.9:
