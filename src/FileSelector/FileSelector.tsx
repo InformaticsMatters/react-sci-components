@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
-import { Box, Button, Collapse, styled } from '@material-ui/core';
+import { Box, Button, Collapse, styled } from "@material-ui/core";
 
-import { AllFilesList } from './AllFilesList';
-import { SelectedFilesLabel } from './SelectedFilesLabel';
-import type { SharedProps } from './types';
+import { AllFilesList } from "./AllFilesList";
+import { SelectedFilesLabel } from "./SelectedFilesLabel";
+import type { SharedProps } from "./types";
 
-export interface FileSelectorProps extends Omit<SharedProps, 'projectId'> {
+export interface FileSelectorProps extends Omit<SharedProps, "projectId"> {
   projectId: string | undefined;
   disabled?: boolean;
 }
@@ -59,5 +59,5 @@ export const FileSelector = (props: FileSelectorProps) => {
 };
 
 const RightButton = styled(Button)({
-  marginLeft: 'auto',
+  marginLeft: "auto",
 });

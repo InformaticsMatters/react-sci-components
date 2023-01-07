@@ -1,2 +1,2 @@
-export * from './FileSelector';
-export * from './types';
+export * from "./FileSelector";
+export * from "./types";

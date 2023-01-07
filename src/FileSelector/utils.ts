@@ -5,7 +5,7 @@
  * @returns the generated path
  */
 export const getFullPath = (breadcrumbs: string[], path: string): string =>
-  breadcrumbs.join('/') + (breadcrumbs.length ? '/' : '') + path;
+  breadcrumbs.join("/") + (breadcrumbs.length ? "/" : "") + path;
 
 /**
  * Determines the new value of the selection

@@ -1,15 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
-import { useGetFiles } from '@squonk/data-manager-client/file';
+import { useGetFiles } from "@squonk/data-manager-client/file";
 
-import { Typography } from '@material-ui/core';
+import { Typography } from "@material-ui/core";
 
-import { CenterLoader } from '../CenterLoader';
-import { FileListItem } from './FileListItem';
-import { PathBreadcrumbs } from './PathBreadcrumbs';
-import { ScrollList } from './ScrollList';
-import type { SavedFile, SharedProps } from './types';
-import { getFullPath } from './utils';
+import { CenterLoader } from "../CenterLoader";
+import { FileListItem } from "./FileListItem";
+import { PathBreadcrumbs } from "./PathBreadcrumbs";
+import { ScrollList } from "./ScrollList";
+import type { SavedFile, SharedProps } from "./types";
+import { getFullPath } from "./utils";
 
 /**
  * Navigable list of files in the project volume in a list format with options to select files or
@@ -25,7 +25,7 @@ export const AllFilesList = ({
   extensions,
 }: SharedProps) => {
   const [breadcrumbs, setBreadcrumbs] = useState<string[]>([]);
-  const subPath = '/' + breadcrumbs.join('/');
+  const subPath = "/" + breadcrumbs.join("/");
 
   const { data, isLoading } = useGetFiles({
     project_id: projectId,
@@ -34,7 +34,7 @@ export const AllFilesList = ({
 
   const files =
     data?.files.filter((file) => extensions.some((ext) => file.file_name.endsWith(ext))) ?? [];
-  const dirs = (data?.paths ?? []).map((path): SavedFile => ({ path, type: 'directory' }));
+  const dirs = (data?.paths ?? []).map((path): SavedFile => ({ path, type: "directory" }));
 
   if (isLoading) {
     return (
@@ -73,10 +73,10 @@ export const AllFilesList = ({
             />
           );
         })}
-        {(targetType === 'file' ? files : []).map((file) => {
+        {(targetType === "file" ? files : []).map((file) => {
           const fullPath = getFullPath(breadcrumbs, file.file_name);
           const handleSelect = (): void => {
-            const savedFile: SavedFile = { path: fullPath, type: 'file', mimeType: file.mime_type };
+            const savedFile: SavedFile = { path: fullPath, type: "file", mimeType: file.mime_type };
             let payload: SavedFile[];
             if (multiple) {
               payload = [...value.filter((f) => f.path === fullPath), savedFile];

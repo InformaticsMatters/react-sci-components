@@ -1,16 +1,16 @@
-import type { ReactNode } from 'react';
-import React from 'react';
+import type { ReactNode } from "react";
+import React from "react";
 
-import { Checkbox, ListItem, ListItemIcon, ListItemText, styled, Tooltip } from '@material-ui/core';
-import FolderRoundedIcon from '@material-ui/icons/FolderRounded';
+import { Checkbox, ListItem, ListItemIcon, ListItemText, styled, Tooltip } from "@material-ui/core";
+import FolderRoundedIcon from "@material-ui/icons/FolderRounded";
 
-import type { SharedProps } from './types';
+import type { SharedProps } from "./types";
 
 export interface FileListItemProps {
   /**
    * Whether the item is a file or directory
    */
-  type: SharedProps['targetType'];
+  type: SharedProps["targetType"];
   /**
    * Path to teh file or directory.
    */
@@ -58,14 +58,14 @@ export const FileListItem = ({
           <SmallCheckbox
             checked={checked}
             edge="start"
-            inputProps={{ 'aria-labelledby': labelId }}
+            inputProps={{ "aria-labelledby": labelId }}
             size="small"
             onChange={(_event, checked) => onSelect(checked)}
             onClick={(event) => event.stopPropagation()}
           />
         </ListItemIcon>
       )}
-      {type.startsWith('dir') && <ListItemIcon>{folderIcon ?? <FolderRoundedIcon />}</ListItemIcon>}
+      {type.startsWith("dir") && <ListItemIcon>{folderIcon ?? <FolderRoundedIcon />}</ListItemIcon>}
       <Tooltip title={title}>
         <ListItemText id={labelId} primary={title} primaryTypographyProps={{ noWrap: true }} />
       </Tooltip>

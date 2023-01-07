@@ -1,6 +1,6 @@
-import React from 'react';
+import React from "react";
 
-import { styled, Tooltip, Typography } from '@material-ui/core';
+import { styled, Tooltip, Typography } from "@material-ui/core";
 
 export interface SelectedFilesLabelProps {
   /**
@@ -18,22 +18,22 @@ export interface SelectedFilesLabelProps {
 export const SelectedFilesLabel = ({ files }: SelectedFilesLabelProps) => {
   return (
     <Label noWrap display="inline" variant="body2">
-      Selected Files:{' '}
+      Selected Files:{" "}
       {files.length === 1 ? (
         files[0]
       ) : files.length > 1 ? (
-        <Tooltip title={files.slice(1).join(', ')}>
+        <Tooltip title={files.slice(1).join(", ")}>
           <span>
             {files[0]} and <b>{files.length - 1} more</b>
           </span>
         </Tooltip>
       ) : (
-        'None'
+        "None"
       )}
     </Label>
   );
 };
 
 const Label = styled(Typography)({
-  whiteSpace: 'break-spaces',
+  whiteSpace: "break-spaces",
 });

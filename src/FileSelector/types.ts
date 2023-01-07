@@ -1,10 +1,10 @@
 type ProjectId = string;
 export type NoUndefProjectId = NonNullable<ProjectId>;
-export type FileOrDirectory = 'file' | 'directory';
+export type FileOrDirectory = "file" | "directory";
 
 export type SavedFile = {
   path: string;
-  type: 'file' | 'directory';
+  type: "file" | "directory";
   mimeType?: string;
 };
 

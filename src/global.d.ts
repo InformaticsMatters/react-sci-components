@@ -1,2 +1,2 @@
-declare module 'ngl';
-declare module 'plotly.js-basic-dist';
+declare module "ngl";
+declare module "plotly.js-basic-dist";

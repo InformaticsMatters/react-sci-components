@@ -1,8 +1,8 @@
-'use strict';
+"use strict";
 
-import fs from 'fs';
+import fs from "fs";
 
-const PACKAGES = ['FileSelector', 'CenterLoader'];
+const PACKAGES = ["FileSelector", "CenterLoader"];
 
 try {
   PACKAGES.forEach((name) => {
